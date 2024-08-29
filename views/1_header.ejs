@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>SYNTECCON-CAR RENT</title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+        <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.4.2/uicons-solid-straight/css/uicons-solid-straight.css'>
+
+        <link rel="stylesheet" href="/assets/css/style.css">
+        <link rel="icon" href="/assets/images/Syntec Logo PNG.png" type="image/x-icon">
+        <link rel="stylesheet" href="/assets/fonts/fontawesome/css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="/assets/plugins/animation/css/animate.min.css">
+        <link rel="stylesheet" href="/assets/plugins/datatables/css/datatables.css">
+        
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+        <link rel="stylesheet" href="/assets/css/all.min.css">
+
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css" 
+        integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+        <link rel="stylesheet" href="/assets/css/bootstrap-select.min.css">
+
+
+        <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" /> -->
+        <link rel="stylesheet" href="/assets/css/jquery.dataTables.css">
+
+       <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> -->
+        <link rel="stylesheet" href="/assets/css/bootstrap-icons.min.css">
+
+        <link rel="stylesheet" href="/assets/css/bootstrap-select.min.css">
+
+        <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+
+        <script>
+            let url_now = "http://172.16.7.144:7000"
+        </script>
+
+    </head>
+
+    <body>
+        <div class='dashboard' style="width: 99vw; padding-left: 1vw;" >
+            <div class="dashboard-nav" style="margin: 10px 0px 10px 10px;">
+                <nav class="dashboard-nav-list">
+                    <div class="flex-shrink-0 p-3" style="width: 100%;">
+                        <div class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+                            <img src="/assets/images/logo/car_rent_logo.png" width="80%" height="50">
+                            <a style="cursor: pointer;" class="menu-toggle">
+                                <i class="fas fa-bars"></i>
+                            </a>
+                        </div>
+                        <ul class="list-unstyled ps-0">
+                            <li class="mb-3">
+                                <a href="/home" class="exampleClass btn btn-toggle align-items-center rounded collapsed sidebar-collapsed">
+                                    <div>
+                                        <span>
+                                            <i class="fa-solid fa-house" style="margin-right: 5px;"></i>
+                                            หน้าหลัก
+                                        </span>
+                                    </div> 
+                                    <i></i>
+                                </a>
+                            </li>
+                            <li class="mb-3">
+                                <button class="exampleClass btn btn-toggle align-items-center rounded collapsed sidebar-collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                                    <span>
+                                        <i class="fa-solid fa-file-signature" style="margin-right: 5px;"></i> 
+                                        เกี่ยวกับเอกสาร
+                                    </span>
+                                    <span>
+                                        <i class="fa-solid fa-caret-down"></i>
+                                    </span>
+                                </button>
+                                <div class="collapse" id="dashboard-collapse">
+                                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                        <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                            <a onclick="confirm_create_new_document_car_rent()" style="cursor: pointer;" class="link-dark rounded">
+                                                สร้างเอกสารใหม่ 
+                                                <i style="margin-left: 0.3em;" class="fa-solid fa-plus"></i>
+                                            </a>
+                                        </li>
+                                        <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                            <a href="/car_rent_document_list" class="link-dark rounded">
+                                                ดูรายการเอกสาร 
+                                                <i style="margin-left: 0.3em;" class="fa-solid fa-bars"></i>
+                                            </a>
+                                        </li>
+                                        <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                            <a href="/car_rent_document_approve_list" class="link-dark rounded">
+                                                อนุมัติเอกสาร 
+                                                <i style="margin-left: 0.3em;" class="fa-solid fa-check-to-slot"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="mb-3">
+                                <a href="/car_list" class="exampleClass btn btn-toggle align-items-center rounded collapsed sidebar-collapsed">
+                                    <div>
+                                        <span>
+                                            <i class="fa-solid fa-car-side" style="margin-right: 5px;"></i>
+                                            รายการรถยนต์
+                                        </span>
+                                    </div> 
+                                    <i></i>
+                                </a>
+                            </li>
+                            <li class="border-top my-3"></li>
+
+                            <% if( user_data.cr_user_row.admin == "ใช่" || user_data.cr_user_row.master_admin == "ใช่" || user_data.cr_user_row.system_admin == "ใช่" ){ %>
+                                <li class="mb-3">
+                                    <button class="exampleClass btn btn-toggle align-items-center rounded collapsed sidebar-collapsed" data-bs-toggle="collapse" data-bs-target="#job-collapse" aria-expanded="false">
+                                        <span>
+                                            <i class="fa-solid fa-rectangle-list" style="margin-right: 5px;"></i> 
+                                            งานและรายการงาน
+                                        </span>
+                                        <span>
+                                            <i class="fa-solid fa-caret-down"></i>
+                                        </span>
+                                    </button>
+                                    <div class="collapse" id="job-collapse">
+                                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                            <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                                <a href="/admin_job_schedule_today" style="cursor: pointer;" class="link-dark rounded">
+                                                    รายการยืมรถวันนี้ 
+                                                    <i style="margin-left: 0.3em;" class="fa-solid fa-table"></i>
+                                                </a>
+                                            </li>
+                                            <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                                <a href="/admin_job_schedule_alltime" class="link-dark rounded">
+                                                    รายการยืมรถทั้งหมด 
+                                                    <i style="margin-left: 0.3em;" class="fa-solid fa-table-cells"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            <% } %>
+
+                            <% if( user_data.cr_user_row.admin == "ใช่" || user_data.cr_user_row.master_admin == "ใช่" || user_data.cr_user_row.system_admin == "ใช่" ){ %>
+                                <li class="mb-3">
+                                    <button class="exampleClass btn btn-toggle align-items-center rounded collapsed sidebar-collapsed" data-bs-toggle="collapse" data-bs-target="#config-collapse" aria-expanded="false">
+                                        <span>
+                                            <i class="fa-solid fa-gears" style="margin-right: 5px;"></i> 
+                                            ตั้งค่าข้อมูล
+                                        </span>
+                                        <span>
+                                            <i class="fa-solid fa-caret-down"></i>
+                                        </span>
+                                    </button>
+                                    <div class="collapse" id="config-collapse">
+                                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                                            <% if( (user_data.cr_user_row.admin == "ใช่" && user_data.cr_user_row.master_admin == "ใช่") || user_data.cr_user_row.system_admin == "ใช่" ){ %>
+                                                <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                                    <a href="/user_list_in_application" style="cursor: pointer;" class="link-dark rounded">
+                                                        ผู้ใช้งาน 
+                                                        <i style="margin-left: 0.3em;" class="fa-solid fa-users-rectangle"></i>
+                                                    </a>
+                                                </li>
+                                                <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                                    <a href="/division_list" class="link-dark rounded">
+                                                        ผู้อนุมัติแผนก 
+                                                        <i style="margin-left: 0.3em;" class="fa-solid fa-person-circle-check"></i>
+                                                    </a>
+                                                </li>
+                                            <% } %>
+
+                                            <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                                <a href="/driver_list" class="link-dark rounded">
+                                                    คนขับรถ 
+                                                    <i style="margin-left: 0.3em;" class="fi fi-ss-steering-wheel"></i>
+                                                </a>
+                                            </li>
+                                            <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                                <a href="/admin_setup_ticket" class="link-dark rounded">
+                                                    ตั๋ว Grab , Bolt
+                                                    <i style="margin-left: 0.3em;" class="fa-solid fa-ticket"></i>
+                                                </a>
+                                            </li>
+                                            <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                                <a href="/expressway_list" class="link-dark rounded">
+                                                    ข้อมูลทางด่วน
+                                                    <i style="margin-left: 0.3em;" class="fa-solid fa-sign-hanging"></i>
+                                                </a>
+                                            </li>
+                                            <li style="display: flex; margin: 2vh 0 1vh 0; justify-content: center;">
+                                                <a href="/easy_pass_list" class="link-dark rounded">
+                                                    ข้อมูล Easy Pass
+                                                    <i style="margin-left: 0.3em;" class="fa-brands fa-cc-paypal"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            <% } %>
+
+                            <li class="mb-3">
+                                <a href="/chat_with_master_admin" class="btn btn-toggle align-items-center rounded collapsed sidebar-collapsed">
+                                    <div style="color: rgb(255, 70, 70);" ><i class="fa-solid fa-circle-exclamation" style="margin-right: 5px;"></i> <span>แจ้งปัญหาการใช้งาน</span></div> <i></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class='dashboard-app' style="width: 500px;">
+                <header class='dashboard-toolbar' style="display: flex; justify-content: space-between; margin-right: 1vw;">
+                <!-- <header class='dashboard-toolbar' style="display: flex; justify-content: space-between; box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 15px;"> -->
+                    <div class="row">
+                        <div class="col-6" style="padding: 0px;">
+                            <a style="cursor: pointer;" class="menu-toggle" title="Close Side Bar">
+                                <i class="fas fa-bars"></i>
+                            </a>
+                        </div>
+                        <div class="col-6" style="padding: 0px;">
+                            <a onclick="back_page()" style="cursor: pointer;" class="menu-toggle" title="Back">
+                                <i class="fa-solid fa-angles-left"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4" style="padding: 0px;">
+                            <a style="cursor: pointer;" class="menu-header" data-bs-toggle="modal" data-bs-target="#myModal">
+                                <i class="fa-solid fa-bell"></i>
+                            </a>
+                        </div>
+                        <div class="col-4" style="padding: 0px;">
+                            <a style="cursor: pointer;" class="menu-header" data-bs-toggle="modal" data-bs-target="#myModal">
+                                <i class="fa-solid fa-book"></i>
+                            </a>
+                        </div>
+                        <div class="col-4" style="padding: 0px;">
+                            <a style="cursor: pointer;" class="menu-header" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                <i class="fa-solid fa-user-gear"></i>
+                            </a>
+                        </div>
+                    </div>
+                </header>

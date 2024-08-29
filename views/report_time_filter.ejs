@@ -1,0 +1,410 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px; ">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button onclick="window.location.reload();" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเซ็ต
+                </button>
+            </div>
+        </div>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>CUSTOMER SATISFACTION SUMMARY</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.7vh;">
+                        <label for="" class="form-label">ฝ่าย :</label>
+                        <select id="division_filter" onchange="submit_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option selected value="ทั้งหมด">ทั้งหมด</option>
+                            <% division_array.forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.7vh;">
+                        <label for="" class="form-label">โครงการ :</label>
+                        <select id="project_filter" onchange="submit_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option selected value="ทั้งหมด">ทั้งหมด</option>
+                            <% project_array.forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-top: 0.7vh;">
+                        <label for="" class="form-label">วันปิดประเมิน (ตั้งแต่) :</label>
+                        <input class="form-control" type="date" name="" id="start_date_filter" onchange="submit_filter()">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-top: 0.7vh;">
+                        <label for="" class="form-label">วันปิดประเมิน (สิ้นสุด) :</label>
+                        <input class="form-control" type="date" name="" id="end_date_filter" onchange="submit_filter()">
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="div_main_table" style="margin-top: 1vh;">
+                        
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="" style="margin-top: 1vh;">
+                        <table id="" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr hidden>
+                                    <th width="50%" style="text-align: center;" >Total</th>
+                                    <th width="50%" style="text-align: center;" ><span id="sum_total_point"></span></th>
+                                </tr>
+                                <tr>
+                                    <th width="50%" style="text-align: center;" >Avg Evaluation in Percent (%)</th>
+                                    <th width="50%" style="text-align: center;" id="avg_total_point" ><span style="color: #21b721;" ></span></th>
+                                </tr>
+                                <tr>
+                                    <th width="30%" style="text-align: center;" >EXPORT</th>
+                                    <th width="70%" style="text-align: center;" > 
+                                        <button style="width: 33%;" class="btn btn-info btn-function" onclick="export_data_to_excel('xlsx' , 'main_table')" >Xlsx</button>
+                                        <button style="width: 33%;" class="btn btn-info btn-function" onclick="export_data_to_excel('xls' , 'main_table')">Xls</button>
+                                        <button style="width: 33%;" class="btn btn-info btn-function" onclick="export_data_to_excel('csv' , 'main_table')">CSV</button> 
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<script>
+
+    let css_surveyed_list_str 
+    let css_surveyed_list_obj
+
+    window.onload = function(){
+
+        css_surveyed_list_str = `<%-JSON.stringify(css_surveyed_list)%>`
+        css_surveyed_list_obj = JSON.parse(css_surveyed_list_str.replace(/\n|\t|\r/g, ""));
+
+        find_total_and_avg_point(css_surveyed_list_obj);
+        submit_filter();
+
+    }
+
+    function find_total_and_avg_point(css_surveyed_list_obj){
+
+        console.log("find_total_and_avg_point(css_surveyed_list_obj)")
+        console.log(css_surveyed_list_obj)
+
+        // let only_project_code = css_surveyed_list_obj.map(item => item.ProjectCode)
+
+        let project_two_part = css_surveyed_list_obj.filter( function(e){
+            return  e.sd_part == "2"
+        } )
+
+        let project_one_part = css_surveyed_list_obj.filter( function(e){
+            return  e.sd_part == "1"
+        } )
+
+        let only_project_code_two_part = [...new Set(project_two_part.map(item => item.ProjectCode))]
+        let only_project_code_one_part = [...new Set(project_one_part.map(item => item.ProjectCode))]
+        only_project_code_one_part = only_project_code_one_part.filter(item => !only_project_code_two_part.includes(item))
+
+        console.log("only_project_code_two_part")
+        console.log(only_project_code_two_part)
+
+        console.log("only_project_code_one_part")
+        console.log(only_project_code_one_part)
+
+        let total_point_summary = 0
+        let total_avg_summary = 0
+        let many_of_project_summary = 0
+
+        for( let i = 0 ; i < only_project_code_two_part.length ; i++ ){
+            let this_project_code = css_surveyed_list_obj.filter( function(e){
+                return  e.ProjectCode == only_project_code_two_part[i] && e.sd_part == "2"
+            } )
+
+            const totalPoints = this_project_code.reduce((acc, obj) => acc + obj.point_avg_css, 0);
+            many_of_project_summary += this_project_code.length
+
+            console.log(only_project_code_two_part[i]);
+            console.log(totalPoints);
+
+            total_point_summary += totalPoints
+        }
+
+        for( let i = 0 ; i < only_project_code_one_part.length ; i++ ){
+            let this_project_code = css_surveyed_list_obj.filter( function(e){
+                return  e.ProjectCode == only_project_code_one_part[i] && e.sd_part == "1"
+            } )
+
+            const totalPoints = this_project_code.reduce((acc, obj) => acc + obj.point_avg_css, 0);
+            many_of_project_summary += this_project_code.length
+
+            console.log(only_project_code_one_part[i]);
+            console.log(totalPoints);
+
+            total_point_summary += totalPoints
+
+        }
+
+        console.log("total_point_summary")
+        console.log(total_point_summary)
+
+        document.getElementById( "sum_total_point" ).innerText = Math.round(total_point_summary)
+        if(Math.round(total_point_summary/many_of_project_summary) > 74){
+            document.getElementById( "avg_total_point" ).innerHTML = `<span style="color: #21b721; font-size: larger;" > ${Math.round(total_point_summary/many_of_project_summary)} % </span>`
+
+        }else{
+            document.getElementById( "avg_total_point" ).innerHTML = `<span style="color: red; font-size: larger;" > ${Math.round(total_point_summary/many_of_project_summary)} % </span>`
+
+        }
+
+    }
+
+    function submit_filter(){
+        console.log("filter !")
+        console.log( document.getElementById("start_date_filter").value )
+        console.log( document.getElementById("end_date_filter").value )
+
+        let start_date_filter_timestamp = 0
+        let end_date_filter_timestamp = 0
+
+        if( document.getElementById("start_date_filter").value == "" ){
+            start_date_filter_timestamp = 0
+        }else{
+            start_date_filter_timestamp = new Date(document.getElementById("start_date_filter").value).getTime();
+        }
+
+        if( document.getElementById("end_date_filter").value == "" ){
+            end_date_filter_timestamp = 20000000000000000
+        }else{
+            end_date_filter_timestamp = new Date(document.getElementById("end_date_filter").value).getTime();
+        }
+
+        filter( document.getElementById("division_filter").value , document.getElementById("project_filter").value , start_date_filter_timestamp , end_date_filter_timestamp );
+    }
+
+    async function filter( division_filter_checked , project_filter_checked , start_date_filter_timestamp , end_date_filter_timestamp ){
+        console.log("Call Function Filter")
+        let css_surveyed_list_obj_clone = css_surveyed_list_obj
+
+        let css_surveyed_list_obj_filter = await filter_by_division(css_surveyed_list_obj_clone , division_filter_checked)
+        let css_surveyed_list_obj_filter_2 = await filter_by_project(css_surveyed_list_obj_filter , project_filter_checked)
+        let css_surveyed_list_obj_filter_3 = await filter_by_between_date(css_surveyed_list_obj_filter_2 , start_date_filter_timestamp , end_date_filter_timestamp)
+
+        // find_total_and_avg_point(css_surveyed_list_obj_filter_3)
+        create_table(css_surveyed_list_obj_filter_3)
+    }
+
+    function filter_by_between_date( css_surveyed_list_obj_filter_2 , start_date_filter_timestamp , end_date_filter_timestamp ) {
+        return new Promise((resolve, reject) => {
+            let result = []
+            if( css_surveyed_list_obj_filter_2.length == 0 ){
+                resolve([])
+            }else{
+                console.log("start_date_filter_timestamp")
+                console.log(start_date_filter_timestamp)
+                for( let i = 0 ; i < css_surveyed_list_obj_filter_2.length ; i++ ){
+                    if( css_surveyed_list_obj_filter_2[i].sd_part == "1" ){
+                        if( new Date(css_surveyed_list_obj_filter_2[i].pj_close_css_1).getTime() >= (start_date_filter_timestamp - 25200000) && new Date(css_surveyed_list_obj_filter_2[i].pj_close_css_1).getTime() <= end_date_filter_timestamp ){
+                            result.push(css_surveyed_list_obj_filter_2[i])
+                        }
+                    }else{
+                        if( new Date(css_surveyed_list_obj_filter_2[i].pj_close_css_2).getTime() >= (start_date_filter_timestamp - 25200000) && new Date(css_surveyed_list_obj_filter_2[i].pj_close_css_2).getTime() <= end_date_filter_timestamp ){
+                            result.push(css_surveyed_list_obj_filter_2[i])
+                        }
+                    }
+
+                    if( i == css_surveyed_list_obj_filter_2.length - 1 ){
+                        resolve(result)
+                    }
+                }
+            }
+        });
+    }
+
+    function filter_by_project( css_surveyed_list_obj_filter , project_filter_checked ) {
+        return new Promise((resolve, reject) => {
+            let result = []
+            if( css_surveyed_list_obj_filter.length == 0 || project_filter_checked.length == 0 ){
+                resolve([])
+            }else{
+                if( project_filter_checked == "ทั้งหมด" ||  project_filter_checked == "" ){
+                    resolve(css_surveyed_list_obj_filter)
+                }else{
+                    result.push( ...css_surveyed_list_obj_filter.filter( function(e){
+                        return  e.ProjectCode == project_filter_checked
+                    } ) )
+    
+                    resolve(result)
+                }
+            }
+        });
+    }
+
+    function filter_by_division( css_surveyed_list_obj_clone , division_filter_checked ) {
+        return new Promise((resolve, reject) => {
+            let result = []
+            console.log("division_filter_checked")
+            console.log(division_filter_checked)
+            if( css_surveyed_list_obj_clone.length == 0 || division_filter_checked.length == 0 ){
+                resolve([])
+            }else{
+
+                if( division_filter_checked == "ทั้งหมด" ||  division_filter_checked == "" ){
+                    resolve(css_surveyed_list_obj_clone)
+                }else{
+                    result.push( ...css_surveyed_list_obj_clone.filter( function(e){
+                        return  e.Fulldepartment == division_filter_checked
+                    } ) )
+
+                    resolve(result)
+                }
+            }
+        });
+    }
+
+    async function create_table(css_surveyed_list_obj_filter_3){
+        let text = ``
+
+        if(css_surveyed_list_obj_filter_3.length == 0){
+            text = ``
+
+            input_table(text)
+            find_total_and_avg_point(css_surveyed_list_obj_filter_3);
+        }else{
+            for( let i = 0 ; i < css_surveyed_list_obj_filter_3.length ; i++ ){
+                text += await concat_string(css_surveyed_list_obj_filter_3[i])
+            }
+            input_table(text)
+            find_total_and_avg_point(css_surveyed_list_obj_filter_3);
+        }
+    }
+
+    function concat_string( css_surveyed_list_obj_filter_3_row ) {
+        return new Promise((resolve, reject) => {
+            let close_css = ""
+            if(css_surveyed_list_obj_filter_3_row.sd_part == "1"){
+                close_css = new Date(css_surveyed_list_obj_filter_3_row.pj_close_css_1);
+            }else{
+                close_css = new Date(css_surveyed_list_obj_filter_3_row.pj_close_css_2);
+            }
+
+            if(css_surveyed_list_obj_filter_3_row.point_avg_css < 75){
+                color = "red"
+            }else{
+                color = "#21b721"
+            }
+
+            let text = `
+            <tr>
+                <td> <span hidden >${close_css.getTime()}</span>  ${(close_css.getDate().toString()).padStart(2, '0')}/${(close_css.getMonth() + 1).toString().padStart(2, '0')}/${close_css.getFullYear()}</td>
+                <td style="text-align: start;">${css_surveyed_list_obj_filter_3_row.ProjectCode}</td>
+                <td>${css_surveyed_list_obj_filter_3_row.Fulldepartment}</td>
+                <td style="text-align: center;">${css_surveyed_list_obj_filter_3_row.sd_part}</td>
+                <td style="text-align: end;"> <span style="color: ${color}; font-weight: 700;" >${css_surveyed_list_obj_filter_3_row.point_avg_css} %</span></td>
+                <td style="max-width: 700px; overflow: hidden; text-overflow: ellipsis;">${css_surveyed_list_obj_filter_3_row.sd_surveyor_comment}</td>
+                <td>${css_surveyed_list_obj_filter_3_row.sd_do_by_name}</td>
+                <td>${css_surveyed_list_obj_filter_3_row.sd_do_by_position}</td>
+                <td>${css_surveyed_list_obj_filter_3_row.sd_sent_to_company}</td>
+            </tr>`
+            resolve(text)
+        });
+    }
+
+    function input_table( tr_text ){
+        document.getElementById("div_main_table").innerHTML = `
+        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>วันที่ปิดประเมิน</th>
+                    <th>โครงการ</th>
+                    <th>ฝ่าย</th>
+                    <th style="text-align: center;">ครั้งที่</th>
+                    <th style="text-align: end;">คะแนน (%)</th>
+                    <th>ความคิดเห็นผู้ประเมิน</th>
+                    <th>ผู้ประเมิน (ชื่อ-นามสกุล)</th>
+                    <th>ผู้ประเมิน (ตำแหน่ง)</th>
+                    <th>ผู้ประเมิน (บริษัท)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tr_text}
+            </tbody>
+        </table>`
+
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 2 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh" 
+        })
+    }
+
+    if( document.getElementsByClassName("row")[1].clientWidth > 850 ){
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 2 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh" 
+        })
+    }else{
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 0 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh" 
+        })
+    }
+</script>

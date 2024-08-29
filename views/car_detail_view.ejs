@@ -1,0 +1,212 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <!-- <div class="row" style="margin-bottom: 10px;">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button onclick="window.location.reload();" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเซ็ต
+                </button>
+            </div>
+        </div> -->
+        <div class='card'>
+            <div class='card-header'>
+                <h4>ข้อมูลเอกสารขอยืมรถยนต์</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0.5rem;">
+                        <h5 style="font-weight: 600; color: #02274c;">&nbsp; ⦿ ข้อมูลรถยนต์ที่ยืม</h5>
+                        <hr>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0.5rem;">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-10 col-lg-8 col-xl-8" style="margin-bottom: 0.5rem;">
+                                <% if( car_image_data.length == 0 ){ %>
+                                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="width: 100%;">
+                                        <div class="carousel-inner">
+                                            <div class="carousel-item active">
+                                                <img src="/assets/images/400x400.png" class="d-block w-100 h-100" alt="...">
+                                            </div>
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                <% }else{ %>
+                                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="width: 100%;">
+                                        <div class="carousel-indicators">
+                                            <% index_1 = 0 %>
+                                            <% car_image_data.forEach( function(e) { %>
+                                                <% if( index_1 == 0 ){ %>
+                                                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 0"></button>
+                                                <% }else{ %>
+                                                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%= index_1 %>" aria-label="Slide <%= index_1 %>"></button>
+                                                <% } %>
+                                            <% index_1++ } ) %>
+                                        </div>
+                                        <div class="carousel-inner">
+                                            <% index_2 = 0 %>
+                                            <% car_image_data.forEach( function(e) { %>
+                                                <% if( index_2 == 0 ){ %>
+                                                    <div class="carousel-item active">
+                                                        <img src="<%= e.ci_file_part %>" class="d-block mw-100 mh-100" alt="...">
+                                                    </div>
+                                                <% }else{ %>
+                                                    <div class="carousel-item">
+                                                        <img src="<%= e.ci_file_part %>" class="d-block mw-100 mh-100" alt="...">
+                                                    </div>
+                                                <% } %>
+                                            <% index_2++ } ) %>
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="col-sm-12 col-md-2 col-lg-4 col-xl-4" style="margin-bottom: 0.5rem;">
+                                <div class="" style="width: 100%; overflow: auto;">
+                                    <table id="main_table_1" class="table table-hover table-bordered" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>ชื่อ-นามสกุล</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% car_image_data.forEach( function(e) { %>
+                                                <tr>
+                                                    <td><%= dayjs(e.ci_create_date).format("DD/MM/YYYY") %></td>
+                                                    <td>
+                                                        <a href="<%= e.ci_file_part %>" target="_blank"><%= e.ci_file_name %></a>
+                                                    </td>
+                                                </tr>
+                                            <% } ) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 0.5rem;">
+                        <label for="" class="form-label">ชื่อรถยนต์</label>
+                        <span class="form-control"><%= car_data[0].car_name %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 0.5rem;">
+                        <label for="" class="form-label">ประเภทรถยนต์</label>
+                        <span class="form-control"><%= car_data[0].car_type %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5rem;">
+                        <label for="" class="form-label">รายละเอียดเพิ่มเติม</label>
+                        <textarea disabled style="background-color: white;" class="form-control" id="" rows="5"><%= car_data[0].car_detail %></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0.5rem;">
+                        <h5 style="font-weight: 600; color: #02274c;">&nbsp; ⦿ รายการวันที่ถูกยืม</h5>
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table_2" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>สถานะ</th>
+                                    <th>วันที่</th>
+                                    <th>ช่วง</th>
+                                    <th>สถานะ</th>
+
+                                    <th>ยืมโดย (ชื่อ-นามสกุล)</th>
+                                    <th>ยืมโดย (อีเมล)</th>
+                                    <th>ยืมโดย (แผนก)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% document_sub_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= e.cds_day %> (<%= e.cds_day_th %>)</td>
+                                        <td><%= dayjs(e.cds_date).format("DD/MM/YYYY") %></td>
+                                        <td><%= e.cds_phase %></td>
+                                        <td><%= e.cds_status %></td>
+
+                                        <td><%= e.cdm_create_by_name %></td>
+                                        <td><%= e.cdm_create_by_email %></td>
+                                        <td><%= e.cdm_create_by_division %></td>
+
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<script>
+
+    $('#main_table_2').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+    $('#main_table_1').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": false,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": false, 
+        "searching": false,
+        "autoWidth": true,
+        "ordering": true,
+        "info": false,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+</script>

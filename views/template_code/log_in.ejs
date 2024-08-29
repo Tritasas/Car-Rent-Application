@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Recruit Management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/bootstrap-select.css" />
+    <link rel="stylesheet" href="assets/fonts/fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/plugins/animation/css/animate.min.css">
+    <link rel="stylesheet" href="assets/plugins/datatables/css/datatables.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-content">
+      <div class="auth-bg">
+          <span class="r"></span>
+          <span class="r s"></span>
+          <span class="r s"></span>
+          <span class="r"></span>
+      </div>
+      <div class="card">
+      <form class="form-signin" id="signin" action="" method="post" >
+          <div class="card-body text-center">
+              <div class="mb-4">
+              <img src="assets/images/logo/logo.svg" width="90" height="90"/>
+              </div>
+              <h3 class="mb-4">Recruit Management</h3>
+
+              <div class="input-group mb-3">
+                  <!-- <input type="text" class="form-control" placeholder="Username" name="user_username" required> -->
+              </div>
+
+              <div class="input-group mb-4">
+                  <!-- <input type="password" class="form-control" placeholder="Password" name="user_password" required> -->
+              </div>
+
+              <!-- <button class="btn btn-lg btn-primary mb-3" type="submit" style="width:100%;">Signin</button> -->
+              <!-- <a class="btn btn-lg btn-primary mb-3" href="/reg" style="width:100%;">Register</a> -->
+
+              <a href="https://apps.powerapps.com/play/e/default-99e38c91-bab9-419c-84c0-4054b0b25b8b/a/920dcb04-d071-4693-ad74-9f10f749a3e9?tenantId=99e38c91-bab9-419c-84c0-4054b0b25b8b&hint=a0399fa1-0480-4278-be45-624ccdf33b54&sourcetime=1695715740422&source=portal"
+               class="btn btn-outline-secondary mb-4" style="width:100%;" >
+                <img src="assets/images/powerappicon.png"  width="20" style="margin-right:5px;"/>
+                Power Apps
+              </a>
+
+              <div class="checkbox mb-3 text-danger" id="message">&nbsp;</div>
+              <p class="mb-0 text-muted"> © 2023 ITE All Rights Reserved </p>
+          </div>
+      </form>
+      </div>
+  </div>
+</div>
+
+<%- include("foot.ejs") %>

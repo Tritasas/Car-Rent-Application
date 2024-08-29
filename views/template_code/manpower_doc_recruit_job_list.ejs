@@ -1,0 +1,493 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button onclick="window.location.reload()" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเฟรซ
+                </button>
+            </div>
+        </div>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>อนุมัติงาน - เอกสารขออนุมัติอัตรากำลัง</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 15px;">
+                        <!-- <button onclick="checkbox_1_all()" style="color: white; font-weight: 700;" type="button" class="btn btn-secondary btn-back">
+                            <i class="fa-solid fa-hand-pointer" style="margin-right: 5px;"></i>
+                            เลือกทั้งหมด
+                        </button> -->
+                        <!-- <button onclick="check_approve()" style="color: white; font-weight: 700;" type="button" class="btn btn-success btn-back">
+                            <i class="fa-solid fa-file-circle-check" style="margin-right: 5px;"></i>
+                            อนุมัติรายการที่เลือก
+                        </button>
+                        <button disabled style="color: white; font-weight: 700;" type="button" class="btn btn-danger btn-back">
+                            <i class="fa-solid fa-file-circle-xmark" style="margin-right: 5px;"></i>
+                            ปฎิเสธรายการที่เลือก
+                        </button> -->
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">ลำดับ</th>
+                                    <th>เครื่องมือ</th>
+                                    <th>หมายเลขเอกสาร</th>
+                                    <th>สถานะ</th>
+                                    <th>มอบหมายเมื่อ</th>
+
+                                    <th>แผนกเอกสาร</th>
+                                    <th>ตำแหน่ง</th>
+                                    <th>วันที่คาดหวังให้เริ่มงาน</th>
+                                    <th>ประเภทการจ้าง</th>
+                                    <th>วัตถุประสงค์</th>
+                                    <th>สถานที่ทำงาน</th>
+                                    <th>หน้าที่ความรับผิดชอบ</th>
+                                    <th>สาขาที่ต้องการ</th>
+                                    <th>ทักษะหรือความต้องการอื่นๆ</th>
+
+                                    <th>ผู้อนุมัติที่ 1</th>
+                                    <th>ผู้อนุมัติที่ 2</th>
+
+                                    <th>บริษัท</th>
+                                    <th>สร้างวันที่</th>
+                                    <th>สร้างโดย (ชื่อ)</th>
+                                    <th>สร้างโดย (แผนก)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% manpower_doc_list_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <!-- <input id="<%= e.md_id %>" name="checkbox_1" onchange="checkbox_1()" type="checkbox" class="form-check-input" style="margin-right: 10px; margin-top: 6px;"> -->
+                                            <button onclick="set_src_manpower_doc_view('<%= e.md_id %>')" data-bs-toggle="modal" data-bs-target="#manpower_doc_view" title="VIEW" type="button" class="btn btn-outline-primary inTable">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                            <button onclick="set_manpower_doc_id('<%= e.md_id %>')" data-bs-toggle="modal" data-bs-target="#view_candidate" title="VIEW CANDIDATE" type="button" class="btn btn-outline-primary inTable">
+                                                <i class="fa-solid fa-user-tag"></i>
+                                            </button>
+                                        </td>
+                                        <td><%= e.md_doc_code %><%= e.md_doc_id %></td>
+                                        <td><%= e.md_status_approve %></td>
+                                        <td><%= dayjs(e.md_recruit_assign_date).format("DD-MM-YYYY") %></td>
+
+                                        <td><%= e.md_division_doc %></td>
+                                        <td><%= e.md_job_name %></td>
+                                        <td><%= dayjs(e.md_start_work).format("DD-MM-YYYY") %></td>
+                                        <td><%= e.md_employee_type %></td>
+                                        <td><%= e.md_objective %></td>
+                                        <td><%= e.md_workplace %></td>
+                                        <td><%= e.md_responsibilities %></td>
+                                        <td><%= e.md_education_major %></td>
+                                        <td><%= e.md_requirement_skill %></td>
+
+                                        <td><%= e.md_hiring_name_th %> (<%= e.md_hiring_name_en %>)</td>
+                                        <td><%= e.md_head_bu_name_th %> (<%= e.md_head_bu_name_en %>)</td>
+
+                                        <td><%= e.md_company_code %></td>
+                                        <td><%= dayjs(e.md_create_date).format("DD-MM-YYYY") %></td>
+                                        <td><%= e.md_create_name %></td>
+                                        <td><%= e.md_create_division %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade bd-example-modal-xl" id="manpower_doc_view">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-solid fa-eye"></i>
+                    ดูเอกสารขออนุมัติอัตรากำลัง
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="background-color: #e4e4e4 !important;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <iframe id="manpower_doc_view_iframe" src="#" style="width: 100%; height: 65vh;" frameborder="0" allowtransparency="true"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 100%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-xl" id="view_candidate">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: rgb(0, 128, 255);" class="fa-solid fa-user-tag"></i>
+                    ผู้สมัครในเอกสารนี้
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <button data-bs-toggle="modal" data-bs-target="#add_candidate" type="button" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-user-plus" style="margin-right: 5px;"></i>
+                            เพิ่มใหม่
+                        </button>
+                    </div>
+                    <div id="div_sub_table" class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 100%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-xl" id="interview_point_view">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-solid fa-eye"></i>
+                    ดูคะแนนการประเมิน
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="background-color: #e4e4e4 !important;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <iframe id="interview_point_view_iframe" src="#" style="width: 100%; height: 65vh;" frameborder="0" allowtransparency="true"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 100%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add_candidate">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: rgb(0, 128, 255);" class="fa-solid fa-user-plus"></i>
+                    เพิ่มผู้สมัครคนใหม่
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">ชื่อ (ไทย)</label>
+                        <input id="cdd_name_th" value="" placeholder="" type="text" class="form-control">
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">นามสกุล (ไทย)</label>
+                        <input id="cdd_surname_th" value="" placeholder="" type="text" class="form-control">
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">ชื่อ (อังกฤษ)</label>
+                        <input id="cdd_name_en" value="" placeholder="" type="text" class="form-control">
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">นามสกุล (อังกฤษ)</label>
+                        <input id="cdd_surname_en" value="" placeholder="" type="text" class="form-control">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label for="" class="form-label"><span class="red">*</span> อีเมลผู้สมัคร</label>
+                        <input id="cdd_email" value="" placeholder="" type="text" class="form-control">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label for="" class="form-label"><span class="red">*</span> รหัสผ่าน (สำหรับเข้าสู่ระบบในการกรอกข้อมูล)</label>
+                        <input id="cdd_password" value="" placeholder="" type="text" class="form-control">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label for="" class="form-label"><span class="red">*</span> ผู้สัมภาษณ์</label>
+                        <select id="cdd_interview_id" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <% employee_data.forEach( function(e) { %>
+                                <option value="<%= e.ed_id %>"><%= e.ed_name_th %> <%= e.ed_surname_th %> (<%= e.ed_name_en %> <%= e.ed_surname_en %>)</option>
+                            <%  } ) %>
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 5px;">
+                        <label for="" class="form-label"><span class="red">*</span> วันที่สัมภาษณ์</label>
+                        <input id="cdd_interview_date" value="" placeholder="" type="date" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="ckech_add_candidate()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let checkbox_1_array_id = []
+
+    window.onload = function(){
+        manpower_doc_list_data_str = '<%-JSON.stringify(manpower_doc_list_data)%>'
+        manpower_doc_list_data_obj = JSON.parse(manpower_doc_list_data_str);
+    }
+
+    let manpower_doc_id = ``
+
+    function set_manpower_doc_id( doc_id ){
+        manpower_doc_id = doc_id
+
+        candidate_data_str = '<%-JSON.stringify(candidate_data)%>'
+        candidate_data_obj = JSON.parse(candidate_data_str);
+
+        candidate_data_in_this_manpower_doc = candidate_data_obj.filter( function(e){
+            return  e.md_id == doc_id
+        } )
+
+        console.log("candidate_data_in_this_manpower_doc.length")
+        console.log(candidate_data_in_this_manpower_doc.length)
+
+        let body_table = ""
+
+        if( candidate_data_in_this_manpower_doc.length == 1 && candidate_data_in_this_manpower_doc[0].cd_id == null ){
+            document.getElementById("div_sub_table").innerHTML = `
+            <table id="sub_table" class="table table-hover table-bordered" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th width="5%">ลำดับ</th>
+                        <th>หมายเลขเอกสาร</th>
+                        <th>ชื่อผู้สมัคร (ไทย)</th>
+                        <th>ชื่อผู้สมัคร (อังกฤษ)</th>
+                        <th>อีเมลผู้สมัคร</th>
+                        <th>สถานะ</th>
+                        <th>ชื่อผู้สัมภาษณ์</th>
+                        <th>อีเมลผู้สัมภาษณ์</th>
+                        <th>วันที่สัมภาษณ์</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+            `
+            setTimeout( function(){
+                $('#sub_table').DataTable({
+                    "destroy": true,
+                    "retrieve":true,
+                    "stateSave": true,
+                    fixedColumns:   {
+                        left: 0 ,
+                        right: 0
+                    },
+                    "paging": true,
+                    "scrollCollapse": true,
+                    "responsive": true, 
+                    "lengthChange": true, 
+                    "searching": true,
+                    "autoWidth": true,
+                    "ordering": true,
+                    "info": true,
+                    "scrollX": true,
+                    "scrollY": "30vh" 
+                })
+            } , 200 );
+        }else{
+            for( let i = 0 ; i < candidate_data_in_this_manpower_doc.length ; i++ ){
+                let index = i + 1
+                let status = ""
+                if( candidate_data_in_this_manpower_doc[i].cjm_status == "ได้รับการประเมินแล้ว" ){
+                    status = `
+                    <a onclick="set_src_interview_point_view('${candidate_data_in_this_manpower_doc[i].cjm_id}')" style="text-decoration: underline !important; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#interview_point_view" title="VIEW" type="" class="">
+                        ${candidate_data_in_this_manpower_doc[i].cjm_status}
+                    </a>`
+                }else{
+                    status = candidate_data_in_this_manpower_doc[i].cjm_status
+                }
+                body_table += `
+                <tr>
+                    <td>${index}</td>
+                    <td>${candidate_data_in_this_manpower_doc[i].md_doc_code}${candidate_data_in_this_manpower_doc[i].md_doc_id}</td>
+                    <td>${candidate_data_in_this_manpower_doc[i].cd_name_th}</td>
+                    <td>${candidate_data_in_this_manpower_doc[i].cd_name_en}</td>
+                    <td>
+                        <a href="/candidate_detail_view/${btoa(candidate_data_in_this_manpower_doc[i].cd_id)}" style="text-decoration: underline !important; cursor: pointer;" target="_black" title="VIEW" type="" class="">
+                            ${candidate_data_in_this_manpower_doc[i].cd_email}
+                        </a>
+                    </td>
+                    <td>${status}</td>
+                    <td>${candidate_data_in_this_manpower_doc[i].cjm_interviewer_name_th} (${candidate_data_in_this_manpower_doc[i].cjm_interviewer_name_en})</td>
+                    <td>${candidate_data_in_this_manpower_doc[i].cjm_interviewer_email}</td>
+                    <td>${new Date(candidate_data_in_this_manpower_doc[i].cjm_interviewer_date).getDate()}/${new Date(candidate_data_in_this_manpower_doc[i].cjm_interviewer_date).getMonth()+1}/${new Date(candidate_data_in_this_manpower_doc[i].cjm_interviewer_date).getFullYear()}</td>
+                </tr>
+                `
+    
+                if( i == candidate_data_in_this_manpower_doc.length - 1 ){
+                    document.getElementById("div_sub_table").innerHTML = `
+                    <table id="sub_table" class="table table-hover table-bordered" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th width="5%">ลำดับ</th>
+                                <th>หมายเลขเอกสาร</th>
+                                <th>ชื่อผู้สมัคร (ไทย)</th>
+                                <th>ชื่อผู้สมัคร (อังกฤษ)</th>
+                                <th>อีเมลผู้สมัคร</th>
+                                <th>สถานะ</th>
+                                <th>ชื่อผู้สัมภาษณ์</th>
+                                <th>อีเมลผู้สัมภาษณ์</th>
+                                <th>วันที่สัมภาษณ์</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${body_table}
+                        </tbody>
+                    </table>
+                    `
+                    setTimeout( function(){
+                        $('#sub_table').DataTable({
+                            "destroy": true,
+                            "retrieve":true,
+                            "stateSave": true,
+                            fixedColumns:   {
+                                left: 0 ,
+                                right: 0
+                            },
+                            "paging": true,
+                            "scrollCollapse": true,
+                            "responsive": true, 
+                            "lengthChange": true, 
+                            "searching": true,
+                            "autoWidth": true,
+                            "ordering": true,
+                            "info": true,
+                            "scrollX": true,
+                            "scrollY": "30vh" 
+                        })
+                    } , 200 );
+                }
+            }
+        }
+
+    }
+
+    function ckech_add_candidate(){
+        if( document.getElementById("cdd_email").value == "" ){
+            alert( "ระบุ อีเมลผู้สมัคร" )
+        }else if( document.getElementById("cdd_password").value == "" ){
+            alert( "ระบุ รหัสผ่าน (สำหรับเข้าสู่ระบบในการกรอกข้อมูล)" )
+        }else if( document.getElementById("cdd_interview_id").value == "" ){
+            alert( "ระบุ ผู้สัมภาษณ์" )
+        }else if( document.getElementById("cdd_interview_date").value == "" ){
+            alert( "ระบุ วันที่สัมภาษณ์" )
+        }else{
+            add_candidate()
+        }
+    }
+
+    function add_candidate(){
+        let data = {
+            manpower_doc_id : manpower_doc_id , 
+            cdd_name_th : document.getElementById("cdd_name_th").value , 
+            cdd_surname_th : document.getElementById("cdd_surname_th").value , 
+            cdd_name_en : document.getElementById("cdd_name_en").value , 
+            cdd_surname_en : document.getElementById("cdd_surname_en").value , 
+            cdd_email : document.getElementById("cdd_email").value , 
+            cdd_password : document.getElementById("cdd_password").value , 
+            cdd_interview_id : document.getElementById("cdd_interview_id").value , 
+            cdd_interview_date : document.getElementById("cdd_interview_date").value
+        }
+
+        console.log("data")
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_candidate',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }    
+
+    function set_src_manpower_doc_view( param ){
+        document.getElementById("manpower_doc_view_iframe").src = `/manpower_doc_view/${btoa(param)}`
+    }
+
+    function set_src_interview_point_view( param ){
+        document.getElementById("interview_point_view_iframe").src = `/manpower_doc_interview_view/${btoa(param)}`
+    }
+
+    if( window.innerWidth > 1000 ){
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 4 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh" 
+        })
+    }else{
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 0 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh" 
+        })
+    }
+
+
+    
+
+</script>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Recruit Management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/plugins/animation/css/animate.min.css">
+    <link rel="stylesheet" href="/assets/plugins/datatables/css/datatables.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css" 
+    integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+</head>
+
+<body>
+    <div class="dashboard dashboard-compact" style="width: 99vw; overflow: hidden; padding-left: 1vw;" >
+        <div class='dashboard-app' style="width: 500px; margin-top: 15px;">
+            <div class='dashboard-content'>
+                <div class='container'>
+                    <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+                        <div class='card-header'>
+                            <h3>เอกสารขออนุมัติอัตรากำลัง</h3>
+                            <input disabled hidden value="<%= manpower_doc_data[0].md_id %>" id="manpower_doc_id" type="number" class="form-control">
+                        </div>
+                        <div class='card-body'>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">ฝ่าย (Division)</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_division_doc %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">หัวหน้าโดยตรง (Hiring manager) <span class="red">ผู้อนุมัติที่ 1</span></label>
+                                    <div class="input-group">
+                                        <span id="" class="form-control"><%= manpower_doc_data[0].md_hiring_name_th %> (<%= manpower_doc_data[0].md_hiring_name_en %>)</span>
+                                        <div class="input-group-append">
+                                            <% if( manpower_doc_data[0].md_status_approve == "รออนุมัติลำดับที่ 1" ) { %>
+                                                <button hidden class="btn btn-outline-secondary btn_group_right" type="button" id="button-addon2">คอมเมนต์</button>
+                                            <% }else{ %>
+                                                <button class="btn btn-outline-secondary btn_group_right" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#comment_approve_1">คอมเมนต์</button>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">Head BU <span class="red">ผู้อนุมัติที่ 2</span></label>
+                                    <div class="input-group">
+                                        <span id="" class="form-control"><%= manpower_doc_data[0].md_head_bu_name_th %> (<%= manpower_doc_data[0].md_head_bu_name_en %>)</span>
+                                        <div class="input-group-append">
+                                            <% if( manpower_doc_data[0].md_status_approve == "รออนุมัติลำดับที่ 1" || manpower_doc_data[0].md_status_approve == "รออนุมัติลำดับที่ 2" ) { %>
+                                                <button hidden class="btn btn-outline-secondary btn_group_right" type="button" id="button-addon2">คอมเมนต์</button>
+                                            <% }else{ %>
+                                                <button class="btn btn-outline-secondary btn_group_right" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#comment_approve_2">คอมเมนต์</button>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 18px;">
+                                    <hr>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">ชื่อตำแหน่ง (Job Title)</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_job_name %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label"><span class="red">*</span> วันที่คาดหวังให้เริ่มงาน (Expected date of joining) <span class="red">DD/MM/YYYY</span></label>
+                                    <span id="" class="form-control"><%= dayjs(manpower_doc_data[0].md_start_work).format('DD/MM/YYYY') %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label"><span class="red">*</span> ประเภทการจ้าง (Type of employment)</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_employee_type %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">ระบุจำนวนเดือน <span class="red">* กรณีพนักงานสัญญาจ้าง</span></label>
+                                    <div class="input-group">
+                                        <% if( manpower_doc_data[0].md_hire_month == ""){ %>
+                                            <span id="" class="form-control">-</span>
+                                        <% }else{ %>
+                                            <span id="" class="form-control"><%= manpower_doc_data[0].md_hire_month %></span>
+                                        <% } %>
+                                        <span class="input-group-text">เดือน (Month)</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label"><span class="red">*</span> วัตถุประสงค์ (Objective)</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_objective %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">ชื่อพนักงานที่ถูกทดแทน (Replacement Employee Name) <span class="red">* กรณีทดแทน</span></label>
+                                    <% if( manpower_doc_data[0].md_replace_employee_name == ""){ %>
+                                        <span id="" class="form-control">-</span>
+                                    <% }else{ %>
+                                        <span id="" class="form-control"><%= manpower_doc_data[0].md_replace_employee_name %></span>
+                                    <% } %>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">สถานที่ทำงาน (Workplace)</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_workplace %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">ระบุไซท์งาน <span class="red">* กรณีเลือกไซท์งาน</span></label>
+                                    <% if( manpower_doc_data[0].md_workplace_site_name == ""){ %>
+                                        <span id="" class="form-control">-</span>
+                                    <% }else{ %>
+                                        <span id="" class="form-control"><%= manpower_doc_data[0].md_workplace_site_name %></span>
+                                    <% } %>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">หน้าที่ความรับผิดชอบ (Responsibilities)</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="responsibilities" rows="4"><%= manpower_doc_data[0].md_responsibilities %></textarea>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">ช่วงอายุ (Age)</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_age_length %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">ระบุช่วงอายุ <span class="red">* กรณีเลือกอื่น ๆ</span></label>
+                                    <% if( manpower_doc_data[0].md_age_length_other == ""){ %>
+                                        <span id="" class="form-control">-</span>
+                                    <% }else{ %>
+                                        <span id="" class="form-control"><%= manpower_doc_data[0].md_age_length_other %></span>
+                                    <% } %>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">วุฒิการศึกษา (Educational background)</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_education_type %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">ระบุวุฒิการศึกษา <span class="red">* กรณีเลือกอื่น ๆ</span></label>
+                                    <% if( manpower_doc_data[0].md_education_other == ""){ %>
+                                        <span id="" class="form-control">-</span>
+                                    <% }else{ %>
+                                        <span id="" class="form-control"><%= manpower_doc_data[0].md_education_other %></span>
+                                    <% } %>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">สาขาที่ต้องการ</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_education_major %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">เพศ (Sex)</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_sex %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 18px;">
+                                    <!-- <label for="" class="form-label">ประสบการณ์ทำงาน (Work experiences)</label> -->
+                                    <label for="" class="form-label">ประสบการณ์ทำงาน</label>
+                                    <span id="" class="form-control"><%= manpower_doc_data[0].md_work_experiences %></span>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 18px;">
+                                    <label for="" class="form-label">ทักษะหรือความต้องการอื่นๆ (Skill Or Additional requirement)</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="requirement_skill" rows="4"><%= manpower_doc_data[0].md_requirement_skill %></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="comment_approve_1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: rgb(221, 206, 1);" class="fa-regular fa-comments"></i>
+                    คอมเมนต์จากหัวหน้าโดยตรง
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">คอมเมนต์</label>
+                        <textarea disabled style="background-color: white;" class="form-control" id="" rows="4"><%= manpower_doc_data[0].md_hiring_approve_comment %></textarea>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">วันที่อนุมัติ</label>
+                        <span id="" class="form-control"><%= dayjs(manpower_doc_data[0].md_hiring_approve_date).format('DD/MM/YYYY') %></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 100%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="comment_approve_2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: rgb(221, 206, 1);" class="fa-regular fa-comments"></i>
+                    คอมเมนต์จาก Head BU
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">คอมเมนต์</label>
+                        <textarea disabled style="background-color: white;" class="form-control" id="" rows="4"><%= manpower_doc_data[0].md_head_bu_approve_comment %></textarea>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">วันที่อนุมัติ</label>
+                        <span id="" class="form-control"><%= dayjs(manpower_doc_data[0].md_head_bu_approve_date).format('DD/MM/YYYY') %></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 100%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let req_hiring_month = false
+    let req_replace_employee_name = false
+    let req_workplace_site_name = false
+    let req_age_length_other = false
+    let req_education_other = false
+
+    let position_data_obj
+    let employee_data_obj
+
+    window.onload = function(){
+        position_data_str = '<%-JSON.stringify(position_data)%>'
+        position_data_obj = JSON.parse(position_data_str);
+
+        employee_data_str = '<%-JSON.stringify(employee_data)%>'
+        employee_data_obj = JSON.parse(employee_data_str);
+    }
+
+
+</script>

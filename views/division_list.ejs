@@ -1,0 +1,373 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card'>
+            <div class='card-header'>
+                <h4>แผนกและผู้อนุมัติ</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <!-- <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 15px;">
+                        <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_add_new_driver" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                            <i class="fa-solid fa-car-side" style="margin-right: 0.2rem;"></i>
+                            เพิ่มคนขับรถ
+                        </button>
+                    </div> -->
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <div style="text-align: center; color: black;">
+                            <h4 style="color: black;">รายชื่อแผนก</h4>
+                        </div>
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="10%">#</th>
+                                    <th width="85%">แผนก</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% division_list_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <a style="cursor: pointer;" onclick="change_division_selected('<%= e.div_id %>' , '<%= e.div_name %>')">
+                                                <button type="button" class="btn btn-primary btn-icon">
+                                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td><%= e.div_name %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <div style="text-align: center; color: black;">
+                            <h4 style="color: black;">
+                                ผู้อนุมัติแผนก <span id="division_selected">...</span>
+                                <input id="division_selected_id" value="" style="display: none;" />
+                            </h4>
+                        </div>
+                        <div id="sub_table_div">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_add_approver" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">ระบุข้อมูลผู้อนุมัติ</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="submit_add_new_approver(event)" >
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> ชื่อ-นามสกุล</label>
+                            <input required id="new_approver_name" onchange="" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> อีเมล</label>
+                            <input required id="new_approver_email" onchange="" value="" type="email" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> แผนก</label>
+                            <select required onchange="" id="new_approver_division" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                                <% division_list_data.forEach( function(e) { %>
+                                    <option value="<%= e.div_id %>__<%= e.div_name %>"><%= e.div_name %></option>
+                                <% } ) %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let approver_division_data = []
+
+    window.onload = () => {
+        console.log("Start!")
+
+        data_no_syntex = '<%= JSON.stringify(approver_division_data) %>'
+        data_no_free_spec = (JSON.stringify(data_no_syntex.replace(/\n|\t|\r/g, " ")))
+        data_with_syntax = decodedString( data_no_free_spec )
+        data_to_obj = JSON.parse(data_with_syntax);
+
+        console.log("data_to_obj!")
+        console.log(data_to_obj)
+
+        approver_division_data = data_to_obj
+
+    }
+
+    function submit_add_new_approver( event ){
+        event.preventDefault();
+
+        console.log(document.getElementById("division_selected_id").value)
+        console.log(document.getElementById("new_approver_name").value)
+        console.log(document.getElementById("new_approver_email").value)
+        console.log(document.getElementById("new_approver_division").value)
+
+        let data = {
+            division_selected_id : document.getElementById("division_selected_id").value , 
+            new_approver_name : document.getElementById("new_approver_name").value , 
+            new_approver_email : document.getElementById("new_approver_email").value , 
+            new_approver_division : document.getElementById("new_approver_division").value
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_new_approver',
+            data: data,
+            success: function (call_back_data) {
+                // console.log("add_new_drive Submit !")
+
+                // window.location.reload();
+
+                console.log("call_back_data")
+                console.log(call_back_data)
+
+                if( call_back_data == "Success" ){
+                    Swal.fire({
+                        icon: "success" ,
+                        title: "เพิ่มผู้อนุมัติสำเร็จ",
+                        text: "" 
+                    });
+                    
+                    setTimeout( function(){window.location.reload()} , 1500 );
+                }else{
+                    Swal.fire({
+                        icon: "error" ,
+                        title: "เพิ่มผู้อนุมัติไม่สำเร็จ",
+                        text: "อีเมลของผู้อนุมัติซ้ำ" 
+                    });
+                }
+
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+
+    }
+
+    function change_division_selected( division_id , division_name ){
+        let new_approver_division_data = approver_division_data.filter( function(e){
+            return  e.dap_join_div_id == division_id
+        } )
+
+        document.getElementById("division_selected").innerText = division_name
+        document.getElementById("division_selected_id").value = division_id
+        draw_table_approver_table(new_approver_division_data)
+    }
+
+    function delete_approver( approver_id ){
+        Swal.fire({
+            icon : "question",
+            title: "ยืนยันการลบผู้อนุมัติ",
+            text: "",
+            showCancelButton: true,
+            confirmButtonColor: "#E21E1E",
+            confirmButtonText: "ยืนยัน, ลบ" ,
+            cancelButtonColor: "#00000040",
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let data = {
+                    approver_id : approver_id
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '/delete_approver',
+                    data: data,
+                    success: function (nextPage) {
+                        Swal.fire({
+                            icon: "success" ,
+                            title: "ลบผู้อนุมัติสำเร็จ",
+                            text: "" 
+                        });
+
+                        setTimeout( function(){window.location.reload()} , 1500 );
+
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    function draw_table_approver_table( approver_division_data ){
+        
+        let text = ``
+
+        if(approver_division_data.length == 0){
+            set_table_approver_table(text)
+        }else{
+            for( let i = 0 ; i < approver_division_data.length ; i++ ){
+                let index = i + 1
+                text += `
+                <tr>
+                    <td>${index}</td>
+                    <td>
+                        <a style="cursor: pointer;" onclick="delete_approver('${approver_division_data[i].dap_id}')" >
+                            <button  type="button" class="btn btn-danger btn-icon">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td>${approver_division_data[i].dap_approver_name}</td>
+                    <td>${approver_division_data[i].dap_approver_email}</td>
+                    <td>${approver_division_data[i].dap_approver_division_name}</td>
+                </tr>
+                `
+
+                if( i == approver_division_data.length - 1 ){
+                    set_table_approver_table(text)
+                }
+            }
+        }
+    }
+
+    function set_table_approver_table(text){
+        document.getElementById("sub_table_div").innerHTML = `
+        <table id="sub_table" class="table table-hover table-bordered" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th width="5%">#</th>
+                    <th width="10%">#</th>
+                    <th width="30%">ชื่อ</th>
+                    <th width="30%">อีเมล</th>
+                    <th width="25%">แผนก</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${text}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" style="text-align: center;">
+                        <a style="cursor: pointer;" onclick="">
+                            <button type="button" class="btn btn-warning btn-icon" data-bs-toggle="modal" data-bs-target="#modal_add_approver">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        `
+
+        $('#sub_table').DataTable({
+            "destroy": true,
+            "retrieve":true,
+            "stateSave": true,
+            fixedColumns:   {
+                left: 0 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "46vh" 
+        })
+    }
+
+    function submit_add_new_driver(event){
+        event.preventDefault();
+
+        let data = {
+            nickname_th : document.getElementById("dm_nickname_th").value , 
+            name_th : document.getElementById("dm_name_th").value , 
+            nickname_en : document.getElementById("dm_nickname_en").value , 
+            name_en : document.getElementById("dm_name_en").value
+        }
+
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_new_drive',
+            data: data,
+            success: function (nextPage) {
+                console.log("add_new_drive Submit !")
+
+                window.location.reload();
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+    $('#sub_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+</script>

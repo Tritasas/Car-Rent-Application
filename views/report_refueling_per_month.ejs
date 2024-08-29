@@ -1,0 +1,430 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>Report Refueling</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="" style="margin-top: 0.7vh;">
+                        <button data-bs-toggle="modal" data-bs-target="#modal_insert_refueling_excel" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                            <i class="fa-solid fa-plus"></i>
+                            เพิ่มประวัติการเติมน้ำมัน
+                        </button>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="" style="margin-top: 0.7vh;">
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.4vh;">
+                        <label for="">รอบเดือน</label>
+                        <select id="filter_as_of" onchange="change_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            <% (filter_as_of.sort()).forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.4vh;">
+                        <label for="">ช่วงเวลา</label>
+                        <select id="filter_phase" onchange="change_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            <option value="ช่วงเช้า">ช่วงเช้า</option>
+                            <option value="ช่วงบ่าย">ช่วงบ่าย</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.4vh;">
+                        <label for="">ทะเบียนรถยนต์</label>
+                        <select id="filter_car_registration_code" onchange="change_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            <% (filter_car_registration_code.sort()).forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.4vh;">
+                        <label for="">หมายเลขบัตรฟลีทการ์ด</label>
+                        <select id="filter_fleet_card_number" onchange="change_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            <% (filter_fleet_card_number.sort()).forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.4vh;">
+                        <label for="">รหัสแผนก</label>
+                        <select id="filter_cost_centre" onchange="change_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            <% (filter_cost_centre.sort()).forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="div_main_table" style="margin-top: 1.5vh;">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_insert_refueling_excel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">เลือกไฟล์อัพโหลด</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="form" action="/uploads_refueling_excel" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <input type="file" class="form-control" id="fileupload" name="fileupload" required accept=".xlsx, .xls" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">อัพโหลด</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    window.onload = function(){
+        data_no_syntex = '<%= JSON.stringify(report_refueling_per_month_data) %>'
+        data_no_free_spec = (JSON.stringify(data_no_syntex.replace(/\n|\t|\r/g, " ")))
+        data_with_syntax = decodedString( data_no_free_spec )
+        data_to_obj = JSON.parse(data_with_syntax);
+
+        draft_main_table( data_to_obj )
+    }
+
+    async function change_filter(){
+        data_no_syntex = '<%= JSON.stringify(report_refueling_per_month_data) %>'
+        data_no_free_spec = (JSON.stringify(data_no_syntex.replace(/\n|\t|\r/g, " ")))
+        data_with_syntax = decodedString( data_no_free_spec )
+        data_to_obj = JSON.parse(data_with_syntax);
+
+        let result_0 = await filter_as_of(data_to_obj)
+        let result_1 = await filter_phase_function(result_0)
+        let result_2 = await filter_car_registration_code_function(result_1)
+        let result_3 = await filter_fleet_card_number_function(result_2)
+        let result_4 = await filter_cost_centre_function(result_3)
+
+        console.log(result_4)
+        draft_main_table( result_4 )
+
+    }
+
+    function filter_as_of(data){
+        return new Promise(( resolve , reject ) => {
+            if( document.getElementById("filter_as_of").value == "" || document.getElementById("filter_as_of").value == "ทั้งหมด" ){
+                resolve(data)
+            }else{
+                let return_object = data.filter( function(e){
+                    return e.rrm_header_As_Of == document.getElementById("filter_as_of").value
+                } )
+
+                resolve(return_object)
+            }
+        })
+    }
+
+    function filter_phase_function(data){
+        return new Promise(( resolve , reject ) => {
+            if( document.getElementById("filter_phase").value == "" || document.getElementById("filter_phase").value == "ทั้งหมด" ){
+                resolve(data)
+            }else{
+                let return_object_phase_1 = data.filter( function(e){
+                    return  +((e.rrm_Transaction_Time).split(":")[0]) <= 12
+                } )
+
+                let return_object_phase_2 = data.filter( function(e){
+                    return  +((e.rrm_Transaction_Time).split(":")[0]) > 12
+                } )
+
+                if( document.getElementById("filter_phase").value == "ช่วงเช้า" ){
+                    resolve(return_object_phase_1)
+                }else if( document.getElementById("filter_phase").value == "ช่วงบ่าย" ){
+                    resolve(return_object_phase_2)
+                }
+            }
+        })
+    }
+
+    function filter_car_registration_code_function(data){
+        return new Promise(( resolve , reject ) => {
+            if( document.getElementById("filter_car_registration_code").value == "" || document.getElementById("filter_car_registration_code").value == "ทั้งหมด" ){
+                resolve(data)
+            }else{
+                let return_object = data.filter( function(e){
+                    return e.rrm_License_Plate_Number == document.getElementById("filter_car_registration_code").value
+                } )
+
+                resolve(return_object)
+            }
+        })
+    }
+
+    function filter_fleet_card_number_function(data){
+        return new Promise(( resolve , reject ) => {
+            if( document.getElementById("filter_fleet_card_number").value == "" || document.getElementById("filter_fleet_card_number").value == "ทั้งหมด" ){
+                resolve(data)
+            }else{
+                let return_object = data.filter( function(e){
+                    return e.rrm_Fleet_Card_Number == document.getElementById("filter_fleet_card_number").value
+                } )
+
+                resolve(return_object)
+            }
+        })
+    }
+
+    function filter_cost_centre_function(data){
+        return new Promise(( resolve , reject ) => {
+            if( document.getElementById("filter_cost_centre").value == "" || document.getElementById("filter_cost_centre").value == "ทั้งหมด" ){
+                resolve(data)
+            }else{
+                let return_object = data.filter( function(e){
+                    return e.rrm_Cost_Centre == document.getElementById("filter_cost_centre").value
+                } )
+
+                resolve(return_object)
+            }
+        })
+    }
+
+    function draft_main_table( data ){
+        let text = ``
+        if( data.length == 0 ){
+            set_main_table(text)
+        }else{
+            for( let i = 0 ; i < data.length ; i++ ){
+                let index = i+1
+                let date_Settlement_Date = new Date(data[i].rrm_Settlement_Date)
+                let date_Transaction_Date = new Date(data[i].rrm_Transaction_Date)
+                let option_1 = ""
+                if( data[i].rrm_join_cds_id == "" || data[i].rrm_join_cds_id == null || data[i].rrm_join_cds_id == "null" ){
+                    option_1 = ``
+                }else{
+                    option_1 = `<button onclick="show_modal_detail_report( '${data[i].rrm_join_cds_id}' )" type="button" class="btn btn-primary btn-icon">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>`
+                }
+
+                text += `
+                <tr>
+                    <td>${index}</td>
+                    <td>${option_1}</td>
+                    <td>${data[i].rrm_header_As_Of}</td>
+                    
+                    <td>${data[i].rrm_Account_Number}</td>
+                    <td>${data[i].rrm_Company_Tax_ID}</td>
+                    <td>${data[i].rrm_Account_Name}</td>
+                    <td>${data[i].rrm_Company_Br}</td>
+                    <td>${date_Settlement_Date.getDate().toString().padStart(2, '0')}/${(date_Settlement_Date.getMonth() + 1).toString().padStart(2, '0')}/${date_Settlement_Date.getFullYear()}</td>
+                    <td>${date_Transaction_Date.getDate().toString().padStart(2, '0')}/${(date_Transaction_Date.getMonth() + 1).toString().padStart(2, '0')}/${date_Transaction_Date.getFullYear()}</td>
+                    <td>${data[i].rrm_Transaction_Time}</td>
+                    <td>${data[i].rrm_License_Plate_Number}</td>
+                    <td>${data[i].rrm_Fleet_Card_Number}</td>
+
+                    <td>${data[i].rrm_Cardholder_Name}</td>
+                    <td>${data[i].rrm_Card_Credit_Limit_BHT}</td>
+                    <td>${data[i].rrm_Card_Credit_Limit_LITRE}</td>
+                    <td>${data[i].rrm_Cost_Centre}</td>
+                    <td>${data[i].rrm_Department}</td>
+                    <td>${data[i].rrm_Invoice_Number}</td>
+                    <td>${data[i].rrm_Termial_ID}</td>
+                    <td>${data[i].rrm_Merchant_ID}</td>
+                    <td>${data[i].rrm_Tax_ID_of_Merchant}</td>
+                    <td>${data[i].rrm_Merchant_Name}</td>
+                    <td>${data[i].rrm_Merchant_Name}</td>
+                    <td>${data[i].rrm_Register_Address}</td>
+                    <td>${data[i].rrm_Merchant_Address}</td>
+                    <td>${data[i].rrm_Amount_Before_VAT}</td>
+                    <td>${data[i].rrm_VAT_BHT}</td>
+                    <td>${data[i].rrm_Total_Amount}</td>
+                    <td>${data[i].rrm_Product}</td>
+                    <td>${data[i].rrm_Liter}</td>
+                    <td>${data[i].rrm_Odometer}</td>
+                    <td>${data[i].rrm_HDO}</td>
+                </tr>
+                `
+
+                if( i == data.length - 1 ){
+                    set_main_table(text)
+                }
+            }
+        }
+    }
+
+    function set_main_table(text){
+        document.getElementById("div_main_table").innerHTML = `
+        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th width="5%">#</th>
+                    <th>Tool<br><span class="sub_head_table">เครื่องมือ</span></th>
+                    <th>As Of<br><span class="sub_head_table">ช่วงเวลา</span></th>
+                    <th>Account Number<br><span class="sub_head_table">รหัสลูกค้า</span></th>
+                    <th>Company Tax ID<br><span class="sub_head_table">เลขประจำตัวผู้เสียภาษีของหน่วยงาน/บริษัท</span></th>
+                    <th>Account Name<br><span class="sub_head_table">ชื่อบริษัท</span></th>
+                    <th>Company Br.<br><span class="sub_head_table">สาขาที่</span></th>
+                    <th>Settlement Date<br><span class="sub_head_table">วันที่เรียกเก็บเงิน</span></th>
+                    <th>Transaction Date<br><span class="sub_head_table">วันที่ทำรายการ</span></th>
+                    <th>Transaction Time<br><span class="sub_head_table">เวลาที่ทำรายการ</span></th>
+                    <th>License Plate Number<br><span class="sub_head_table">ทะเบียนรถ</span></th>
+                    <th>Fleet Card Number<br><span class="sub_head_table">หมายเลขบัตรฟลีทการ์ด</span></th>
+                    <th>Cardholder Name<br><span class="sub_head_table">ชื่อ-สกุลผู้ถือบัตร</span></th>
+                    <th>Card Credit Limit - BHT.<br><span class="sub_head_table">วงเงินบัตรต่อเดือน - บาท</span></th>
+                    <th>Card Credit Limit - LITRE<br><span class="sub_head_table">วงเงินบัตรต่อเดือน - ลิตร</span></th>
+                    <th>Cost Centre<br><span class="sub_head_table">รหัสแผนก</span></th>
+                    <th>Department<br><span class="sub_head_table">แผนก</span></th>
+                    <th>Invoice Number<br><span class="sub_head_table">เลขที่ใบกำกับภาษี</span></th>
+                    <th>Termial ID<br><span class="sub_head_table">หมายเลขเครื่องรูดบัตร</span></th>
+                    <th>Merchant ID<br><span class="sub_head_table">หมายเลขสถานีบริการน้ำมัน</span></th>
+                    <th>Tax ID of Merchant<br><span class="sub_head_table">เลขประจำตัวผู้เสียภาษีของสถานีบริการน้ำมัน</span></th>
+                    <th>Merchant Name<br><span class="sub_head_table">ชื่อสถานีบริการน้ำมัน</span></th>
+                    <th>Merchant Br.<br><span class="sub_head_table">สาขาที่</span></th>
+                    <th>Register Address<br><span class="sub_head_table">ที่อยู่จดทะเบียน</span></th>
+                    <th>Merchant Address<br><span class="sub_head_table">สถานที่ตั้ง</span></th>
+                    <th>Amount Before VAT - BHT.<br><span class="sub_head_table">จำนวนเงินก่อนภาษีมูลค่าเพิ่ม - บาท</span></th>
+                    <th>VAT - BHT.<br><span class="sub_head_table">ภาษีมูลค่าเพิ่ม - บาท</span></th>
+                    <th>Total Amount-BHT.<br><span class="sub_head_table">จำนวนเงินรวมภาษีมูลค่าเพิ่ม - บาท</span></th>
+                    <th>Product<br><span class="sub_head_table">ประเภทน้ำมัน</span></th>
+                    <th>Liter<br><span class="sub_head_table">จำนวนลิตร</span></th>
+                    <th>Odometer<br><span class="sub_head_table">เลขกิโลเมตร</span></th>
+                    <th>HDO</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${text}
+            </tbody>
+        </table>
+        `
+
+        $('#main_table').DataTable({
+            "destroy": true,
+            "retrieve":true,
+            "stateSave": true,
+            fixedColumns:   {
+                left: 1 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "48vh" 
+        })
+    }
+
+    function show_modal_detail_report( cds_id ){
+
+        let data = {
+            sub_document_id : cds_id
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/find_main_document_from_sub_document_id',
+            data: data,
+            success: function (call_back_data) {
+                if( call_back_data.message == "success" ){
+                    Swal.fire({
+                        icon : "info",
+                        title: "",
+                        html: `
+                        <a href="/refueling_document/${btoa(cds_id)}" target="_blank" style="cursor: pointer;">
+                            <button type="button" class="btn btn-primary" style="color: white; margin-left: 10px;">
+                                <i class="fa-solid fa-list"></i>
+                                ดูประวัติการเติมน้ำมัน
+                            </button>
+                        </a>
+                        <br>
+                        <br>
+                        <a href="${call_back_data.link}" target="_blank" style="cursor: pointer;">
+                            <button type="button" class="btn btn-primary" style="color: white; margin-left: 10px;">
+                                <i class="fa-solid fa-list"></i>
+                                เอกสารขออนุมัติ
+                            </button>
+                        </a>`,
+                        showConfirmButton: false,
+                        confirmButtonColor: "#027E6F",
+                        confirmButtonText: "ยืนยัน, ตรวจรถสำเร็จ" ,
+                        showCancelButton: false,
+                        cancelButtonColor: "#00000040",
+                        cancelButtonText: "ปิด"
+                    })
+                }else{
+                    alert(`${call_back_data.message} โปรดติดต่ DIS`)
+                }
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 1 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "45vh" 
+    })
+
+    $('#main_table_2').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 1 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "45vh" 
+    })
+</script>

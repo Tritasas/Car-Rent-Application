@@ -1,0 +1,83 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-12">
+                <!-- <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button onclick="window.location.reload();" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเซ็ต
+                </button> -->
+                <button onclick="create_new_car()" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-car-side" style="margin-right: 0.2rem;"></i>
+                    เพิ่มรายการรถยนต์ใหม่
+                </button>
+            </div>
+        </div>
+        <div class='card'>
+            <div class='card-header'>
+                <h4>รายการรถยนต์ทั้งหมด</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row" style="margin-bottom: 1vh;">
+                    <% car_list.forEach( function(e) { %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                            <div class="card daily-sales" style="width: 100%;">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                                            <img class="img-radius img-fluid wid-80" src="<%= e.car_image_path %>" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                        </div>
+                                        <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8" style="padding: 1rem 1.5rem;">
+                                            <span style="font-size: 18px; font-weight: 800;"><%= e.car_name %> (<%= e.car_type %>)</span>
+                                                <br>
+                                                <hr>
+                                            <div style="height: 30px; overflow: auto;" class="">
+                                                <span style="font-size: 15px;"><%= e.car_detail %></span>
+                                            </div>
+                                            <br>
+                                            <a href="/car_detail_view/<%= btoa( e.car_id ) %>" class="btn btn-warning" style="color: white;"><i class="fa-solid fa-eye" style="margin-right: 0.2rem;"></i> ดูข้อมูลรถยนต์</a>
+                                            <a href="/car_detait_edit/<%= btoa( e.car_id ) %>" class="btn btn-dark" style="color: white;"><i class="fa-solid fa-gear" style="margin-right: 0.2rem;"></i> แก้ไขข้อมูลรถยนต์</a>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="position: absolute; height: 0.5rem; width: 100%; bottom: 0;">
+                                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } ) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<script>
+
+function create_new_car(){
+    Swal.fire({
+            icon : "question",
+            title: "ต้องการเพิ่มรถยนต์ใหม่",
+            html: `
+                ยืนยันการเพิ่มรายการรถยนต์ใหม่หรือไม่ ? 
+            `,
+            showCancelButton: true,
+            confirmButtonColor: "#027E6F",
+            cancelButtonColor: "#00000040",
+            confirmButtonText: "ยืนยัน, เพิ่มรถยนต์" ,
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location = "/create_new_car"
+            }
+        });
+}
+
+</script>

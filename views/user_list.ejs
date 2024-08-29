@@ -1,0 +1,338 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <!-- <div class="row" style="margin-bottom: 10px;">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button onclick="window.location.reload();" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเซ็ต
+                </button>
+            </div>
+        </div> -->
+        <div class='card'>
+            <div class='card-header'>
+                <h4>ผู้ใช้งานแอพพลิเคชั่น</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>อีเมล</th>
+                                    <th>แผนก</th>
+                                    <th>ตำแหน่งงาน</th>
+                                    <th>ตำแหน่งออฟฟิศ</th>
+                                    <th>ใช้งาน</th>
+                                    <th>แอดมิน</th>
+                                    <th>Master แอดมิน</th>
+                                    <th>System แอดมิน</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% user_list.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= e.user_nane_en %> <%= e.user_surname_en %></td>
+                                        <td><%= e.user_email %></td>
+                                        <td><%= e.user_division %></td>
+                                        <td><%= e.user_job_title %></td>
+                                        <td><%= e.user_office_location %></td>
+                                        <td>
+                                            <% if( e.user_enable == "ใช้งาน"){ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox">
+                                                        <input checked name="check_box" id="<%= e.user_id %>" onchange="update_user_enable( document.getElementById('<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% }else{ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox">
+                                                        <input name="check_box" id="<%= e.user_id %>" onchange="update_user_enable( document.getElementById('<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if( e.user_admin == "ใช่"){ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox">
+                                                        <input checked name="check_box" id="check_box_admin_<%= e.user_id %>" onchange="update_user_admin( document.getElementById('check_box_admin_<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% }else{ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox">
+                                                        <input name="check_box" id="check_box_admin_<%= e.user_id %>" onchange="update_user_admin( document.getElementById('check_box_admin_<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if( e.user_master_admin == "ใช่"){ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox">
+                                                        <input checked name="check_box" id="check_box_master_admin_<%= e.user_id %>" onchange="update_user_master_admin( document.getElementById('check_box_master_admin_<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% }else{ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox">
+                                                        <input name="check_box" id="check_box_master_admin_<%= e.user_id %>" onchange="update_user_master_admin( document.getElementById('check_box_master_admin_<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if( e.user_system_admin == "ใช่"){ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox">
+                                                        <input checked name="check_box" id="check_box_system_admin_<%= e.user_id %>" onchange="update_user_system_admin( document.getElementById('check_box_system_admin_<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% }else{ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox">
+                                                        <input name="check_box" id="check_box_system_admin_<%= e.user_id %>" onchange="update_user_system_admin( document.getElementById('check_box_system_admin_<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<script>
+
+    function update_user_system_admin( value , user_id ){
+        console.log("value")
+        console.log(value)
+        console.log("user_id")
+        console.log(user_id)
+
+        let data = {
+            value : value , 
+            user_id : user_id
+        }
+
+        console.log("data")
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/update_user_system_admin',
+            data: data,
+            success: function (nextPage) {
+                console.log("update_user_system_admin Updated !")
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function update_user_master_admin( value , user_id ){
+        console.log("value")
+        console.log(value)
+        console.log("user_id")
+        console.log(user_id)
+
+        let data = {
+            value : value , 
+            user_id : user_id
+        }
+
+        console.log("data")
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/update_user_master_admin',
+            data: data,
+            success: function (nextPage) {
+                console.log("update_user_master_admin Updated !")
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function update_user_admin( value , user_id ){
+        console.log("value")
+        console.log(value)
+        console.log("user_id")
+        console.log(user_id)
+
+        let data = {
+            value : value , 
+            user_id : user_id
+        }
+
+        console.log("data")
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/update_user_admin',
+            data: data,
+            success: function (nextPage) {
+                console.log("update_user_admin Updated !")
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function update_user_enable( value , user_id ){
+        console.log("value")
+        console.log(value)
+        console.log("user_id")
+        console.log(user_id)
+
+        let data = {
+            value : value , 
+            user_id : user_id
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/update_user_enable',
+            data: data,
+            success: function (nextPage) {
+                console.log("update_user_enable Updated !")
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    if( document.getElementsByClassName("row")[1].clientWidth > 850 ){
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 2 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "46vh" 
+        })
+    }else{
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 0 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "46vh" 
+        })
+    }
+</script>

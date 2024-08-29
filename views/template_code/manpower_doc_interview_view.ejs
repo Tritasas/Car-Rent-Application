@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Recruit Management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/plugins/animation/css/animate.min.css">
+    <link rel="stylesheet" href="/assets/plugins/datatables/css/datatables.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css" 
+    integrity="sha512-ARJR74swou2y0Q2V9k0GbzQ/5vJ2RBSoCWokg4zkfM29Fb3vZEQyv0iWBMW/yvKgyHSR/7D64pFMmU8nYmbRkg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+</head>
+
+<body>
+    <div class="dashboard dashboard-compact" style="width: 99vw; overflow: hidden; padding-left: 1vw;" >
+        <div class='dashboard-app' style="width: 500px; margin-top: 15px;">
+            <div class='dashboard-content'>
+                <div class='container'>
+                    <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+                        <div class='card-header'>
+                            <h3>ประเมินผู้สัมภาษณ์</h3>
+                        </div>
+                        <div class='card-body'>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <h5>
+                                        <i class="fa-solid fa-person" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                                        ข้อมูลผู้สัมภาษณ์
+                                    </h5>
+                                </div>
+                                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">ชื่อผู้สัมภาษณ์ (ไทย)</label>
+                                    <span id="" class="form-control"><%= data[0].cd_name_th %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">ชื่อผู้สัมภาษณ์ (อังกฤษ)</label>
+                                    <span id="" class="form-control"><%= data[0].cd_name_en %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">อีเมลผู้สัมภาษณ์</label>
+                                    <span id="" class="form-control"><%= data[0].cd_email %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">ดูเอกสารขออนุมัติอัตรากำลัง</label>
+                                    <button onclick="set_src_manpower_doc_view('<%= data[0].md_id %>')" style="color: white; width: 100%; padding: 4px 12px;" data-bs-toggle="modal" data-bs-target="#manpower_doc_view" title="VIEW" type="button" class="btn btn-info">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <hr>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <h5>
+                                        <i class="fa-solid fa-ruler-combined" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                                        ข้อมูลการให้คะแนน
+                                    </h5>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label"><span class="red">*</span> คะแนนการสัมภาษณ์ : 5 = ดีมาก; 4 = ดี; 3 = ปานกลาง; 2 = ต่ำกว่าเกณฑ์; 1 = ต้องปรับปรุง</label> <br>
+                                    <label for="" class="form-label"><span class="red">*</span> Interview Rating : 5 = Excellent; 4 = Good; 3 = Average; 2 = Below average; 1 = Poor</label>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <hr>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <h5>
+                                        <i class="fa-solid fa-wand-magic-sparkles" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                                        1. คุณสมบัติและการฝึกอบรม (Qualifications & Training)
+                                    </h5>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_1 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_1 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_1 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_2 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_2 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_2 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_3 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_3 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_3 %></textarea>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <hr>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <h5>
+                                        <i class="fa-solid fa-brain" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                                        2. ความรู้และทักษะ (Knowledge & Skills)
+                                    </h5>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_4 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_4 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_4 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_5 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_5 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_5 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_6 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_6 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_6 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_7 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_7 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_7 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_8 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_8 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_8 %></textarea>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <hr>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <h5>
+                                        <i class="fa-solid fa-dumbbell" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                                        3. สมรรถนะ (Competencies)
+                                    </h5>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_9 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_9 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_9 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_10 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_10 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_10 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_11 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_11 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_11 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_12 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_12 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_12 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_13 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_13 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_13 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_14 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_14 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_14 %></textarea>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <hr>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <h5>
+                                        <i class="fa-solid fa-person-circle-question" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                                        4. คุณลักษณะส่วนบุคคล (Personal Qualities)
+                                    </h5>
+                                </div>
+                                
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_15 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_15 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_15 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_16 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_16 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_16 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_17 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_17 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_17 %></textarea>
+                                </div>
+
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label id="section1" for="" class="form-label"><%= interview_data[0].ip_section_18 %></label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_point_18 %></span>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">หมายเหตุ</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_comment_18 %></textarea>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <hr>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <h5>
+                                        <i class="fa-solid fa-clipboard-list" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                                        สรุปผลการประเมิน
+                                    </h5>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px; display: flex; justify-content: space-between;">
+                                    <label for="" class="form-label">ผลการสัมภาษณ์ (Interview Result)</label>
+                                    <label id="" for="" class="form-label">( <span id="sum_point" ><%= interview_data[0].ip_total_point %></span> / 90 )  x 100</label>
+                                    <label for="" class="form-label"><span style="font-size: xx-large;" id="total_percentage"><%= interview_data[0].ip_total_percent %>%</span></label>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">ความคิดเห็นเพิ่มเติม (Additional comments)</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="5"><%= interview_data[0].ip_additional_comment %></textarea>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">สรุป (Conclusion)</label>
+                                    <span id="" class="form-control"><%= interview_data[0].ip_conclusion %></span>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                                    <label for="" class="form-label">โปรดระบุ (please specify)</label>
+                                    <textarea disabled style="background-color: white;" class="form-control" id="" rows="2"><%= interview_data[0].ip_conclusion_specify %></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade bd-example-modal-xl" id="manpower_doc_view">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-solid fa-eye"></i>
+                    ดูเอกสารขออนุมัติอัตรากำลัง
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="background-color: #e4e4e4 !important;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <iframe id="manpower_doc_view_iframe" src="#" style="width: 100%; height: 65vh;" frameborder="0" allowtransparency="true"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 100%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    window.onload = function(){
+    }
+
+    function set_src_manpower_doc_view( param ){
+        document.getElementById("manpower_doc_view_iframe").src = `/manpower_doc_view/${btoa(param)}`
+    }
+
+</script>

@@ -1,0 +1,272 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card'>
+            <div class='card-header'>
+                <h4>รายการเอกสารขอตั๋ว Bolt , Grab</h4>
+                <input id="tdm_id" disabled hidden value="<%= ticket_document_main[0].tdm_id %>" type="text" name="" class="form-control">
+            </div>
+            <div class='card-body'>
+                <form onsubmit="submit_11111(event , '<%= ticket_document_sub.length %>')">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="margin-bottom: 2vh;">
+                            <label for=""> <span class="red">*</span> ชื่อ-นามสกุล ผู้ใช้</label>
+                            <input required id="tdm_user_name" onchange="" value="<%= ticket_document_main[0].tdm_user_name %>" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="margin-bottom: 2vh;">
+                            <label for=""> <span class="red">*</span> อีเมล ผู้ใช้</label>
+                            <input required id="tdm_user_email" onchange="" value="<%= ticket_document_main[0].tdm_user_email %>" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="margin-bottom: 2vh;">
+                            <label for=""> <span class="red">*</span> แผนก ผู้ใช้</label>
+                            <select required id="tdm_user_division_id" onchange="" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                                <option selected style="display: none;" value="<%= ticket_document_main[0].tdm_user_division_id %>"><%= ticket_document_main[0].tdm_user_division_name %></option>
+                                <% division_data.forEach( function(e) { %>
+                                    <option value="<%= e.div_id %>"><%= e.div_name %></option>
+                                <% } ) %>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 2vh;">
+                            <label for=""> <span class="red">*</span> เพื่อ</label>
+                            <textarea required id="tdm_for_what" onchange="" class="form-control" rows="5"><%= ticket_document_main[0].tdm_for_what %></textarea>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 2vh;">
+                            <button data-bs-toggle="modal" data-bs-target="#modal_insert_new_row" type="button" class="btn btn-warning" style="color: white;">
+                                <i class="fa-solid fa-plus" style="margin-right: 4px;"></i>
+                                เพิ่มรอบตั๋ว
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 2vh;">
+                            <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th width="5%"><i class="fa-solid fa-list-ol"></i></th>
+                                        <th width="5%"><i class="fa-solid fa-screwdriver-wrench"></i></th>
+                                        <th width="20%">วันที่ต้องการ</th>
+                                        <th width="10%">แอพที่เรียก</th>
+                                        <th width="60%">หมายเหตุ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% index = 1 %>
+                                    <% ticket_document_sub.forEach( function(e) { %>
+                                        <tr>
+                                            <td><%= index %></td>
+                                            <td>
+                                                <a style="cursor: pointer;" onclick="delete_sub_row('<%= e.tds_id %>')">
+                                                    <button type="button" class="btn btn-danger btn-icon">
+                                                        <i class="fa-regular fa-trash-can"></i>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                            <td><%= dayjs(e.tds_want_date).format("DD/MM/YYYY") %></td>
+                                            <td><%= e.tds_want_brand %></td>
+                                            <td><%= e.tds_want_remark %></td>
+                                        </tr>
+                                    <% index++ } ) %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 2vh; text-align: end;">
+                            <button style="width: 50%;" type="submit" class="btn btn-success">
+                                <i class="fa-regular fa-floppy-disk" style="margin-right: 5px;"></i> 
+                                บันทึกเอกสาร
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_insert_new_row" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">ระบุข้อมูล</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="insert_sub_row(event)" >
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> วันที่ต้องการ</label>
+                            <input required id="tds_want_date" onchange="" value="" type="date" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> แอพที่เรียก</label>
+                            <select required id="tds_want_brand" onchange="" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                                <option disabled value="Bolt">Bolt (ยังไม่พร้อมใช้งาน)</option>
+                                <option value="Grab">Grab</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> หมายเหตุ</label>
+                            <textarea required id="tds_want_remark" onchange="" class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                    <button type="submit" class="btn btn-primary">บันทึกรายการ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    async function submit_11111(event , sub_row_length){
+        event.preventDefault();
+        console.log("sub_row_length")
+        console.log(sub_row_length)
+
+        if( sub_row_length == 0 ){
+            Swal.fire({
+                icon: "error" , 
+                title: "ไม่สามารถบันทึกได้" , 
+                text: `โปรดเพิ่มรายการรอบการขอตั๋ว โดยการกดที่ปุ่ม 'เพิ่มรอบตั๋ว'` , 
+            });
+        }else{
+            Swal.fire({
+                icon : "question",
+                title: "ยืนยันการบันทึก",
+                text: "ยืนยันการบันทึกเอกสารขอตั๋ว Bolt , Grab หรือไม่ ?",
+                showCancelButton: true,
+                confirmButtonColor: "#027E6F",
+                confirmButtonText: "ยืนยัน, บันทึก" ,
+                cancelButtonColor: "#00000040",
+                cancelButtonText: "ปิด"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    let call_back_value = await end_function("บันทึกแล้ว")
+                    window.location.replace(call_back_value)
+                }
+            });
+        }
+    }
+
+    async function delete_sub_row( sub_row_id ){
+        let call_back_value = await end_function("สร้าง")
+        
+        Swal.fire({
+            icon : "question",
+            title: "ยืนยันการลบ",
+            text: "ยืนยันการลบหรือไม่ ?",
+            showCancelButton: true,
+            confirmButtonColor: "#f20000",
+            confirmButtonText: "ยืนยัน, ลบ" ,
+            cancelButtonColor: "#00000040",
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let data = {
+                    sql_command : `DELETE FROM tb_ticket_document_sub WHERE tb_ticket_document_sub.tds_id = '${sub_row_id}'`
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/only_for_run_sql',
+                    data: data,
+                    success: function (nextPage) {
+                        Swal.fire({
+                            title: "ลบรายการสำเร็จ",
+                            text: "",
+                            icon: "success"
+                        });
+                        
+                        setTimeout( function(){window.location.reload()} , 800 );
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    async function insert_sub_row(event){
+        event.preventDefault();
+
+        let call_back_value = await end_function("สร้าง")
+
+        let data = {
+            tds_want_date : document.getElementById("tds_want_date").value , 
+            tds_want_brand : document.getElementById("tds_want_brand").value , 
+            tds_want_remark : document.getElementById("tds_want_remark").value , 
+            tdm_id : document.getElementById("tdm_id").value , 
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/ticket_insert_sub_row',
+            data: data,
+            success: function ( call_back_data ) {
+                console.log("save --1")
+                console.log("call_back_value")
+                console.log(call_back_value)
+                window.location.reload();
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function end_function( status ){
+        return new Promise( (resolve, reject) => {
+            let data = {
+                tdm_id : document.getElementById("tdm_id").value , 
+                tdm_user_name : document.getElementById("tdm_user_name").value , 
+                tdm_user_email : document.getElementById("tdm_user_email").value , 
+                tdm_user_division_id : document.getElementById("tdm_user_division_id").value , 
+                tdm_for_what : document.getElementById("tdm_for_what").value , 
+                status : status
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/ticket_request_document_submit',
+                data: data,
+                success: function ( call_back_data ) {
+                    console.log("save --2")
+                    resolve(call_back_data)
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                }
+            });
+        } )
+    }
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 3 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+</script>

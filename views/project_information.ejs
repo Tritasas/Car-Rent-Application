@@ -1,0 +1,3041 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px; ">
+            <div class="col-12" style="display: flex; justify-content: space-between;">
+                <div>
+                    <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                        <i class="fa-solid fa-angle-left"></i>
+                        กลับ
+                    </button>
+                    <button onclick="window.location.reload();" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        รีเซ็ต
+                    </button>
+                </div>
+
+                <div>
+                    <a href="#css_1">
+                        <button style="color: white; font-weight: 700;" type="button" class="btn btn-secondary btn-back">
+                            <i class="fa-regular fa-flag"></i>
+                            ไปการประเมิน (ครั้งที่ 1)
+                        </button>
+                    </a>
+
+                    <% if(project_information[0].pj_status_css_doc == "ประเมินและทำ Action Plan ครั้งที่ 1 สำเร็จแล้ว"){ %>
+                        <a href="#css_2">
+                            <button style="color: white; font-weight: 700;" type="button" class="btn btn-secondary btn-back">
+                                <i class="fa-regular fa-flag"></i>
+                                ไปการประเมิน (ครั้งที่ 2)
+                            </button>
+                        </a>
+                    <% } %>
+                    
+
+                    <a href="#admin_sm">
+                        <button style="color: white; font-weight: 700;" type="button" class="btn btn-secondary btn-back">
+                            <i class="fa-regular fa-flag"></i>
+                            จัดการสิทธ์
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>รายละเอียดโครงการ <%= project_information[0].ProjectCode %> </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px;">
+                        <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                            <h5 style="font-weight: 600; color: #02274c;"><i class="fa-solid fa-circle-info" style="margin-right: 5px;"></i> ข้อมูลทั่วไป</h5>
+                        </div>
+                        <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">โครงการ</label>
+                        <span class="form-control"><%= project_information[0].ProjectCode %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">แผนก</label>
+                        <span class="form-control"><%= project_information[0].Fulldepartment %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">ชื่อโครงการ (ไทย)</label>
+                        <span class="form-control"><%= project_information[0].ProjectNameTH %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">ชื่อโครงการ (อังกฤษ)</label>
+                        <span class="form-control"><%= project_information[0].ProjectNameEN %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">สถานที่</label>
+                        <span class="form-control"><%= project_information[0].Place %></span>
+                    </div>
+
+                    <% if( user_ability.admin == true || user_ability.sm == true ){ %>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                            <label for="" class="form-label">สัญญาเลขที่</label>
+                            <div class="input-group">
+                                <input id="contract_number" value="<%= project_information[0].ContractNo %>" type="text" class="form-control">
+                                <button onclick="save_contract_number(document.getElementById('contract_number').value)" type="button" class="input-group-text btn btn-success">บันทึก</button>
+                            </div>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                            <label for="" class="form-label">สัญญา ลว. (MM/DD/YYYY)</label>
+                            <div class="input-group">
+                                <input id="contract_date" value="<%= dayjs(project_information[0].ContractSignDate).format('YYYY-MM-DD') %>" type="date" class="form-control">
+                                <button onclick="save_contract_date(document.getElementById('contract_date').value)" type="button" class="input-group-text btn btn-success">บันทึก</button>
+                            </div>
+                        </div>
+                    <% }else{ %>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                            <label for="" class="form-label">สัญญาเลขที่</label>
+                            <span class="form-control"><%= project_information[0].ContractNo %></span>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                            <label for="" class="form-label">สัญญา ลว. (DD/MM/YYYY)</label>
+                            <span class="form-control"><%= dayjs(project_information[0].ContractSignDate).format('DD/MM/YYYY') %></span>
+                        </div>
+                    <% } %>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px; margin-top: 1.5rem;">
+                        <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                            <h5 style="font-weight: 600; color: #02274c;"><i class="fa-solid fa-person-chalkboard" style="margin-right: 5px;"></i> ผู้ว่าจ้าง</h5>
+                        </div>
+                        <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">ชื่อผู้ว่าจ้าง (ไทย)</label>
+                        <span class="form-control"><%= project_information[0].OwnerNameTH %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">ชื่อผู้ว่าจ้าง (อังกฤษ)</label>
+                        <span class="form-control"><%= project_information[0].OwnerNameEN %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px; margin-top: 1.5rem;">
+                        <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                            <h5 style="font-weight: 600; color: #02274c;"><i class="fa-solid fa-phone-volume" style="margin-right: 5px;"></i> ผู้ติดต่อ</h5>
+                        </div>
+                        <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                    </div>
+
+                    <% if( user_ability.admin == true ){ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                            <button data-bs-toggle="modal" data-bs-target="#modal_add_new_contact" type="button" class="btn btn-secondary">
+                                <i class="fa-solid fa-phone-volume" style="margin-right: 5px;"></i>
+                                เพิ่มผู้ติดต่อ
+                            </button>
+                        </div>
+                    <% } %>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <table id="contact_data_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">ลำดับ</th>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>ตำแหน่งงาน</th>
+                                    <th>เบอร์ติดต่อ</th>
+                                    <th>อีเมล</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% contact_data.forEach( function(e) { %>
+                                <tr>
+                                    <td>
+                                        <%= index %>
+                                        <% if( user_ability.admin == true ){ %>
+                                            <button style="margin-left: 1vw; padding: 0.15rem 0.5rem;" onclick="set_delete_contact('<%= e.ct_ID %>')" data-bs-toggle="modal" data-bs-target="#modal_delete_contact" type="button" class="btn btn-danger">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        <% } %>
+                                    </td>
+                                    <td><%= e.Payer_Contactname %></td>
+                                    <td><%= e.Payer_Position %></td>
+                                    <td><%= e.Payer_Phno %></td>
+                                    <td><%= e.Payer_Email %></td>
+                                </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px; margin-top: 1.5rem;">
+                        <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                            <h5 style="font-weight: 600; color: #02274c;"><i class="fa-solid fa-oil-well" style="margin-right: 5px;"></i> ผู้รับเหมา</h5>
+                        </div>
+                        <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <table id="consult_data_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">ลำดับ</th>
+                                    <th>ผู้รับเหมา</th>
+                                    <th>ผู้รับเหมา</th>
+                                    <th>ผู้รับเหมา</th>
+                                    <th>ผู้รับเหมา</th>
+                                    <th>ผู้รับเหมา</th>
+                                    <th>ผู้รับเหมา</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% consult_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= e.Consultant_Companyname %></td>
+                                        <td><%= e.Consultant_Officeplace %></td>
+                                        <td><%= e.Consultant_Contactname %></td>
+                                        <td><%= e.Consultant_Position %></td>
+                                        <td><%= e.Consultant_Phno %></td>
+                                        <td><%= e.Consultant_Email %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px; margin-top: 1.5rem;">
+                        <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                            <h5 style="font-weight: 600; color: #02274c;"><i class="fa-solid fa-oil-well" style="margin-right: 5px;"></i> ที่ปรึกษา/ผู้ควบคุมงาน</h5>
+                        </div>
+                        <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <table id="consult_main_data_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">ลำดับ</th>
+                                    <th>ผู้รับเหมาหลัก</th>
+                                    <th>ผู้รับเหมาหลัก</th>
+                                    <th>ผู้รับเหมาหลัก</th>
+                                    <th>ผู้รับเหมาหลัก</th>
+                                    <th>ผู้รับเหมาหลัก</th>
+                                    <th>ผู้รับเหมาหลัก</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% consult_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= e.MainContractor_Companyname %></td>
+                                        <td><%= e.MainContractor_Officeplace %></td>
+                                        <td><%= e.MainContractor_Contactname %></td>
+                                        <td><%= e.MainContractor_Position %></td>
+                                        <td><%= e.MainContractor_Phno %></td>
+                                        <td><%= e.MainContractor_Email %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px; margin-top: 1.5rem;">
+                        <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                            <h5 style="font-weight: 600; color: #02274c;"><i class="fa-solid fa-person-circle-check" style="margin-right: 5px;"></i> ผู้อนุมัติของโครงการนี้</h5>
+                        </div>
+                        <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                    </div>
+
+                    <% if( user_ability.master_admin == true ){ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                            <button data-bs-toggle="modal" data-bs-target="#modal_change_pm" type="button" class="btn btn-secondary">
+                                <i class="fa-solid fa-user-gear" style="margin-right: 5px;"></i>
+                                เปลี่ยน Project Manager (PM)
+                            </button>
+                            <button data-bs-toggle="modal" data-bs-target="#modal_change_bu" type="button" class="btn btn-secondary">
+                                <i class="fa-solid fa-user-tie" style="margin-right: 5px;"></i>
+                                เปลี่ยน Head BU
+                            </button>
+                        </div>
+                    <% }else{ %>
+
+                    <% } %>
+
+                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">PM name</label>
+                        <span class="form-control"><%= project_information[0].PMName %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">PM email</label>
+                        <span class="form-control"><%= project_information[0].PMEmail %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">PM division</label>
+                        <span class="form-control"><%= project_information[0].PM_division %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">BU name</label>
+                        <span class="form-control"><%= project_information[0].BU_name %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">BU email</label>
+                        <span class="form-control"><%= project_information[0].BUEmail %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">BU division</label>
+                        <span class="form-control"><%= project_information[0].BU_division %></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <% if(project_information[0].pj_status_css_doc == "ประเมินและทำ Action Plan ครั้งที่ 1 สำเร็จแล้ว" 
+        || project_information[0].pj_status_css_doc == "รอผลการประเมินครั้งที่ 2" 
+        || project_information[0].pj_status_css_doc == "สรุปผลการประเมินครั้งที่ 2"
+        || project_information[0].pj_status_css_doc == "รอ PM อนุมัติ Action Plan ครั้งที่ 2"
+        || project_information[0].pj_status_css_doc == "รอ BU อนุมัติ Action Plan ครั้งที่ 2"
+        || project_information[0].pj_status_css_doc == "รอ ISO อนุมัติ Action Plan ครั้งที่ 2"
+        || project_information[0].pj_status_css_doc == "รอ COO อนุมัติ Action Plan ครั้งที่ 2"
+        || project_information[0].pj_status_css_doc == "ปฏิเสธ Action Plan ครั้งที่ 2"
+        || project_information[0].pj_status_css_doc == "สำเร็จ (ประเมิน 2 ครั้ง)"
+        || project_information[0].pj_status_css_doc == "สำเร็จ (ประเมิน 1 ครั้ง)" ){ %>
+            <div id="css_2" class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px; margin-top: 1.5rem;">
+                <div class='card-header'>
+                    <h3>รายละเอียดการประเมิน (ครั้งที่ 2)</h3>
+                </div>
+                <div class='card-body'>
+                    <div class="row">
+                        <% if( user_ability.admin == true || user_ability.sm == true ){ %>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="display: flex; margin-top: 0px; justify-content: space-between;">
+                                <div>
+                                    <% if( project_information[0].pj_status_css_doc == "ประเมินและทำ Action Plan ครั้งที่ 1 สำเร็จแล้ว" || project_information[0].pj_status_css_doc == "รอผลการประเมินครั้งที่ 2" ){ %>
+                                        <% if (project_information[0].ContractNo == "N/A" || project_information[0].ContractNo == null || project_information[0].ContractNo == "null" || project_information[0].ContractNo == "" ) { %>
+                                            <button onclick="alert('โปรดระบุ สัญญาเลขที่ ก่อน')" type="button" class="btn btn-secondary">
+                                                <i class="fa-solid fa-square-envelope" style="margin-right: 5px;"></i>
+                                                ส่งใบประเมินความพึงพอใจ (ครั้งที่ 2)
+                                            </button>
+                                        <% }else{ %>
+                                            <button data-bs-toggle="modal" data-bs-target="#modal_create_css_2" type="button" class="btn btn-secondary">
+                                                <i class="fa-solid fa-square-envelope" style="margin-right: 5px;"></i>
+                                                ส่งใบประเมินความพึงพอใจ (ครั้งที่ 2)
+                                            </button>
+                                        <% } %>
+                                    <% }else{ %>
+                                        
+                                    <% } %>
+        
+                                    <% if( project_information[0].pj_status_css_doc == "รอผลการประเมินครั้งที่ 2" && (satisfaction_document_p2_data.filter( function(e){ return  e.sd_status == "ประเมินแล้ว" } )).length > 0 ){ %>
+                                        <button id="summary_css_p1" data-bs-toggle="modal" data-bs-target="#modal_close_css_2" type="button" class="btn btn-secondary">
+                                            <i class="fa-solid fa-lock" style="margin-right: 5px;"></i>
+                                            ปิดรับเอกสารการประเมินและสรุปผล
+                                        </button>
+                                    <% }else{ %>
+                                        
+                                    <% } %>
+                                </div>
+                                <div>
+                                    <% if(project_information[0].pj_status_css_doc == "สำเร็จ (ประเมิน 1 ครั้ง)"){ %>
+                                        <button id="" data-bs-toggle="modal" data-bs-target="#modal_have_css_p2" type="button" class="btn btn-danger">
+                                            <i class="fa-solid fa-lock-open" style="margin-right: 5px;"></i>
+                                            เปิดการประเมินครั้งที่ 2
+                                        </button>
+                                    <% }else{ %>
+                                        <button id="" data-bs-toggle="modal" data-bs-target="#modal_dont_have_css_p2" type="button" class="btn btn-danger">
+                                            <i class="fa-solid fa-notdef" style="margin-right: 5px;"></i>
+                                            โครงการนี้ไม่มีการประเมินครั้งที่ 2
+                                        </button>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                        <% }else{ %>
+        
+                        <% } %>
+
+                        <% if(project_information[0].pj_status_css_doc == "สำเร็จ (ประเมิน 1 ครั้ง)"){ %>
+
+                        <% }else{ %>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                                <table id="satisfaction_doccument_table_p2" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th width="5%">#</th>
+                                            <th>เครื่องมือ</th>
+                                            <th>สถานะการประเมิน</th>
+                                            <th>% คะแนนที่ได้</th>
+                                            <th>เอกสารส่งหา (ชื่อ-นามสกุล)</th>
+                                            <th>เอกสารส่งหา (บริษัท)</th>
+                                            <th>เอกสารส่งหา (อีเมล)</th>
+                                            <th>เอกสารส่งหา (ตำแหน่ง)</th>
+                                            <th>ผู้ประเมิน (ชื่อ)</th>
+                                            <th>ผู้ประเมิน (ตำแหน่ง)</th>
+                                            <th>ประเมินเมื่อ</th>
+                                            <th>ผู้ส่งเอกสาร (ชื่อ)</th>
+                                            <th>ส่งเอกสารเมื่อ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% index = 1 %>
+                                        <% satisfaction_document_p2_data.forEach( function(e) { %>
+                                            <tr>
+                                                <td>
+                                                    <%= index %>
+                                                    <input hidden type="text" value="/satisfaction_document/<%= btoa(e.sd_id) %>/<%= btoa(e.sd_project_id) %>/<%= btoa(e.sd_part) %>/<%= btoa(e.sd_sent_to_email) %>" id="link_<%= e.sd_id %>">
+                                                </td>
+                                                <td>
+                                                    <button title="Copy Link Doc" onclick="myFunction( `<%= e.sd_id %>` )" type="button" class="btn btn-outline-primary inTable">
+                                                        <i class="fa-regular fa-copy"></i>
+                                                    </button>
+            
+                                                    <% if( e.sd_status == "ประเมินแล้ว" ){ %>
+                                                        <button onclick="set_iframe_url( '/satisfaction_document_view_for_action_plan/<%= btoa(e.sd_id) %>' )" title="" data-bs-toggle="modal" data-bs-target="#modal_iframe" type="button" class="btn btn-outline-primary inTable">
+                                                            <i class="fa-solid fa-table"></i>
+                                                        </button>
+                                                    <% } %>
+            
+                                                </td>
+                                                <td>
+                                                    <% if( e.sd_status == "ประเมินแล้ว" ){ %>
+                                                        <a href="/satisfaction_document_view/<%= btoa(e.sd_id) %>" target="_blank" style="color: #00a32b; text-decoration: underline !important; cursor: pointer;" title="View" type="" class="">
+                                                            <%= e.sd_status %>
+                                                        </a>
+                                                    <% }else if( e.sd_status == "ถูกปฎิเสธ" ){ %>
+                                                        <a onclick="alert('สาเหตุการปฎิเสธ : <%= e.sd_approve_comment %> ')" style="color: #c80000; text-decoration: underline !important; cursor: pointer;" title="View" type="" class="">
+                                                            <%= e.sd_status %>
+                                                        </a>
+                                                    <% }else if( e.sd_status == "อนุมัติแล้ว (ยังไม่ได้ประเมิน)" ){ %>
+                                                        <a onclick="set_resend_css_1('<%= e.sd_id %>')" data-bs-toggle="modal" data-bs-target="#modal_resend_css_1" style="text-decoration: underline !important; cursor: pointer;" title="View" type="" class="">
+                                                            <%= e.sd_status %>
+                                                        </a>
+                                                    <% }else{ %>
+                                                        <%= e.sd_status %>
+                                                    <% } %>
+                                                </td>
+                                                <td><%= Math.round(( (+e.sd_point_1) + (+e.sd_point_2) + (+e.sd_point_3) + (+e.sd_point_4) + (+e.sd_point_5) + (+e.sd_point_6) + (+e.sd_point_7) + (+e.sd_point_8) + (+e.sd_point_9) + (+e.sd_point_10) + (+e.sd_point_11) + (+e.sd_point_12) ) * 100 / 120 ) %> % </td>
+                                                <td><%= e.sd_sent_to_name %></td>
+                                                <td><%= e.sd_sent_to_company %></td>
+                                                <td><%= e.sd_sent_to_email %></td>
+                                                <td><%= e.sd_sent_to_position %></td>
+                                                <td><%= e.sd_do_by_name %></td>
+                                                <td><%= e.sd_do_by_position %></td>
+                                                <td>
+                                                    <% if(e.sd_do_date == "" || e.sd_do_date == null || e.sd_do_date == "null"){ %>
+            
+                                                    <% }else{ %>
+                                                        <%= dayjs(e.sd_do_date).format("DD/MM/YYYY") %>
+                                                    <% } %>
+                                                </td>
+                                                <td><%= e.sd_create_by_name_en %> (<%= e.sd_create_by_name_th %>) </td>
+                                                <td><%= dayjs(e.sd_create_date).format("DD/MM/YYYY") %></td>
+                                            </tr>
+                                        <% index++ } ) %>
+                                    </tbody>
+                                </table>
+                            </div>
+    
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px; margin-top: 1.5rem;">
+                                <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                                    <h5 style="font-weight: 600; color: #02274c;"><i class="fa-solid fa-chart-column" style="margin-right: 5px;"></i> สรุปการประเมินครั้งที่ 2</h5>
+                                </div>
+                                <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                            </div>
+    
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;" id="div_summary_css_p2"></div>
+    
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px; margin-top: 1.5rem;">
+                            <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                                <h5 style="font-weight: 600; color: #02274c;"><i class="fa-regular fa-newspaper" style="margin-right: 5px;"></i> Action Plan ครั้งที่ 2</h5>
+                            </div>
+                            <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                        </div>
+    
+                        <% if( project_information[0].pj_status_css_doc == "ประเมินและทำ Action Plan ครั้งที่ 1 สำเร็จแล้ว" || project_information[0].pj_status_css_doc == "รอผลการประเมินครั้งที่ 2" ){ %>
+                            
+                        <% }else if( project_information[0].pj_status_css_doc == "สรุปผลการประเมินครั้งที่ 2" || project_information[0].pj_status_css_doc == "ปฏิเสธ Action Plan ครั้งที่ 2" ){ %>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                                <textarea class="form-control" name="" id="action_plan_p2" rows="10"><%= project_information[0].pj_action_plan_2 %></textarea>
+                            </div>
+        
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                                <button data-bs-toggle="modal" data-bs-target="#action_plan_p2_upload_file" onclick="action_plan_p2_save( document.getElementById('action_plan_p2').value )" type="button" class="btn btn-secondary">
+                                    <i class="fa-solid fa-cloud-arrow-up" style="margin-right: 5px;"></i>
+                                    เพิ่ม / อัพโหลดไฟล์
+                                </button>
+                            </div>
+        
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                                <table id="action_file_p2_table" style="width: 100%;" class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>เครื่องมือ</th>
+                                            <th>ชื่อไฟล์</th>
+                                            <th>อัพโหลดโดย</th>
+                                            <th>อัพโหลดเมื่อ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% index = 1 %>
+                                        <% action_plan_file_p2.forEach( function(e) { %>
+                                            <tr>
+                                                <td>
+                                                    <%= index %>
+                                                </td>
+                                                <td style="text-align: center;">
+                                                    <button onclick="set_delete_file('<%= e.apf_id %>')" data-bs-toggle="modal" data-bs-target="#modal_delete_action_plan_p1_upload_file" type="button" class="btn btn-danger">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <a href="<%= e.apf_new_name %>" target="_blank"><%= e.apf_old_name %></a>
+                                                </td>
+                                                <td>
+                                                    <%= e.apf_create_name_th %> (<%= e.apf_create_name_en %>)
+                                                </td>
+                                                <td>
+                                                    <%= dayjs(e.apf_create_date).format("DD/MM/YYYY") %>
+                                                </td>
+                                            </tr>
+                                        <% index++ } ) %>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <% if( project_information[0].pj_status_css_doc == "ปฏิเสธ Action Plan ครั้งที่ 2" ){ %>
+                                <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                    </symbol>
+                                </svg>
+
+                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 15px;">
+                                    <div class="alert alert-danger" role="alert">
+                                        <h4 class="alert-heading">
+                                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg> 
+                                            ถูกปฎิเสธ
+                                        </h4>
+                                        <p>
+                                            สาเหตุ : <%= project_information[0].pj_action_plan_2_reject_comment %>
+                                        </p>
+                                        <hr>
+                                        <p class="mb-0">
+                                            โดย : <%= project_information[0].pj_action_plan_2_reject_by %> เมื่อ : <%= dayjs(project_information[0].pj_action_plan_2_reject_date).format("DD/MM/YYYY") %>
+                                        </p>
+                                    </div>
+                                </div>
+                            <% } %>
+        
+                            <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                                
+                            </div>
+        
+                            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                                <button onclick="action_plan_p2_save( document.getElementById('action_plan_p2').value )" style="width: 100%;" type="button" class="btn btn-secondary">
+                                    <i class="fa-regular fa-floppy-disk" style="margin-right: 3px;"></i>
+                                    บันทึก
+                                </button>
+                            </div>
+        
+                            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                                <button onclick="check_action_plan_p2_save( document.getElementById('action_plan_p2').value , '<%= action_plan_file_p2.length %>' )" style="width: 100%;" type="button" class="btn btn-success">
+                                    <i class="fa-regular fa-paper-plane" style="margin-right: 3px;"></i>
+                                    บันทึกและส่งอนุมติ
+                                </button>
+                            </div>
+        
+                            <div hidden class="col-sm-0 col-md-0 col-lg-0 col-xl-0" style="margin-top: 15px;">
+                                <button id="btn_submit_action_plan_p2" style="width: 100%;" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal_submit_action_plan_p2">
+                                    <i class="fa-regular fa-floppy-disk" style="margin-right: 3px;"></i>
+                                </button>
+                            </div>
+                        <% }else{ %>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                                <textarea disabled class="form-control" name="" id="action_plan_p2" rows="10"><%= project_information[0].pj_action_plan_2 %></textarea>
+                            </div>
+        
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                                <table id="action_file_p2_table" style="width: 100%;" class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>ชื่อไฟล์</th>
+                                            <th>อัพโหลดโดย</th>
+                                            <th>อัพโหลดเมื่อ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% index = 1 %>
+                                        <% action_plan_file_p2.forEach( function(e) { %>
+                                            <tr>
+                                                <td>
+                                                    <%= index %>
+                                                </td>
+                                                <td>
+                                                    <a href="<%= e.apf_new_name %>" target="_blank"><%= e.apf_old_name %></a>
+                                                </td>
+                                                <td>
+                                                    <%= e.apf_create_name_th %> (<%= e.apf_create_name_en %>)
+                                                </td>
+                                                <td>
+                                                    <%= dayjs(e.apf_create_date).format("DD/MM/YYYY") %>
+                                                </td>
+                                            </tr>
+                                        <% index++ } ) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <% } %>
+                    <% } %>
+
+
+                    <% if( project_information[0].pj_status_css_doc == "รอ PM อนุมัติ Action Plan ครั้งที่ 2" && user_ability.pm == true ){ %>
+                        <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                            
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_reject_action_plan" style="width: 100%;" type="button" class="btn btn-danger">
+                                <i class="fa-solid fa-ban" style="margin-right: 5px;"></i>
+                                ปฎิเสธ Action Plan
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_approve_action_plan_1" style="width: 100%;" type="button" class="btn btn-success">
+                                <i class="fa-regular fa-circle-check" style="margin-right: 5px;"></i>
+                                อนุมัติ Action Plan
+                            </button>
+                        </div>
+                    <% }else if( project_information[0].pj_status_css_doc == "รอ BU อนุมัติ Action Plan ครั้งที่ 2" && user_ability.bu == true ){ %>
+                        <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                            
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_reject_action_plan" style="width: 100%;" type="button" class="btn btn-danger">
+                                <i class="fa-solid fa-ban" style="margin-right: 5px;"></i>
+                                ปฎิเสธ Action Plan
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_approve_action_plan_1" style="width: 100%;" type="button" class="btn btn-success">
+                                <i class="fa-regular fa-circle-check" style="margin-right: 5px;"></i>
+                                อนุมัติ Action Plan
+                            </button>
+                        </div>
+                    <% }else if( project_information[0].pj_status_css_doc == "รอ ISO อนุมัติ Action Plan ครั้งที่ 2" && user_ability.iso == true ){ %>
+                        <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                            
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_reject_action_plan" style="width: 100%;" type="button" class="btn btn-danger">
+                                <i class="fa-solid fa-ban" style="margin-right: 5px;"></i>
+                                ปฎิเสธ Action Plan
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_approve_action_plan_1" style="width: 100%;" type="button" class="btn btn-success">
+                                <i class="fa-regular fa-circle-check" style="margin-right: 5px;"></i>
+                                อนุมัติ Action Plan
+                            </button>
+                        </div>
+                    <% }else if( project_information[0].pj_status_css_doc == "รอ COO อนุมัติ Action Plan ครั้งที่ 2" && user_ability.coo == true ){ %>
+                        <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                            
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_reject_action_plan" style="width: 100%;" type="button" class="btn btn-danger">
+                                <i class="fa-solid fa-ban" style="margin-right: 5px;"></i>
+                                ปฎิเสธ Action Plan
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_approve_action_plan_1" style="width: 100%;" type="button" class="btn btn-success">
+                                <i class="fa-regular fa-circle-check" style="margin-right: 5px;"></i>
+                                อนุมัติ Action Plan
+                            </button>
+                        </div>
+                    <% }else{ %>
+
+                    <% } %>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
+
+        <div id="css_1" class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px; margin-top: 1.5rem;">
+            <div class='card-header'>
+                <h3>รายละเอียดการประเมิน (ครั้งที่ 1)</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+
+                    <% if( user_ability.admin == true || user_ability.sm == true ){ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 0px;">
+
+                            <% if( project_information[0].pj_status_css_doc == "ไม่มีการประเมิน" || project_information[0].pj_status_css_doc == "รอผลการประเมินครั้งที่ 1" ){ %>
+                                <% if (project_information[0].ContractNo == "N/A" || project_information[0].ContractNo == null || project_information[0].ContractNo == "null" || project_information[0].ContractNo == "" ) { %>
+                                    <button onclick="alert('โปรดระบุ สัญญาเลขที่ ก่อน')" type="button" class="btn btn-secondary">
+                                        <i class="fa-solid fa-square-envelope" style="margin-right: 5px;"></i>
+                                        ส่งใบประเมินความพึงพอใจ (ครั้งที่ 1)
+                                    </button>
+                                <% }else{ %>
+                                    <button data-bs-toggle="modal" data-bs-target="#modal_create_css_1" type="button" class="btn btn-secondary">
+                                        <i class="fa-solid fa-square-envelope" style="margin-right: 5px;"></i>
+                                        ส่งใบประเมินความพึงพอใจ (ครั้งที่ 1)
+                                    </button>
+                                <% } %>
+                            <% }else{ %>
+                                
+                            <% } %>
+
+                            <% if( project_information[0].pj_status_css_doc == "รอผลการประเมินครั้งที่ 1" && (satisfaction_document_p1_data.filter( function(e){ return  e.sd_status == "ประเมินแล้ว" } )).length > 0 ){ %>
+                                <button id="summary_css_p1" data-bs-toggle="modal" data-bs-target="#modal_close_css_1" type="button" class="btn btn-secondary">
+                                    <i class="fa-solid fa-lock" style="margin-right: 5px;"></i>
+                                    ปิดรับเอกสารการประเมินและสรุปผล
+                                </button>
+                            <% }else{ %>
+                                
+                            <% } %>
+
+                        </div>
+                    <% }else{ %>
+    
+                    <% } %>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                        <table id="satisfaction_doccument_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>เครื่องมือ</th>
+                                    <th>สถานะการประเมิน</th>
+                                    <th>% คะแนนที่ได้</th>
+                                    <th>เอกสารส่งหา (ชื่อ-นามสกุล)</th>
+                                    <th>เอกสารส่งหา (บริษัท)</th>
+                                    <th>เอกสารส่งหา (อีเมล)</th>
+                                    <th>เอกสารส่งหา (ตำแหน่ง)</th>
+                                    <th>ผู้ประเมิน (ชื่อ)</th>
+                                    <th>ผู้ประเมิน (ตำแหน่ง)</th>
+                                    <th>ประเมินเมื่อ</th>
+                                    <th>ผู้ส่งเอกสาร (ชื่อ)</th>
+                                    <th>ส่งเอกสารเมื่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% satisfaction_document_p1_data.forEach( function(e) { %>
+                                <tr>
+                                    <td>
+                                        <%= index %>
+                                        <input hidden type="text" value="/satisfaction_document/<%= btoa(e.sd_id) %>/<%= btoa(e.sd_project_id) %>/<%= btoa(e.sd_part) %>/<%= btoa(e.sd_sent_to_email) %>" id="link_<%= e.sd_id %>">
+                                    </td>
+                                    <td>
+                                        <button title="Copy Link Doc" onclick="myFunction( `<%= e.sd_id %>` )" type="button" class="btn btn-outline-primary inTable">
+                                            <i class="fa-regular fa-copy"></i>
+                                        </button>
+
+                                        <% if( e.sd_status == "ประเมินแล้ว" ){ %>
+                                            <button onclick="set_iframe_url( '/satisfaction_document_view_for_action_plan/<%= btoa(e.sd_id) %>' )" title="" data-bs-toggle="modal" data-bs-target="#modal_iframe" type="button" class="btn btn-outline-primary inTable">
+                                                <i class="fa-solid fa-table"></i>
+                                            </button>
+                                        <% } %>
+
+                                    </td>
+                                    <td>
+                                        <% if( e.sd_status == "ประเมินแล้ว" ){ %>
+                                            <a href="/satisfaction_document_view/<%= btoa(e.sd_id) %>" target="_blank" style="color: #00a32b; text-decoration: underline !important; cursor: pointer;" title="View" type="" class="">
+                                                <%= e.sd_status %>
+                                            </a>
+                                        <% }else if( e.sd_status == "ถูกปฎิเสธ" ){ %>
+                                            <a onclick="alert('สาเหตุการปฎิเสธ : <%= e.sd_approve_comment %> ')" style="color: #c80000; text-decoration: underline !important; cursor: pointer;" title="View" type="" class="">
+                                                <%= e.sd_status %>
+                                            </a>
+                                        <% }else if( e.sd_status == "อนุมัติแล้ว (ยังไม่ได้ประเมิน)" ){ %>
+                                            <a onclick="set_resend_css_1('<%= e.sd_id %>')" data-bs-toggle="modal" data-bs-target="#modal_resend_css_1" style="text-decoration: underline !important; cursor: pointer;" title="View" type="" class="">
+                                                <%= e.sd_status %>
+                                            </a>
+                                        <% }else{ %>
+                                            <%= e.sd_status %>
+                                        <% } %>
+                                    </td>
+                                    <td><%= Math.round(( (+e.sd_point_1) + (+e.sd_point_2) + (+e.sd_point_3) + (+e.sd_point_4) + (+e.sd_point_5) + (+e.sd_point_6) + (+e.sd_point_7) + (+e.sd_point_8) + (+e.sd_point_9) + (+e.sd_point_10) + (+e.sd_point_11) + (+e.sd_point_12) ) * 100 / 120 ) %> % </td>
+                                    <td><%= e.sd_sent_to_name %></td>
+                                    <td><%= e.sd_sent_to_company %></td>
+                                    <td><%= e.sd_sent_to_email %></td>
+                                    <td><%= e.sd_sent_to_position %></td>
+                                    <td><%= e.sd_do_by_name %></td>
+                                    <td><%= e.sd_do_by_position %></td>
+                                    <td>
+                                        <% if(e.sd_do_date == "" || e.sd_do_date == null || e.sd_do_date == "null"){ %>
+
+                                        <% }else{ %>
+                                            <%= dayjs(e.sd_do_date).format("DD/MM/YYYY") %>
+                                        <% } %>
+                                    </td>
+                                    <td><%= e.sd_create_by_name_en %> (<%= e.sd_create_by_name_th %>) </td>
+                                    <td><%= dayjs(e.sd_create_date).format("DD/MM/YYYY") %></td>
+                                </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px; margin-top: 1.5rem;">
+                        <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                            <h5 style="font-weight: 600; color: #02274c;"><i class="fa-solid fa-chart-column" style="margin-right: 5px;"></i> สรุปการประเมินครั้งที่ 1</h5>
+                        </div>
+                        <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;" id="div_summary_css_p1"></div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0px; margin-top: 1.5rem;">
+                        <div class="" style="display: flex; justify-content: center; align-items: center; margin-bottom: 0px; padding-top: 0.3rem; background-color: #f2f2f2;">
+                            <h5 style="font-weight: 600; color: #02274c;"><i class="fa-regular fa-newspaper" style="margin-right: 5px;"></i> Action Plan ครั้งที่ 1</h5>
+                        </div>
+                        <hr style="font-weight: 600; color: #02274c; margin-top: 0px;">
+                    </div>
+
+                    <% if( project_information[0].pj_status_css_doc == "ไม่มีการประเมิน" || project_information[0].pj_status_css_doc == "รอผลการประเมินครั้งที่ 1" ){ %>
+                        
+                    <% }else if( project_information[0].pj_status_css_doc == "สรุปผลการประเมินครั้งที่ 1" || project_information[0].pj_status_css_doc == "ปฏิเสธ Action Plan ครั้งที่ 1" ){ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                            <textarea class="form-control" name="" id="action_plan_p1" rows="10"><%= project_information[0].pj_action_plan_1 %></textarea>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                            <button data-bs-toggle="modal" data-bs-target="#action_plan_p1_upload_file" onclick="action_plan_p1_save( document.getElementById('action_plan_p1').value )" type="button" class="btn btn-secondary">
+                                <i class="fa-solid fa-cloud-arrow-up" style="margin-right: 5px;"></i>
+                                เพิ่ม / อัพโหลดไฟล์
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                            <table id="action_file_p1_table" style="width: 100%;" class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>เครื่องมือ</th>
+                                        <th>ชื่อไฟล์</th>
+                                        <th>อัพโหลดโดย</th>
+                                        <th>อัพโหลดเมื่อ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% index = 1 %>
+                                    <% action_plan_file_p1.forEach( function(e) { %>
+                                        <tr>
+                                            <td>
+                                                <%= index %>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <button onclick="set_delete_file('<%= e.apf_id %>')" data-bs-toggle="modal" data-bs-target="#modal_delete_action_plan_p1_upload_file" type="button" class="btn btn-danger">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <a href="<%= e.apf_new_name %>" target="_blank"><%= e.apf_old_name %></a>
+                                            </td>
+                                            <td>
+                                                <%= e.apf_create_name_th %> (<%= e.apf_create_name_en %>)
+                                            </td>
+                                            <td>
+                                                <%= dayjs(e.apf_create_date).format("DD/MM/YYYY") %>
+                                            </td>
+                                        </tr>
+                                    <% index++ } ) %>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <% if( project_information[0].pj_status_css_doc == "ปฏิเสธ Action Plan ครั้งที่ 1" ){ %>
+                            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                </symbol>
+                            </svg>
+
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 15px;">
+                                <div class="alert alert-danger" role="alert">
+                                    <h4 class="alert-heading">
+                                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg> 
+                                        ถูกปฎิเสธ
+                                    </h4>
+                                    <p>
+                                        สาเหตุ : <%= project_information[0].pj_action_plan_1_reject_comment %>
+                                    </p>
+                                    <hr>
+                                    <p class="mb-0">
+                                        โดย : <%= project_information[0].pj_action_plan_1_reject_by %> เมื่อ : <%= dayjs(project_information[0].pj_action_plan_1_reject_date).format("DD/MM/YYYY") %>
+                                    </p>
+                                </div>
+                            </div>
+                        <% } %>
+    
+                        <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                            
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="action_plan_p1_save( document.getElementById('action_plan_p1').value )" style="width: 100%;" type="button" class="btn btn-secondary">
+                                <i class="fa-regular fa-floppy-disk" style="margin-right: 3px;"></i>
+                                บันทึก
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="check_action_plan_p1_save( document.getElementById('action_plan_p1').value , '<%= action_plan_file_p1.length %>' )" style="width: 100%;" type="button" class="btn btn-success">
+                                <i class="fa-regular fa-paper-plane" style="margin-right: 3px;"></i>
+                                บันทึกและส่งอนุมติ
+                            </button>
+                        </div>
+    
+                        <div hidden class="col-sm-0 col-md-0 col-lg-0 col-xl-0" style="margin-top: 15px;">
+                            <button id="btn_submit_action_plan_p1" style="width: 100%;" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal_submit_action_plan_p1">
+                                <i class="fa-regular fa-floppy-disk" style="margin-right: 3px;"></i>
+                            </button>
+                        </div>
+                    <% }else{ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                            <textarea disabled class="form-control" name="" id="action_plan_p1" rows="10"><%= project_information[0].pj_action_plan_1 %></textarea>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                            <table id="action_file_p1_table" style="width: 100%;" class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>ชื่อไฟล์</th>
+                                        <th>อัพโหลดโดย</th>
+                                        <th>อัพโหลดเมื่อ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% index = 1 %>
+                                    <% action_plan_file_p1.forEach( function(e) { %>
+                                        <tr>
+                                            <td>
+                                                <%= index %>
+                                            </td>
+                                            <td>
+                                                <a href="<%= e.apf_new_name %>" target="_blank"><%= e.apf_old_name %></a>
+                                            </td>
+                                            <td>
+                                                <%= e.apf_create_name_th %> (<%= e.apf_create_name_en %>)
+                                            </td>
+                                            <td>
+                                                <%= dayjs(e.apf_create_date).format("DD/MM/YYYY") %>
+                                            </td>
+                                        </tr>
+                                    <% index++ } ) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } %>
+
+                    <% if( project_information[0].pj_status_css_doc == "รอ PM อนุมัติ Action Plan ครั้งที่ 1" && user_ability.pm == true ){ %>
+                        <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                            
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_reject_action_plan" style="width: 100%;" type="button" class="btn btn-danger">
+                                <i class="fa-solid fa-ban" style="margin-right: 5px;"></i>
+                                ปฎิเสธ Action Plan
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_approve_action_plan_1" style="width: 100%;" type="button" class="btn btn-success">
+                                <i class="fa-regular fa-circle-check" style="margin-right: 5px;"></i>
+                                อนุมัติ Action Plan
+                            </button>
+                        </div>
+                    <% }else if( project_information[0].pj_status_css_doc == "รอ BU อนุมัติ Action Plan ครั้งที่ 1" && user_ability.bu == true ){ %>
+                        <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                            
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_reject_action_plan" style="width: 100%;" type="button" class="btn btn-danger">
+                                <i class="fa-solid fa-ban" style="margin-right: 5px;"></i>
+                                ปฎิเสธ Action Plan
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_approve_action_plan_1" style="width: 100%;" type="button" class="btn btn-success">
+                                <i class="fa-regular fa-circle-check" style="margin-right: 5px;"></i>
+                                อนุมัติ Action Plan
+                            </button>
+                        </div>
+                    <% }else if( project_information[0].pj_status_css_doc == "รอ ISO อนุมัติ Action Plan ครั้งที่ 1" && user_ability.iso == true ){ %>
+                        <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                            
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_reject_action_plan" style="width: 100%;" type="button" class="btn btn-danger">
+                                <i class="fa-solid fa-ban" style="margin-right: 5px;"></i>
+                                ปฎิเสธ Action Plan
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_approve_action_plan_1" style="width: 100%;" type="button" class="btn btn-success">
+                                <i class="fa-regular fa-circle-check" style="margin-right: 5px;"></i>
+                                อนุมัติ Action Plan
+                            </button>
+                        </div>
+                    <% }else if( project_information[0].pj_status_css_doc == "รอ COO อนุมัติ Action Plan ครั้งที่ 1" && user_ability.coo == true ){ %>
+                        <div class="col-sm-0 col-md-0 col-lg-4 col-xl-6" style="margin-top: 15px;">
+                            
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_reject_action_plan" style="width: 100%;" type="button" class="btn btn-danger">
+                                <i class="fa-solid fa-ban" style="margin-right: 5px;"></i>
+                                ปฎิเสธ Action Plan
+                            </button>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3" style="margin-top: 15px;">
+                            <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_approve_action_plan_1" style="width: 100%;" type="button" class="btn btn-success">
+                                <i class="fa-regular fa-circle-check" style="margin-right: 5px;"></i>
+                                อนุมัติ Action Plan
+                            </button>
+                        </div>
+                    <% }else{ %>
+
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div id="admin_sm" class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px; margin-top: 1.5rem;">
+            <div class='card-header'>
+                <h3>ผู้ดูแล (Admin)</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                        <table id="admin_site_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">ลำดับ</th>
+                                    <th>ฝ่าย</th>
+                                    <th>ชื่อ-นามสกุล (TH)</th>
+                                    <th>ชื่อ-นามสกุล (en)</th>
+                                    <th>อีเมล</th>
+                                    <th>แผนก</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% admin_site_data.forEach( function(e) { %>
+                                <tr>
+                                    <td><%= index %></td>
+                                    <td><%= e.da_ref_division_name %></td>
+                                    <td><%= e.da_admin_name_th %></td>
+                                    <td><%= e.da_admin_name_en %></td>
+                                    <td><%= e.da_admin_email %></td>
+                                    <td><%= e.da_admin_division %></td>
+                                </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px; margin-top: 1.5rem;">
+            <div class='card-header'>
+                <h3>ผู้จัดการโครงการ (SM)</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <% if( user_ability.master_admin == true ){ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 0px;">
+                            <button data-bs-toggle="modal" data-bs-target="#modal_add_manager_site" type="button" class="btn btn-secondary">
+                                <i class="fa-regular fa-square-plus" style="margin-right: 5px;"></i>
+                                เพิ่มผู้จัดการโครงการ (Add Site Manager)
+                            </button>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                            <table id="manager_site_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">ลำดับ</th>
+                                        <th width="5%">#</th>
+                                        <th>โครงการ</th>
+                                        <th>ชื่อ-นามสกุล (TH)</th>
+                                        <th>ชื่อ-นามสกุล (en)</th>
+                                        <th>อีเมล</th>
+                                        <th>แผนก</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% index = 1 %>
+                                    <% manager_site_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <button onclick="set_delete_manager_site('<%= e.sm_id %>')" data-bs-toggle="modal" data-bs-target="#modal_delete_manager_site" type="button" style="padding-left: 10px; padding-right: 10px; color: white; font-weight: 400;" class="btn btn-danger">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </td>
+                                        <td><%= e.sm_project_code %></td>
+                                        <td><%= e.sm_name_th %></td>
+                                        <td><%= e.sm_name_en %></td>
+                                        <td><%= e.sm_email %></td>
+                                        <td><%= e.sm_division %></td>
+                                    </tr>
+                                    <% index++ } ) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% }else{ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 10px;">
+                            <table id="manager_site_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">ลำดับ</th>
+                                        <th>โครงการ</th>
+                                        <th>ชื่อ-นามสกุล (TH)</th>
+                                        <th>ชื่อ-นามสกุล (en)</th>
+                                        <th>อีเมล</th>
+                                        <th>แผนก</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% index = 1 %>
+                                    <% manager_site_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= e.sm_project_code %></td>
+                                        <td><%= e.sm_name_th %></td>
+                                        <td><%= e.sm_name_en %></td>
+                                        <td><%= e.sm_email %></td>
+                                        <td><%= e.sm_division %></td>
+                                    </tr>
+                                    <% index++ } ) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div hidden >
+    <input id="project_id" type="text" class="form-control" value="<%= project_information[0].pj_id %>">
+    <input id="project_code" type="text" class="form-control" value="<%= project_information[0].ProjectCode %>">
+
+    <button id="btn_check_true" data-bs-toggle="modal" data-bs-target="#modal_check_true" style="width: 100%;" type="button" class="btn btn-success">
+    </button>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_add_new_contact">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-phone-volume"></i>
+                    ข้อมูลผู้ติดต่อใหม่
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label class="form-label" for="">ชื่อ-นามสกุล</label>
+                        <input id="new_contact_name" class="form-control" type="text">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label class="form-label" for="">ตำแหน่งงาน</label>
+                        <input id="new_contact_position" class="form-control" type="text">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label class="form-label" for="">หมายเลยโทรศัพท์</label>
+                        <input id="new_contact_phone_number" class="form-control" type="text">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label class="form-label" for="">อีเมล</label>
+                        <input id="new_contact_email" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="add_new_contact()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_reject_action_plan">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: rgb(255, 26, 26);" class="fa-solid fa-ban"></i>
+                    ยืนยันการปฏิเสธ Action Plan
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        ยืนยันการปฏิเสธ Action Plan
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label class="form-label" for="">เหตุผล</label>
+                        <textarea name="" class="form-control" id="comment_reject" cols="30" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="comfirm_reject()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_check_true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-regular fa-floppy-disk" style="color: green; margin-right: 5px;"></i>
+                    บันทึกแล้ว
+                </h4>
+                <button id="btn_close_modal_check_true" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px; display: flex; justify-content: center;">
+                        <img src="/assets/images/checked.png" width="100vw" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_have_css_p2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-lock" style="color: rgb(255, 25, 25); margin-right: 5px;"></i>
+                    ยืนยันเปิดการประเมินครั้งที่ 2 
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">
+                            ยืนยันเปิดการประเมินครั้งที่ 2 
+                            <br><br>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_have_css_p2()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_dont_have_css_p2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-lock" style="color: rgb(255, 25, 25); margin-right: 5px;"></i>
+                    ยืนยันว่าโครงการนี้มีการประเมินเพียง 1 ครั้ง
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">
+                            ยืนยันว่าโครงการนี้มีการประเมินเพียง 1 ครั้ง ไม่มีการประเมินครั้งที่ 2
+                            <br><br> 
+                            <span class="red">หากยืนยัน โครงการจะถูกเปลี่ยนสถานะเป็นสำเร็จ แล้วจะนำไปแสดงในรายการรีพอร์ต</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_dont_have_css_p2()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_approve_action_plan_1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-regular fa-circle-check"></i>
+                    ยืนยันการอนุมัติส่งใบประเมิน
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        ยืนยันการอนุมัติส่งใบประเมินหรือไม่
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                        <label class="form-label" for="">ความคิดเห็น</label>
+                        <textarea name="" class="form-control" id="comment_approve" cols="30" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="comfirm_approve()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_create_css_2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-file-circle-plus" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    ยืนยันสร้างเอกสาร
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">ยืนยันการสร้างเอกสารการประเมินความพึงพอใจ (ครั้งที่ 2)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="create_css_document_part_2()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="action_plan_p2_upload_file">
+    <div class="modal-dialog">
+        <form id="form_upload_action_plan_p1" action="/form_upload_action_plan_p1/2/<%= project_information[0].pj_id %>/<%= project_information[0].ProjectCode %>" method="post" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <i class="fa-solid fa-file-circle-question" style="color: rgb(7, 60, 255); margin-right: 5px;"></i>
+                        อัพโหลดเอกสาร
+                    </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="form-label">เลือกไฟล์เอกสาร</label>
+                                    <div class="input-group mb-3">
+                                        <input type="file" class="form-control" id="fileupload" name="fileupload" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                    <button class="btn btn-primary float-right" type="submit" style="margin: 0px; width: 100%;">
+                        <i class="feather icon-upload"></i>
+                        อัพโหลดไฟล์
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_submit_action_plan_p2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-regular fa-paper-plane" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    ยืนยันส่งอนุมัติ Action Plan ครั้งที่ 2
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">ยืนยันส่งอนุมัติ Action Plan ครั้งที่ 2 หรือไม่ ?</label><br>
+                        <span class="red">* ระหว่างการอนุมัติ จะไม่สามารถแก้ไข Action Plan หรือ ลบ/เพิ่มไฟล์ได้ </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_submit_action_plan_p2()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_submit_action_plan_p1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-regular fa-paper-plane" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    ยืนยันส่งอนุมัติ Action Plan ครั้งที่ 1
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">ยืนยันส่งอนุมัติ Action Plan ครั้งที่ 1 หรือไม่ ?</label><br>
+                        <span class="red">* ระหว่างการอนุมัติ จะไม่สามารถแก้ไข Action Plan หรือ ลบ/เพิ่มไฟล์ได้ </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_submit_action_plan_p1()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_delete_action_plan_p1_upload_file">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-lock" style="color: rgb(255, 25, 25); margin-right: 5px;"></i>
+                    ยืนยันลบไฟล์
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">
+                            ยืนยันลบไฟล์หรือไม่
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_delete_file()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="action_plan_p1_upload_file">
+    <div class="modal-dialog">
+        <form id="form_upload_action_plan_p1" action="/form_upload_action_plan_p1/1/<%= project_information[0].pj_id %>/<%= project_information[0].ProjectCode %>" method="post" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <i class="fa-solid fa-file-circle-question" style="color: rgb(7, 60, 255); margin-right: 5px;"></i>
+                        อัพโหลดเอกสาร
+                    </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="form-label">เลือกไฟล์เอกสาร</label>
+                                    <div class="input-group mb-3">
+                                        <input type="file" class="form-control" id="fileupload" name="fileupload" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                    <button class="btn btn-primary float-right" type="submit" style="margin: 0px; width: 100%;">
+                        <i class="feather icon-upload"></i>
+                        อัพโหลดไฟล์
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_iframe">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px; height: 85vh;">
+                        <iframe id="iframe_weakness_strongness" src="" width="100%" height="100%" frameborder="0" allowtransparency="true"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_delete_manager_site">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-regular fa-square-minus" style="color: rgb(255, 25, 25); margin-right: 5px;"></i>
+                    ยืนยันลบผู้จัดการโครงการ (Site Manager)
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">
+                            ยืนยันการลบผู้จัดการโครงการ (Site Manager) หรือไม่
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_delete_manager_site()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_add_manager_site">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-people-group" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    เพิ่มผู้จัดการโครงการ (Site Manager)
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">เลือก ผู้จัดการโครงการ (Site Manager) คนใหม่</label>
+                        <select id="new_manager_site" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <% employee_ite_data.forEach( function(e) { %>
+                                <option value="<%= e.ed_id %>"><%= e.ed_name_th %> <%= e.ed_surname_th %> (<%= e.ed_name_en %> <%= e.ed_surname_en %>)</option>
+                            <%  } ) %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="check_add_manager_site()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_delete_admin_site">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-regular fa-square-minus" style="color: rgb(255, 25, 25); margin-right: 5px;"></i>
+                    ยืนยันลบผู้ดูแลโครงการ (Admin Site)
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">
+                            ยืนยันการลบผู้ดูแลโครงการ (Admin Site) หรือไม่
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_delete_admin_site()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_add_admin_site">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-people-group" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    เพิ่มผู้ดูแล (Admin Site)
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">เลือก ผู้ดูแล (Admin Site) คนใหม่</label>
+                        <select id="new_admin_site" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <% employee_ite_data.forEach( function(e) { %>
+                                <option value="<%= e.ed_id %>"><%= e.ed_name_th %> <%= e.ed_surname_th %> (<%= e.ed_name_en %> <%= e.ed_surname_en %>)</option>
+                            <%  } ) %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="check_add_admin_site()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_change_bu">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-user-tie" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    เปลี่ยน Head BU
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">เลือก Head BU คนใหม่</label>
+                        <select id="new_bu" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <% employee_ite_data.forEach( function(e) { %>
+                                <option value="<%= e.ed_id %>"><%= e.ed_name_th %> <%= e.ed_surname_th %> (<%= e.ed_name_en %> <%= e.ed_surname_en %>)</option>
+                            <%  } ) %>
+                        </select>
+                        <button hidden id="btn_confirm_change_bu" class="btn btn-primary" data-bs-target="#modal_comfirm_change_bu" data-bs-toggle="modal" data-bs-dismiss="modal">Open second modal</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="check_change_bu()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_comfirm_change_bu">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-user-tie" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    ยืนยันการเปลี่ยน Head BU
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">ยืนยันการเปลี่ยน Head BU หรือไม่</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_change_bu()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_change_pm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-user-gear" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    เปลี่ยน Project Manager
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">เลือก Project Manager คนใหม่</label>
+                        <select id="new_project_manager" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <% employee_ite_data.forEach( function(e) { %>
+                                <option value="<%= e.ed_id %>"><%= e.ed_name_th %> <%= e.ed_surname_th %> (<%= e.ed_name_en %> <%= e.ed_surname_en %>)</option>
+                            <%  } ) %>
+                        </select>
+                        <button hidden id="btn_confirm_change_pm" class="btn btn-primary" data-bs-target="#modal_comfirm_change_pm" data-bs-toggle="modal" data-bs-dismiss="modal">Open second modal</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="check_change_pm()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_comfirm_change_pm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-user-gear" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    ยืนยันการเปลี่ยน Project Manager
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">ยืนยันการเปลี่ยน Project Manager หรือไม่</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_change_pm()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_delete_css_document">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-lock" style="color: rgb(255, 25, 25); margin-right: 5px;"></i>
+                    ยืนยันลบเอกสารประเมินความพึงพอใจ
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">
+                            ยืนยันลบเอกสารประเมินความพึงพอใจของลูกค้าหรือไม่
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_delete_css_document()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_close_css_1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-lock" style="color: rgb(255, 25, 25); margin-right: 5px;"></i>
+                    ยืนยันปิดรับเอกสารประเมินความพึงพอใจ
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">
+                            ยืนยันปิดรับเอกสารประเมินความพึงพอใจของลูกค้าหรือไม่ 
+                            <br><br> 
+                            <span class="red">หากยืนยัน ใบประเมินที่ยังไม่ได้ประเมินจะถูกปิดการประเมิน และจะไม่สารถกลับมาประเมินได้อีกต่อไป และคิดคะแนนเฉพาะเอกสารที่ประเมินแล้วเท่านั้น</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="close_css_doc_p1()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_close_css_2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-lock" style="color: rgb(255, 25, 25); margin-right: 5px;"></i>
+                    ยืนยันปิดรับเอกสารประเมินความพึงพอใจ
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">
+                            ยืนยันปิดรับเอกสารประเมินความพึงพอใจของลูกค้าหรือไม่ 
+                            <br><br> 
+                            <span class="red">หากยืนยัน ใบประเมินที่ยังไม่ได้ประเมินจะถูกปิดการประเมิน และจะไม่สารถกลับมาประเมินได้อีกต่อไป และคิดคะแนนเฉพาะเอกสารที่ประเมินแล้วเท่านั้น</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="close_css_doc_p2()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_create_css_1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-file-circle-plus" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    ยืนยันสร้างเอกสาร
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">ยืนยันการสร้างเอกสารการประเมินความพึงพอใจ (ครั้งที่ 1)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="create_css_document_part_1()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_resend_css_1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-square-envelope" style="color: rgb(36, 120, 255); margin-right: 5px;"></i>
+                    ยืนยันส่งอีเมลซ้ำ
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">ยืนยันส่งอีเมลเอกสารการประเมินความพึงพอใจ (ครั้งที่ 1) ซ้ำหรือไม่</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_resend_css_1()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_delete_contact">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-solid fa-trash" style="color: rgb(255, 25, 25); margin-right: 5px;"></i>
+                    ยืนยันการลบข้อมูลผู้ติดต่อ
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">
+                            ยืนยันการลบข้อมูลผู้ติดต่อหรือไม่ 
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="delete_contact()" style="width: 65%;" type="button" class="btn btn-danger">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        jquery_set_table()
+
+        summary_p1_str = '<%-JSON.stringify(satisfaction_document_p1_data)%>'
+        summary_p1_obj = JSON.parse(summary_p1_str.replace(/\n|\t|\r/g, ""));
+
+        summary_p2_str = '<%-JSON.stringify(satisfaction_document_p2_data)%>'
+        summary_p2_obj = JSON.parse(summary_p2_str.replace(/\n|\t|\r/g, ""));
+
+        let css_evaluated = summary_p1_obj.filter( function(e){
+            return  e.sd_status == "ประเมินแล้ว"
+        } )
+
+        let css_evaluated_2 = summary_p2_obj.filter( function(e){
+            return  e.sd_status == "ประเมินแล้ว"
+        } )
+
+        if( css_evaluated.length == 0 ){
+            // document.getElementById("summary_css_p1").disabled = true
+        }else{
+            set_table_summary_css_p1(css_evaluated)
+        }
+
+        if( css_evaluated_2.length == 0 ){
+            // document.getElementById("summary_css_p1").disabled = true
+        }else{
+            set_table_summary_css_p2(css_evaluated_2)
+        }
+    }
+
+    let contact_id_for_delete = ""
+    function set_delete_contact( contact_id ){
+        contact_id_for_delete = contact_id
+    }
+    function delete_contact(){
+        let data = {
+            sql_command : `DELETE FROM tb_contact WHERE tb_contact.ct_ID = ${contact_id_for_delete}`
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/only_for_run_sql',
+            data: data,
+            success: function (nextPage) {
+                // alert("บันทึกแล้ว");
+                window.location.reload();
+            },
+            error: function (error) {
+                alert("บันทึกไม่สำเร็จ")
+            }
+        });
+    }
+
+    function add_new_contact(){
+        if( document.getElementById("new_contact_name").value == "" ){
+            alert("ระบุ ชื่อ-นามสกุล ผู้ติดต่อ")
+        }else if( document.getElementById("new_contact_position").value == "" ){
+            alert("ระบุ ตำแหน่งงาน ผู้ติดต่อ")
+        }else if( document.getElementById("new_contact_phone_number").value == "" ){
+            alert("ระบุ หมายเลยโทรศัพท์ ผู้ติดต่อ")
+        }else if( document.getElementById("new_contact_email").value == "" ){
+            alert("ระบุ อีเมล ผู้ติดต่อ")
+        }else{
+            let data = {
+                project_id : document.getElementById("project_id").value , 
+                new_contact_name : document.getElementById("new_contact_name").value ,
+                new_contact_position : document.getElementById("new_contact_position").value ,
+                new_contact_phone_number : document.getElementById("new_contact_phone_number").value , 
+                new_contact_email : document.getElementById("new_contact_email").value 
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/add_new_contact',
+                data: data,
+                success: function (nextPage) {
+                    window.location.reload();
+                },
+                error: function (error) {
+                    alert("บันทึกไม่สำเร็จ")
+                }
+            });
+        }
+    }
+
+    function save_contract_number( contract_number){
+        console.log("contract_number")
+        console.log(contract_number)
+
+        if(confirm("บันทึก เปลี่ยนสัญญาเลขที่ ?") == true) {
+            let data = {
+                sql_command : `UPDATE tb_project_information SET ContractNo = '${contract_number}' WHERE tb_project_information.pj_id = ${document.getElementById("project_id").value}`
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/only_for_run_sql',
+                data: data,
+                success: function (nextPage) {
+                    alert("บันทึกแล้ว");
+                    window.location.reload();
+                },
+                error: function (error) {
+                    alert("บันทึกไม่สำเร็จ")
+                }
+            });
+        } else {
+            
+        }
+    }
+
+    function save_contract_date( contract_date){
+        console.log("contract_date")
+        console.log(contract_date)
+
+        if(confirm("บันทึก เปลี่ยนวันที่ลงสัญญาเลขที่ ?") == true) {
+            let data = {
+                sql_command : `UPDATE tb_project_information SET ContractSignDate = '${contract_date}' WHERE tb_project_information.pj_id = ${document.getElementById("project_id").value}`
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/only_for_run_sql',
+                data: data,
+                success: function (nextPage) {
+                    alert("บันทึกแล้ว")
+                },
+                error: function (error) {
+                    alert("บันทึกไม่สำเร็จ")
+                }
+            });
+        } else {
+            
+        }
+    }
+
+    function comfirm_reject(){
+        if( document.getElementById("comment_reject").value == "" ){
+            return alert("โปรดระบุเหตุผลในการปฏิเสธ Action Plan")
+        }else{
+            let data = {
+                array_document_id : document.getElementById("project_id").value ,
+                reject_comment : document.getElementById("comment_reject").value
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/action_plan_approve_list_reject',
+                data: data,
+                success: function (nextPage) {
+                    window.location = nextPage;
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+    function confirm_dont_have_css_p2(){
+        let data = {
+            project_id : document.getElementById("project_id").value
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/confirm_dont_have_css_p2' ,
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function confirm_have_css_p2(){
+        let data = {
+            project_id : document.getElementById("project_id").value
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/confirm_have_css_p2' ,
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function comfirm_approve(){
+        let data = {
+            array_document_id : (document.getElementById("project_id").value) ,
+            approve_comment : document.getElementById("comment_approve").value
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/action_plan_approve_list_approve',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    async function confirm_submit_action_plan_p1(){
+        await action_plan_p1_save( document.getElementById("action_plan_p1").value )
+        let call_back = await submit_action_plan_p1()
+        if( call_back == "success" ){
+            window.location.reload()
+        }else{
+            alert("ผิดพลาด")
+        }
+    }
+
+    async function confirm_submit_action_plan_p2(){
+        await action_plan_p2_save( document.getElementById("action_plan_p2").value )
+        let call_back = await submit_action_plan_p2()
+        if( call_back == "success" ){
+            window.location.reload()
+        }else{
+            alert("ผิดพลาด")
+        }
+    }
+
+    function submit_action_plan_p2(){
+        return new Promise( ( resolve , reject ) => {
+            let data = {
+                project_id : document.getElementById("project_id").value
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/submit_action_plan_p2',
+                data: data,
+                success: function (nextPage) {
+                    // window.location = nextPage;
+                    resolve("success")
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                    resolve("error")
+                }
+            });
+        } )
+    }
+
+    function submit_action_plan_p1(){
+        return new Promise( ( resolve , reject ) => {
+            let data = {
+                project_id : document.getElementById("project_id").value
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/submit_action_plan_p1',
+                data: data,
+                success: function (nextPage) {
+                    // window.location = nextPage;
+                    resolve("success")
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                    resolve("error")
+                }
+            });
+        } )
+    }
+
+    function check_action_plan_p1_save( textArea_action_plan_p1 , file_lenght ){
+        console.log(file_lenght)
+        console.log(textArea_action_plan_p1)
+
+        if( textArea_action_plan_p1 == "" ){
+            alert("กรุณาใส่ Action Plan")
+        }else{
+            // action_plan_p1_save( textArea_action_plan_p1 )
+            document.getElementById("btn_submit_action_plan_p1").click();
+        }
+    }
+
+    function check_action_plan_p2_save( textArea_action_plan_p2 , file_lenght ){
+        console.log(file_lenght)
+        console.log(textArea_action_plan_p2)
+
+        if( textArea_action_plan_p2 == "" ){
+            alert("กรุณาใส่ Action Plan")
+        }else{
+            // action_plan_p1_save( textArea_action_plan_p1 )
+            document.getElementById("btn_submit_action_plan_p2").click();
+        }
+    }
+
+    function action_plan_p1_save( textArea_action_plan_p1 ){
+        return new Promise( ( resolve , reject ) => {
+            let data = {
+                project_id : document.getElementById("project_id").value , 
+                textArea_action_plan_p1 : textArea_action_plan_p1
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/action_plan_p1_save',
+                data: data,
+                success: function (nextPage) {
+                    // window.location = nextPage;
+                    document.getElementById("btn_check_true").click();
+                    setTimeout(() => {
+                        document.getElementById("btn_close_modal_check_true").click();
+                    }, 1000);
+                    resolve()
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                    reject()
+                }
+            });
+        } )
+
+    }
+
+    function action_plan_p2_save( textArea_action_plan_p2 ){
+        return new Promise( ( resolve , reject ) => {
+            let data = {
+                project_id : document.getElementById("project_id").value , 
+                textArea_action_plan_p2 : textArea_action_plan_p2
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/action_plan_p2_save',
+                data: data,
+                success: function (nextPage) {
+                    // window.location = nextPage;
+                    document.getElementById("btn_check_true").click();
+                    setTimeout(() => {
+                        document.getElementById("btn_close_modal_check_true").click();
+                    }, 1000);
+                    resolve()
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                    reject()
+                }
+            });
+        } )
+    }
+
+    let action_plan_file_id_for_delete = ""
+    function set_delete_file( file_id ){
+        action_plan_file_id_for_delete = file_id
+    }
+    function confirm_delete_file(){
+        let data = {
+            action_plan_file_id : action_plan_file_id_for_delete
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/delete_action_plan_file',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function set_iframe_url( url ){
+        document.getElementById("iframe_weakness_strongness").src = url
+    }
+
+    function close_css_doc_p1(){
+        let data = {
+            project_id : document.getElementById("project_id").value , 
+            part : 1
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/close_css_doc_p1',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function close_css_doc_p2(){
+        let data = {
+            project_id : document.getElementById("project_id").value , 
+            part : 2
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/close_css_doc_p1',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function set_table_summary_css_p1( data ){
+
+        let sum = data.reduce((accumulator, currentValue) => {
+            return accumulator + (currentValue.sd_point_1 + currentValue.sd_point_2 + currentValue.sd_point_3 + currentValue.sd_point_4 + currentValue.sd_point_5 + currentValue.sd_point_6 + currentValue.sd_point_7 + currentValue.sd_point_8 + currentValue.sd_point_9 + currentValue.sd_point_10 + currentValue.sd_point_11 + currentValue.sd_point_12);
+        }, 0);
+
+        let color = ""
+        
+        if(Math.round((sum * 100)/(data.length * 120)) > 80){
+            color = "green"
+        }else if(Math.round((sum * 100)/(data.length * 120)) > 75){
+            color = "#ce5d00;"
+        }else{
+            color = "red"
+        }
+
+        document.getElementById("div_summary_css_p1").innerHTML = `
+        <table id="table_summary_css_p1" class="table table-bordered" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>จำนวนเอกสารที่ประเมินแล้ว</th>
+                    <th>เฉลี่ยผลรวมคะแนน</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${data.length}</td>
+                    <td style="font-weight: 700; color:${color}">${Math.round((sum * 100)/(data.length * 120))} % </td>
+                </tr>
+            </tbody>
+        </table>`
+
+        $('#table_summary_css_p1').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": false,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": false,
+            "searching": false,
+            "autoWidth": true,
+            "ordering": true,
+            "info": false,
+            "scrollX": true,
+            "scrollY": "30vh"
+        })
+    }
+
+    function set_table_summary_css_p2( data ){
+
+        let sum = data.reduce((accumulator, currentValue) => {
+            return accumulator + (currentValue.sd_point_1 + currentValue.sd_point_2 + currentValue.sd_point_3 + currentValue.sd_point_4 + currentValue.sd_point_5 + currentValue.sd_point_6 + currentValue.sd_point_7 + currentValue.sd_point_8 + currentValue.sd_point_9 + currentValue.sd_point_10 + currentValue.sd_point_11 + currentValue.sd_point_12);
+        }, 0);
+
+        let color = ""
+
+        if(Math.round((sum * 100)/(data.length * 120)) > 80){
+            color = "green"
+        }else if(Math.round((sum * 100)/(data.length * 120)) > 75){
+            color = "#ce5d00;"
+        }else{
+            color = "red"
+        }
+
+        document.getElementById("div_summary_css_p2").innerHTML = `
+        <table id="table_summary_css_p2" class="table table-bordered" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>จำนวนเอกสารที่ประเมินแล้ว</th>
+                    <th>เฉลี่ยผลรวมคะแนน</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${data.length}</td>
+                    <td style="font-weight: 700; color:${color}">${Math.round((sum * 100)/(data.length * 120))} % </td>
+                </tr>
+            </tbody>
+        </table>`
+
+        $('#table_summary_css_p2').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": false,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": false,
+            "searching": false,
+            "autoWidth": true,
+            "ordering": true,
+            "info": false,
+            "scrollX": true,
+            "scrollY": "30vh"
+        })
+    }
+
+    function myFunction( id ) {
+        console.log("click")
+        console.log(window.location.host)
+        // Get the text field
+        var copyText = document.getElementById(`link_${id}`).value;
+
+        const textArea = document.createElement("textarea");
+        textArea.value = window.location.host+copyText;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert("copies!")
+        } catch (err) {
+            console.error('Unable to copy to clipboard', err);
+        }
+        document.body.removeChild(textArea);
+    }
+
+    let css_doc_id_for_resend_email = ""
+    function set_resend_css_1( css_doc_id ){
+        css_doc_id_for_resend_email = css_doc_id
+    }
+    function confirm_resend_css_1(){
+        let data = {
+            css_doc_id : css_doc_id_for_resend_email
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/resend_satisfaction_document',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    let manager_site_id_for_delete = ""
+    function set_delete_manager_site( manager_site_id ){
+        manager_site_id_for_delete = manager_site_id
+    }
+    function confirm_delete_manager_site(){
+        let data = {
+            sql_command : `DELETE FROM tb_site_manager WHERE tb_site_manager.sm_id = '${manager_site_id_for_delete}'`
+        }
+
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/only_for_run_sql',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    let admin_site_id_for_delete = ""
+    function set_delete_admin_site( admin_site_id ){
+        admin_site_id_for_delete = admin_site_id
+    }
+    function confirm_delete_admin_site(){
+        let data = {
+            sql_command : `DELETE FROM tb_site_admin WHERE tb_site_admin.sa_id = '${admin_site_id_for_delete}'`
+        }
+
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/only_for_run_sql',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function check_add_manager_site(){
+        if( document.getElementById("new_manager_site").value == "" ){
+            alert( "ไม่มีรายการที่เลือก" )
+        }else{
+
+            employee_data_str = '<%-JSON.stringify(employee_ite_data)%>'
+            employee_data_obj = JSON.parse(employee_data_str);
+
+            employee_selected = employee_data_obj.filter( function(e){
+                return  e.ed_id == document.getElementById("new_manager_site").value
+            } )
+
+            if( employee_selected.length == 0 ){
+                alert("ไม่พบข้อมูลในฐานข้อมูล")
+            }else{
+                let data = {
+                    project_id : document.getElementById("project_id").value , 
+                    project_code : document.getElementById("project_code").value , 
+                    employee_id : employee_selected[0].ed_id , 
+                    employee_code : employee_selected[0].ed_employee_id , 
+                    name_th : employee_selected[0].ed_name_th + " " + employee_selected[0].ed_surname_th , 
+                    name_en : employee_selected[0].ed_name_en + " " + employee_selected[0].ed_surname_en , 
+                    email : employee_selected[0].ed_email_ite , 
+                    division : employee_selected[0].ed_division_id , 
+                }
+    
+                console.log("data")
+                console.log(data)
+    
+                $.ajax({
+                    type: 'POST',
+                    url: '/add_sm',
+                    data: data,
+                    success: function (nextPage) {
+                        window.location = nextPage;
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        }
+    }
+
+    function check_add_admin_site(){
+        if( document.getElementById("new_admin_site").value == "" ){
+            alert( "ไม่มีรายการที่เลือก" )
+        }else{
+
+            employee_data_str = '<%-JSON.stringify(employee_ite_data)%>'
+            employee_data_obj = JSON.parse(employee_data_str);
+
+            employee_selected = employee_data_obj.filter( function(e){
+                return  e.ed_id == document.getElementById("new_admin_site").value
+            } )
+
+            if( employee_selected.length == 0 ){
+                alert("ไม่พบข้อมูลในฐานข้อมูล")
+            }else{
+                let data = {
+                    project_id : document.getElementById("project_id").value , 
+                    project_code : document.getElementById("project_code").value , 
+                    employee_id : employee_selected[0].ed_id , 
+                    employee_code : employee_selected[0].ed_employee_id , 
+                    name_th : employee_selected[0].ed_name_th + " " + employee_selected[0].ed_surname_th , 
+                    name_en : employee_selected[0].ed_name_en + " " + employee_selected[0].ed_surname_en , 
+                    email : employee_selected[0].ed_email_ite , 
+                    division : employee_selected[0].ed_division_id , 
+                }
+    
+                console.log("data")
+                console.log(data)
+    
+                $.ajax({
+                    type: 'POST',
+                    url: '/add_admin',
+                    data: data,
+                    success: function (nextPage) {
+                        window.location = nextPage;
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        }
+    }
+
+    let new_emp_id_bu = ""
+    function check_change_bu(){
+        if( document.getElementById("new_bu").value == "" ){
+            alert( "ไม่มีรายการที่เลือก" )
+        }else{
+
+            document.getElementById("btn_confirm_change_bu").click();
+            new_emp_id_bu = document.getElementById("new_bu").value
+        }
+    }
+    function confirm_change_bu(){
+        if( new_emp_id_bu == "" ){
+            alert( "ไม่มีรายการที่เลือก" )
+        }else{
+            let data = {
+                emp_id_bu : new_emp_id_bu , 
+                project_id : document.getElementById("project_id").value ,
+            }
+
+            console.log("data")
+            console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: '/project_information_change_bu',
+                data: data,
+                success: function (nextPage) {
+                    window.location = nextPage;
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+    let new_emp_id_pm = ""
+    function check_change_pm(){
+        if( document.getElementById("new_project_manager").value == "" ){
+            alert( "ไม่มีรายการที่เลือก" )
+        }else{
+
+            document.getElementById("btn_confirm_change_pm").click();
+            new_emp_id_pm = document.getElementById("new_project_manager").value
+        }
+    }
+    function confirm_change_pm(){
+        if( new_emp_id_pm == "" ){
+            alert( "ไม่มีรายการที่เลือก" )
+        }else{
+            let data = {
+                emp_id_pm : new_emp_id_pm , 
+                project_id : document.getElementById("project_id").value ,
+            }
+
+            console.log("data")
+            console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: '/project_information_change_pm',
+                data: data,
+                success: function (nextPage) {
+                    window.location = nextPage;
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+
+    let css_doc_id_for_delete = ""
+    function set_delete_css_document( css_doc_id ){
+        css_doc_id_for_delete = css_doc_id
+    }
+    function confirm_delete_css_document(){
+        let data = {
+            sql_command : `DELETE FROM tb_satisfaction_document WHERE tb_satisfaction_document.sd_id = '${css_doc_id_for_delete}'`
+        }
+
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/only_for_run_sql',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function create_css_document_part_1() {
+        let data = {
+            project_id : document.getElementById("project_id").value , 
+            project_code : document.getElementById("project_code").value , 
+            part : "1"
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/create_css_document_part_1',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function create_css_document_part_2() {
+        let data = {
+            project_id : document.getElementById("project_id").value , 
+            project_code : document.getElementById("project_code").value , 
+            part : "2"
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/create_css_document_part_1',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    let project_id_selected = ""
+    let project_code_selected = ""
+
+    function check_satisfaction_document() {
+        if (document.getElementById("satisfaction_document_part").value == "") {
+            alert("ระบุ 'เอกสารการประเมินครั้งที่'")
+        } else if (document.getElementById("satisfaction_document_sent_to_email").value == "") {
+            alert("ระบุ 'อีเมลผู้ประเมิน'")
+        } else if (document.getElementById("satisfaction_document_sent_to_position").value == "") {
+            alert("ระบุ 'ตำแหน่งผู้ประเมิน'")
+        } else {
+            let data = {
+                project_id: project_id_selected,
+                project_code: project_code_selected,
+                part: document.getElementById("satisfaction_document_part").value,
+                sent_to_email: document.getElementById("satisfaction_document_sent_to_email").value,
+                sent_to_position: document.getElementById("satisfaction_document_sent_to_position").value
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/create_satisfaction_document',
+                data: data,
+                success: function (nextPage) {
+                    window.location = nextPage;
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+    if ( document.getElementsByClassName("row")[1].clientWidth > 850 ) {
+        $('#satisfaction_doccument_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 3,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": true,
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh"
+        })
+
+        $('#satisfaction_doccument_table_p2').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 3,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": true,
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh"
+        })
+    } else {
+        $('#satisfaction_doccument_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": true,
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh"
+        })
+
+        $('#satisfaction_doccument_table_p2').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": true,
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh"
+        })
+    }
+
+    function jquery_set_table(){
+        $('#contact_data_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": false,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": false,
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": false,
+            "scrollX": true,
+            "scrollY": "30vh"
+        })
+
+        $('#consult_data_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": false,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": false,
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": false,
+            "scrollX": true,
+            "scrollY": "30vh"
+        })
+
+        $('#consult_main_data_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": false,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": false,
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": false,
+            "scrollX": true,
+            "scrollY": "30vh"
+        })
+
+        $('#admin_site_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": false,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": false,
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": false,
+            "scrollX": true,
+            "scrollY": "30vh"
+        })
+
+        $('#manager_site_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": false,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": false,
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": false,
+            "scrollX": true,
+            "scrollY": "30vh"
+        })
+
+        $('#action_file_p1_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": false,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": false,
+            "searching": false,
+            "autoWidth": true,
+            "ordering": true,
+            "info": false,
+            "scrollX": true,
+            "scrollY": "35vh"
+        })
+
+        $('#action_file_p2_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns: {
+                left: 0,
+                right: 0
+            },
+            "paging": false,
+            "scrollCollapse": true,
+            "responsive": true,
+            "lengthChange": false,
+            "searching": false,
+            "autoWidth": true,
+            "ordering": true,
+            "info": false,
+            "scrollX": true,
+            "scrollY": "35vh"
+        })
+    }
+    
+</script>

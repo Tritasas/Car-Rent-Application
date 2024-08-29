@@ -1,0 +1,204 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card'>
+            <div class='card-header'>
+                <h4>ข้อมูลทางด่วน</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_add_new_expressway" style="color: white; font-weight: 700; margin-bottom: 1vh;" type="button" class="btn btn-info btn-function">
+                            <i class="fa-solid fa-sign-hanging" style="margin-right: 0.2rem;"></i>
+                            เพิ่มข้อมูลทางด่วน
+                        </button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="5%">#</th>
+                                    <th>ชื่อทางด่วน</th>
+                                    <th>ราคา/รอบ</th>
+                                    <th>รายละเอียด</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% expressway_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <a style="cursor: pointer;" onclick="delete_row('<%= e.epw_id %>')">
+                                                <button  type="button" class="btn btn-danger btn-icon">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td style="text-align: center;"><%= e.epw_expressway_name %></td>
+                                        <td style="text-align: end;"><%= e.epw_expressway_price %> บาท</td>
+                                        <td style="max-width: 30vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('<%= e.epw_expressway_description %>')" ><%= e.epw_expressway_description %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_add_new_expressway" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">ระบุข้อมูลทางด่วน</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="submit_add_new_expressway(event)" >
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 1.5vh;">
+                            <label for=""><span class="red">*</span> ชื่อทางด่วน </label>
+                            <input required id="epw_expressway_name" onchange="" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 1.5vh;">
+                            <label for=""><span class="red">*</span> ราคา/รอบ </label>
+                            <div class="input-group">
+                                <input required id="epw_expressway_price" onchange="" value="" type="number" name="" class="form-control">
+                                <span class="input-group-text">บาท</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> รายละเอียด </label>
+                            <textarea id="epw_expressway_description" class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">ยืนยัน, เพิ่ม</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function delete_row( row_id ){
+        Swal.fire({
+            icon : "question",
+            title: "ยืนยันการลบ",
+            text: "ยืนยันการลบหรือไม่ ?",
+            showCancelButton: true,
+            confirmButtonColor: "#f20000",
+            confirmButtonText: "ยืนยัน, ลบ" ,
+            cancelButtonColor: "#00000040",
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let data = {
+                    sql_command : `DELETE FROM tb_expressway WHERE tb_expressway.epw_id = '${row_id}'`
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/only_for_run_sql',
+                    data: data,
+                    success: function (nextPage) {
+                        Swal.fire({
+                            title: "ลบรายการสำเร็จ",
+                            text: "",
+                            icon: "success"
+                        });
+                        
+                        setTimeout( function(){window.location.reload()} , 800 );
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    function submit_add_new_expressway(event){
+        event.preventDefault()
+
+        let data = {
+            epw_expressway_name : document.getElementById("epw_expressway_name").value , 
+            epw_expressway_price : document.getElementById("epw_expressway_price").value , 
+            epw_expressway_description : document.getElementById("epw_expressway_description").value 
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_new_expressway',
+            data: data,
+            success: function (call_back_value) {
+                if( call_back_value == "error same name" ){
+                    Swal.fire({
+                        icon: "warning",
+                        title: "การเพิ่มข้อมูลทางด่วน ไม่สำเร็จ",
+                        text: "ไม่สำเร็จ : ชื่อทางด่วนนี้ มีอยู่แล้ว",
+                    });
+                }else{
+                    window.location.reload();
+                }
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    if( document.getElementsByClassName("row")[1].clientWidth > 850 ){
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 2 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "46vh" 
+        })
+    }else{
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 0 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "46vh" 
+        })
+    }
+</script>

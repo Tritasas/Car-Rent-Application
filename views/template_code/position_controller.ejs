@@ -1,0 +1,191 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button onclick="window.location.reload()" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเฟรซ
+                </button>
+                <button style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function" data-bs-toggle="modal" data-bs-target="#choose_company">
+                    <i class="fa-solid fa-plus"></i>
+                    เพิ่มใหม่
+                </button>
+            </div>
+        </div>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>ผู้ดำรงตำแหน่ง</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">ลำดับ</th>
+                                    <th>ตำแหน่ง</th>
+                                    <th>แผนก</th>
+                                    <th>ชื่อผู้ดำรงตำแหน่ง (TH)</th>
+                                    <th>ชื่อผู้ดำรงตำแหน่ง (EN)</th>
+                                    <th>อีเมล</th>
+                                    <th>สร้างเมื่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% position_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= e.pc_position %></td>
+                                        <td><%= e.pc_division %></td>
+                                        <td><%= e.ed_name_th %> <%= e.ed_surname_th %></td>
+                                        <td><%= e.ed_name_en %> <%= e.ed_surname_en %></td>
+                                        <td><%= e.ed_email_ite %></td>
+                                        <td><%= dayjs(e.pc_create_date).format('DD-MM-YYYY') %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="choose_company">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-solid fa-id-card-clip"></i>
+                    เพิ่มตำแหน่งให้ผู้ใช้งาน
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">ตำแหน่ง</label>
+                        <select id="position_position" onchange="function_1( this.value )" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="Head BU">Head BU</option>
+                            <option value="Recruit">Recruit</option>
+                            <option value="Head Recruit">Head Recruit</option>
+                            <option value="VP HR">VP HR</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">แผนก</label>
+                        <input id="position_division" list="datalistOptions" class="form-control">
+                        <datalist id="datalistOptions">
+                            <% division_all_data.forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </datalist>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">ผู้ดำรงตำแหน่ง</label>
+                        <select id="position_person" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <% employee_data.forEach( function(e) { %>
+                                <option value="<%= e.ed_id %>"><%= e.ed_name_th %> <%= e.ed_surname_th %> (<%= e.ed_name_en %> <%= e.ed_surname_en %>)</option>
+                            <% } ) %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="check_add_new_position()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    window.onload = function(){
+        
+    }
+
+    function check_add_new_position(){
+        if( document.getElementById("position_position").value == "" ){
+            alert("ระบุ 'ตำแหน่ง'")
+        }else if( document.getElementById("position_position").value == "Head BU" ){
+            if( document.getElementById("position_division").value == "" ){
+                alert("ระบุ 'แผนก'")
+            }else if( document.getElementById("position_person").value == "" ){
+                alert("ระบุ 'ผู้ดำรงตำแหน่ง'")
+            }else{
+                add_new_position()
+            }
+        }else{
+            if( document.getElementById("position_person").value == "" ){
+                alert("ระบุ 'ผู้ดำรงตำแหน่ง'")
+            }else{
+                add_new_position()
+            }
+        }
+    }
+
+    function add_new_position(){
+
+        let data = {
+            position : document.getElementById("position_position").value , 
+            division : document.getElementById("position_division").value , 
+            employee : document.getElementById("position_person").value
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_new_position',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function function_1( value ){
+        if( value == "Head BU" ){
+            document.getElementById("position_division").disabled = false
+        }else{
+            document.getElementById("position_division").value = ""
+            document.getElementById("position_division").disabled = true
+        }
+    }
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "50vh" 
+    })
+
+</script>

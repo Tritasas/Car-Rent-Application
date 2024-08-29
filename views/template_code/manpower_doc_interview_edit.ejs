@@ -1,0 +1,618 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button onclick="window.location.reload()" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเฟรซ
+                </button>
+            </div>
+        </div>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>ประเมินผู้สัมภาษณ์</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <!-- <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 15px;">
+                        <button onclick="checkbox_1_all()" style="color: white; font-weight: 700;" type="button" class="btn btn-secondary btn-back">
+                            <i class="fa-solid fa-hand-pointer" style="margin-right: 5px;"></i>
+                            เลือกทั้งหมด
+                        </button>
+                    </div> -->
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <h5>
+                            <i class="fa-solid fa-person" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                            ข้อมูลผู้สัมภาษณ์
+                        </h5>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">ชื่อผู้สัมภาษณ์ (ไทย)</label>
+                        <span id="" class="form-control"><%= data[0].cd_name_th %></span>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">ชื่อผู้สัมภาษณ์ (อังกฤษ)</label>
+                        <span id="" class="form-control"><%= data[0].cd_name_en %></span>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">อีเมลผู้สัมภาษณ์</label>
+                        <span id="" class="form-control"><%= data[0].cd_email %></span>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">ดูเอกสารขออนุมัติอัตรากำลัง</label>
+                        <button onclick="set_src_manpower_doc_view('<%= data[0].md_id %>')" style="color: white; width: 100%; padding: 4px 12px;" data-bs-toggle="modal" data-bs-target="#manpower_doc_view" title="VIEW" type="button" class="btn btn-info">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <hr>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <h5>
+                            <i class="fa-solid fa-ruler-combined" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                            ข้อมูลการให้คะแนน
+                        </h5>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <label for="" class="form-label"><span class="red">*</span> คะแนนการสัมภาษณ์ : 5 = ดีมาก; 4 = ดี; 3 = ปานกลาง; 2 = ต่ำกว่าเกณฑ์; 1 = ต้องปรับปรุง</label> <br>
+                        <label for="" class="form-label"><span class="red">*</span> Interview Rating : 5 = Excellent; 4 = Good; 3 = Average; 2 = Below average; 1 = Poor</label>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <h5>
+                            <i class="fa-solid fa-wand-magic-sparkles" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                            1. คุณสมบัติและการฝึกอบรม (Qualifications & Training)
+                        </h5>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section1" for="" class="form-label">1.1 ประวัติการศึกษา/ Academic Background</label>
+                        <select id="1.1" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_1_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section2" for="" class="form-label">1.2 การฝึกอบรมที่เกี่ยวข้องกับสายงานที่เปิดรับ Professional / Job Related Training</label>
+                        <select id="1.2" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_2_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section3" class="form-label">1.3 ประสบการณ์ตรงกับความต้องการ Experience matching with requirement</label>
+                        <select id="1.3" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_3_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <h5>
+                            <i class="fa-solid fa-brain" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                            2. ความรู้และทักษะ (Knowledge & Skills)
+                        </h5>
+                    </div>
+                    
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section4" class="form-label">2.1 ความรู้และทักษะในงานที่เปิดรับ Job Knowledge & Skills</label>
+                        <select id="2.1" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_4_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section5" class="form-label">2.2 ทักษะทางด้านเทคนิค / Technical Skills</label>
+                        <select id="2.2" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_5_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section6" class="form-label">2.3 ความรู้ในธุรกิจ / Industry Knowledge</label>
+                        <select id="2.3" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_6_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section7" class="form-label">2.4 ทักษะทางภาษา Language Skills</label>
+                        <select id="2.4" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_7_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section8" class="form-label">2.5 ทักษะและความรู้ทางคอมพิวเตอร์ / Computer Skills</label>
+                        <select id="2.5" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_8_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <h5>
+                            <i class="fa-solid fa-dumbbell" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                            3. สมรรถนะ (Competencies)
+                        </h5>
+                    </div>
+                    
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section9" class="form-label">S: Strategic Thinking / การคิดเชิงกลยุทธ์</label>
+                        <select id="3.1" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_9_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section10" class="form-label">P: Positive Communication/ การสื่อสารเชิงบวก</label>
+                        <select id="3.2" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_10_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section11" class="form-label">I: Increase networking/ การสร้างความสัมพันธ์</label>
+                        <select id="3.3" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_11_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section12" class="form-label">R: Result oriented/ การมุ่งหวังผลสัมฤทธิ์</label>
+                        <select id="3.4" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_12_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section13" class="form-label">I: Innovation/ การคิดเชิงนวัตกรรม</label>
+                        <select id="3.5" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_13_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section14" class="form-label">T: Team Management/ การบริหารทีม</label>
+                        <select id="3.6" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_14_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <h5>
+                            <i class="fa-solid fa-person-circle-question" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                            4. คุณลักษณะส่วนบุคคล (Personal Qualities)
+                        </h5>
+                    </div>
+                    
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section15" class="form-label">4.1 บุคลิกลักษณะภายนอก/ Personality & Appearance</label>
+                        <select id="4.1" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_15_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section16" class="form-label">4.2 ทัศนคติ/ Attitude</label>
+                        <select id="4.2" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_16_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section17" class="form-label">4.3 แรงจูงใจในการทำงาน/ Motivation Fit with the Company</label>
+                        <select id="4.3" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_17_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label id="section18" class="form-label">4.4 ความสนใจในงานที่เปิดรับ/ Job interest</label>
+                        <select id="4.4" name="select_point" onchange="select_point()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">หมายเหตุ</label>
+                        <textarea class="form-control" id="section_18_comemnt" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <h5>
+                            <i class="fa-solid fa-clipboard-list" style="margin-right: 5px; color: rgb(0, 128, 255);"></i>
+                            สรุปผลการประเมิน
+                        </h5>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px; display: flex; justify-content: space-between;">
+                        <label for="" class="form-label">ผลการสัมภาษณ์ (Interview Result)</label>
+                        <label id="" for="" class="form-label">( <span id="sum_point" >0</span> / 90 )  x 100 <span class="red" id="alert"> *** ยังไม่ได้เลือกอีก 18 ข้อ</span></label>
+                        <label for="" class="form-label"><span style="font-size: xx-large;" id="total_percentage">50%</span></label>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">ความคิดเห็นเพิ่มเติม (Additional comments)</label>
+                        <textarea class="form-control" id="additional_comment" rows="5"></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">สรุป (Conclusion)</label>
+                        <select id="conclusion" onchange="" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option>สมควรส่งสัมภาษณ์ในลำดับต่อไป (Recommended for further interview)</option>
+                            <option>รอพิจารณา (Pending)</option>
+                            <option>ปฏิเสธ (Rejected)</option>
+                            <option>เหมาะสมกับตำแหน่ง/ สายงานอื่น (โปรดระบุ) Recommended for other position / function (please specify)</option>
+                            <option>เห็นสมควรจ้างงานในตำแหน่งอื่น (Qualified to employ in the position other)</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 12px;">
+                        <label for="" class="form-label">โปรดระบุ (please specify)</label>
+                        <textarea id="conclusion_specify" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-sm-0 col-md-6 col-lg-8 col-xl-8" style="margin-top: 10px;">
+                        <button hidden id="btn_for_save" data-bs-toggle="modal" data-bs-target="#comfirm_save" type="button" class="btn btn-success">
+                            <i class="fa-regular fa-floppy-disk" style="margin-right: 3px;"></i>
+                            บันทึก
+                        </button>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4" style="margin-top: 10px;">
+                        <button onclick="check_submit()" style="width: 100%;" type="button" class="btn btn-success">
+                            <i class="fa-regular fa-floppy-disk" style="margin-right: 3px;"></i>
+                            บันทึก
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade bd-example-modal-xl" id="manpower_doc_view">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-solid fa-eye"></i>
+                    ดูเอกสารขออนุมัติอัตรากำลัง
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="background-color: #e4e4e4 !important;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <iframe id="manpower_doc_view_iframe" src="#" style="width: 100%; height: 65vh;" frameborder="0" allowtransparency="true"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 100%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="comfirm_save">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-regular fa-circle-check"></i>
+                    ยืนยันการบันทึก
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ยืนยันการบันทึกหรือไม่
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="submit()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let checkbox_1_array_id = []
+    let data_obj
+
+    window.onload = function(){
+        data_str = '<%-JSON.stringify(data)%>'
+        data_obj = JSON.parse(data_str);
+
+        console.log( document.getElementById("section1").innerText )
+    }
+
+    let total_point = 0
+    let total_misstake = 18
+
+    function submit(){
+        let data = { 
+            join_cjm_id : data_obj[0].cjm_id ,
+            section_1 : document.getElementById("section1").innerText , 
+            section_2 : document.getElementById("section2").innerText , 
+            section_3 : document.getElementById("section3").innerText , 
+            section_4 : document.getElementById("section4").innerText , 
+            section_5 : document.getElementById("section5").innerText , 
+            section_6 : document.getElementById("section6").innerText , 
+            section_7 : document.getElementById("section7").innerText , 
+            section_8 : document.getElementById("section8").innerText , 
+            section_9 : document.getElementById("section9").innerText , 
+            section_10 : document.getElementById("section10").innerText , 
+            section_11 : document.getElementById("section11").innerText , 
+            section_12 : document.getElementById("section12").innerText , 
+            section_13 : document.getElementById("section13").innerText , 
+            section_14 : document.getElementById("section14").innerText , 
+            section_15 : document.getElementById("section15").innerText , 
+            section_16 : document.getElementById("section16").innerText , 
+            section_17 : document.getElementById("section17").innerText , 
+            section_18 : document.getElementById("section18").innerText , 
+            point_1 : document.getElementById("1.1").value ,
+            point_2 : document.getElementById("1.2").value ,
+            point_3 : document.getElementById("1.3").value ,
+            point_4 : document.getElementById("2.1").value ,
+            point_5 : document.getElementById("2.2").value ,
+            point_6 : document.getElementById("2.3").value ,
+            point_7 : document.getElementById("2.4").value ,
+            point_8 : document.getElementById("2.5").value ,
+            point_9 : document.getElementById("3.1").value ,
+            point_10 : document.getElementById("3.2").value ,
+            point_11 : document.getElementById("3.3").value ,
+            point_12 : document.getElementById("3.4").value ,
+            point_13 : document.getElementById("3.5").value ,
+            point_14 : document.getElementById("3.6").value ,
+            point_15 : document.getElementById("4.1").value ,
+            point_16 : document.getElementById("4.2").value ,
+            point_17 : document.getElementById("4.3").value ,
+            point_18 : document.getElementById("4.4").value ,
+            section_1_comemnt : document.getElementById("section_1_comemnt").value , 
+            section_2_comemnt : document.getElementById("section_2_comemnt").value , 
+            section_3_comemnt : document.getElementById("section_3_comemnt").value , 
+            section_4_comemnt : document.getElementById("section_4_comemnt").value , 
+            section_5_comemnt : document.getElementById("section_5_comemnt").value , 
+            section_6_comemnt : document.getElementById("section_6_comemnt").value , 
+            section_7_comemnt : document.getElementById("section_7_comemnt").value , 
+            section_8_comemnt : document.getElementById("section_8_comemnt").value , 
+            section_9_comemnt : document.getElementById("section_9_comemnt").value , 
+            section_10_comemnt : document.getElementById("section_10_comemnt").value , 
+            section_11_comemnt : document.getElementById("section_11_comemnt").value , 
+            section_12_comemnt : document.getElementById("section_12_comemnt").value , 
+            section_13_comemnt : document.getElementById("section_13_comemnt").value , 
+            section_14_comemnt : document.getElementById("section_14_comemnt").value , 
+            section_15_comemnt : document.getElementById("section_15_comemnt").value , 
+            section_16_comemnt : document.getElementById("section_16_comemnt").value , 
+            section_17_comemnt : document.getElementById("section_17_comemnt").value , 
+            section_18_comemnt : document.getElementById("section_18_comemnt").value , 
+            total_point : total_point , 
+            total_percentage : ((+total_point / 90) * 100).toFixed(2) , 
+            additional_comment : document.getElementById("additional_comment").value ,
+            conclusion : document.getElementById("conclusion").value , 
+            conclusion_specify : document.getElementById("conclusion_specify").value , 
+        }
+
+        console.log( "data" )
+        console.log( data )
+
+        $.ajax({
+            type: 'POST',
+            url: '/interview_edit_submit',
+            data: data,
+            success: function (nextPage) {
+                window.location = "/manpower_doc_interview_list";
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function check_submit(){
+        if( +total_misstake > 0 ){
+            alert("ยังมีข้อที่ยังไม่ได้เลือก")
+        }else if( document.getElementById("conclusion").value == "" ){
+            alert("ยังไม่ได้เลือก สรุป (Conclusion)")
+        }else{
+            document.getElementById("btn_for_save").click();
+        }
+    }
+
+    function set_src_manpower_doc_view( param ){
+        document.getElementById("manpower_doc_view_iframe").src = `/manpower_doc_view/${btoa(param)}`
+    }
+
+    function select_point(){
+        let select_point = document.getElementsByName("select_point")
+        total_point = 0
+        total_misstake = 0
+        document.getElementById("alert").innerText = ``
+
+        for( let i = 0 ; i < select_point.length ; i++ ){
+
+            if( select_point[i].value == "" ){
+                console.log( "ไม่มีข้อมูล" )
+                total_misstake++
+                document.getElementById("alert").innerText = ` *** ยังไม่ได้เลือกอีก ${total_misstake} ข้อ`
+            }else{
+                console.log( select_point[i].value )
+                total_point += +select_point[i].value
+                console.log( "total_point" )
+                console.log( total_point )
+
+                document.getElementById("sum_point").innerText = total_point
+                document.getElementById("total_percentage").innerText = `${((+total_point / 90) * 100).toFixed(2)} %`
+            }
+        }
+    }
+
+</script>

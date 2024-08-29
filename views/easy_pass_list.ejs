@@ -1,0 +1,270 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card'>
+            <div class='card-header'>
+                <h4>ข้อมูล Easy Pass</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_add_new_easy_pass" style="color: white; font-weight: 700; margin-bottom: 1vh;" type="button" class="btn btn-info btn-function">
+                            <i class="fa-brands fa-cc-paypal" style="margin-right: 0.2rem;"></i>
+                            เพิ่มข้อมูล Easy Pass
+                        </button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="25%">รหัสการ์ด Easy Pass</th>
+                                    <th width="15%">เงินในบัตร</th>
+                                    <th width="55%">รายละเอียด</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% easy_pass_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td style="text-align: center;">
+                                            <a href="/easy_pass_recharge_history_list/<%= btoa(e.ezp_id) %>" style="color: rgb(26, 119, 226); cursor: pointer;">
+                                                <%= e.ezp_easy_pass_code %>
+                                            </a>
+                                        </td>
+                                        <td style="text-align: end;">
+                                            <a onclick="insert_recharge('<%= e.ezp_id %>' , '<%= e.ezp_easy_pass_code %>')" data-bs-toggle="modal" data-bs-target="#modal_add_new_recharge" style="color: rgb(26, 119, 226); cursor: pointer;">
+                                                <%= e.ezp_easy_pass_money %> บาท
+                                            </a>
+                                        </td>
+                                        <td style="max-width: 30vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('<%= e.ezp_easy_pass_remark %>')" ><%= e.ezp_easy_pass_remark %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_add_new_recharge" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">ระบุข้อมูลเติมเงินบัตร Easy Pass</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="submit_add_new_recharge(event)" >
+                <div class="modal-body">
+                    <div class="row">
+                        <div hidden class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for="">id</label>
+                            <input disabled required id="recharge_ezp_id" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for="">รหัสการ์ด Easy Pass</label>
+                            <input disabled required id="recharge_ezp_easy_pass_code" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""><span class="red">*</span> จำนวนเงินที่เติมเพิ่ม</label>
+                            <div class="input-group">
+                                <input required id="recharge_epw_expressway_price" value="" type="number" name="" class="form-control">
+                                <span class="input-group-text">บาท</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> รายละเอียด</label>
+                            <textarea id="recharge_ezp_easy_pass_remark" class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">ยืนยัน, เพิ่ม</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_add_new_easy_pass" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">ระบุข้อมูล Easy Pass</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="submit_add_new_easy_pass(event)" >
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""><span class="red">*</span> รหัสการ์ด Easy Pass</label>
+                            <input required id="ezp_easy_pass_code" onchange="" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> รายละเอียด</label>
+                            <textarea id="ezp_easy_pass_remark" class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">ยืนยัน, เพิ่ม</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function submit_add_new_recharge(event){
+        event.preventDefault();
+
+        let data = {
+            recharge_ezp_id : document.getElementById("recharge_ezp_id").value , 
+            recharge_epw_expressway_price : document.getElementById("recharge_epw_expressway_price").value , 
+            recharge_ezp_easy_pass_remark : document.getElementById("recharge_ezp_easy_pass_remark").value , 
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_new_recharge',
+            data: data,
+            success: function (call_back_value) {
+                Swal.fire({
+                    title: "ทำรายการสำเร็จ",
+                    text: "",
+                    icon: "success"
+                });
+                
+                setTimeout( function(){window.location.reload()} , 800 );
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function insert_recharge( easy_pass_id , easy_pass_code ){
+        document.getElementById("recharge_ezp_id").value = easy_pass_id
+        document.getElementById("recharge_ezp_easy_pass_code").value = easy_pass_code
+    }
+
+    // function delete_row( row_id ){
+    //     Swal.fire({
+    //         icon : "question",
+    //         title: "ยืนยันการลบ",
+    //         text: "ยืนยันการลบหรือไม่ ?",
+    //         showCancelButton: true,
+    //         confirmButtonColor: "#f20000",
+    //         confirmButtonText: "ยืนยัน, ลบ" ,
+    //         cancelButtonColor: "#00000040",
+    //         cancelButtonText: "ปิด"
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             let data = {
+    //                 sql_command : `DELETE FROM tb_expressway WHERE tb_expressway.epw_id = '${row_id}'`
+    //             }
+
+    //             $.ajax({
+    //                 type: 'POST',
+    //                 url: '/only_for_run_sql',
+    //                 data: data,
+    //                 success: function (nextPage) {
+    //                     Swal.fire({
+    //                         title: "ลบรายการสำเร็จ",
+    //                         text: "",
+    //                         icon: "success"
+    //                     });
+                        
+    //                     setTimeout( function(){window.location.reload()} , 800 );
+    //                 },
+    //                 error: function (error) {
+    //                     console.log("error with Ajax");
+    //                     console.log(error);
+    //                 }
+    //             });
+    //         }
+    //     });
+    // }
+
+    function submit_add_new_easy_pass(event){
+        event.preventDefault()
+
+        let data = {
+            ezp_easy_pass_code : document.getElementById("ezp_easy_pass_code").value , 
+            ezp_easy_pass_remark : document.getElementById("ezp_easy_pass_remark").value
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_new_easy_pass',
+            data: data,
+            success: function (call_back_value) {
+                if( call_back_value == "error same code" ){
+                    Swal.fire({
+                        icon: "warning",
+                        title: "การเพิ่มข้อมูล Easy Pass ไม่สำเร็จ",
+                        text: "ไม่สำเร็จ : รหัสการ์ด Easy Pass นี้ มีอยู่แล้ว",
+                    });
+                }else{
+                    window.location.reload();
+                }
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    if( document.getElementsByClassName("row")[1].clientWidth > 850 ){
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 2 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "46vh" 
+        })
+    }else{
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 0 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "46vh" 
+        })
+    }
+</script>

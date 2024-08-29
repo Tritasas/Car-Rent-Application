@@ -1,0 +1,360 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card' style="margin-bottom: 2vh;">
+            <div class='card-header'>
+                <h4>รายการเอกสารขอตั๋ว Bolt , Grab</h4>
+                <input id="tdm_id" disabled hidden value="<%= document_main_data[0].tdm_id %>" type="text" name="" class="form-control">
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="margin-bottom: 2vh;">
+                        <label for=""> <span class="red">*</span> ชื่อ-นามสกุล ผู้ใช้</label>
+                        <span class="form-control"><%= document_main_data[0].tdm_user_name %></span>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="margin-bottom: 2vh;">
+                        <label for=""> <span class="red">*</span> อีเมล ผู้ใช้</label>
+                        <span class="form-control"><%= document_main_data[0].tdm_user_email %></span>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="margin-bottom: 2vh;">
+                        <label for=""> <span class="red">*</span> แผนก ผู้ใช้</label>
+                        <span class="form-control"><%= document_main_data[0].tdm_user_division_name %></span>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 2vh;">
+                        <label for=""> <span class="red">*</span> เพื่อ</label>
+                        <textarea disabled style="background-color: white;" id="" onchange="" class="form-control" rows="5"><%= document_main_data[0].tdm_for_what %></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 2vh;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%"><i class="fa-solid fa-list-ol"></i></th>
+                                    <th width="5%"><i class="fa-solid fa-screwdriver-wrench"></i></th>
+                                    <th width="20%">วันที่ต้องการ</th>
+                                    <th width="10%">แอพที่เรียก</th>
+                                    <th width="60%">หมายเหตุ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% document_sub_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <% if( e.tds_status == "ใส่โค้ดแล้ว" ){ %>
+                                                <div class="alert alert-success" role="alert" style="padding: 0.3rem 1rem; margin-bottom: 0rem;">
+                                                    <%= e.tds_ticket_code_generated %>
+                                                </div>
+                                            <% }else{ %>
+                                                -
+                                            <% } %>
+                                        </td>
+                                        <td><%= dayjs(e.tds_want_date).format("DD/MM/YYYY") %></td>
+                                        <td><%= e.tds_want_brand %></td>
+                                        <td style="max-width: 20vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('<%= e.tds_want_remark %>')" ><%= e.tds_want_remark %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='card' style="margin-bottom: 2vh;">
+            <div class='card-header'>
+                <h4>ผู้มีสิทธิ์อนุมัติเอกสารนี้</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 2vh;">
+                        <table id="main_table_3" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%"><i class="fa-solid fa-list-ol"></i></th>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>อีเมล</th>
+                                    <th>แผนก</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% approver_document_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= e.dap_approver_name %></td>
+                                        <td><%= e.dap_approver_email %></td>
+                                        <td><%= e.dap_approver_division_name %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='card' style="margin-bottom: 2vh;">
+            <div class='card-header'>
+                <h4>ความคิดเห็น</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <% if(document_comment_data.length == 0){ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <h5 style="text-align: center;">
+                                <span>ยังไม่มีความคิดเห็น</span>
+                            </h5>
+                        </div>
+                    <% }else{ %> 
+                        <% document_comment_data.forEach( function(e) { %>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                                <div class='card' style="margin-bottom: 2vh;">
+                                    <div class='card-header' style="background-color: #ffffff !important; color: black; text-align: start;">
+                                        <h5 style="display: flex; justify-content: space-between;">
+                                            <span>โดย <%= e.tdc_create_by_name %> (<%= e.tdc_create_by_division %>)</span>
+                                            <span><%= dayjs(e.tdc_create_date).format("DD/MM/YYYY HH:mm:ss") %></span>
+                                        </h5>
+                                    </div>
+                                    <div class='card-body'>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                                                <%= e.tdc_comment %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } ) %>
+                    <% } %>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                        <label for="document_commnet" class="form-label">ความคิดเห็น</label>
+                        <textarea class="form-control" id="document_commnet" rows="3"></textarea>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0vh;">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                                <button onclick="submit_comment()" type="button" class="btn btn-primary"> <i class="fa-regular fa-paper-plane"></i> ส่ง</button>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="text-align: end;">
+
+                                <% if( document_main_data[0].tdm_status == "บันทึกแล้ว" ){ %>
+                                    <% if( permission == "approver" ){ %>
+                                        <button onclick="reject()" style="width: 47%;" type="button" class="btn btn-danger"><i class="fa-solid fa-circle-xmark"></i> ตีกลับ</button>
+                                        <button onclick="approve()" style="width: 47%;" type="button" class="btn btn-success"><i class="fa-solid fa-circle-check"></i> อนุมัติ</button>
+                                    <% }else{ %>
+                                        <div class="alert alert-warning" role="alert" style="text-align: start;">
+                                            <i class="fa-solid fa-clock"></i> รออนุมัติ
+                                        </div>
+                                    <% } %>
+                                <% }else if( document_main_data[0].tdm_status == "อนุมัติแล้ว" ){ %>
+                                    <div class="alert alert-success" role="alert" style="text-align: start;">
+                                        <i class="fa-solid fa-square-check"></i> <%= document_main_data[0].tdm_status %> โดย <%= document_main_data[0].cdm_approver_name %> เมื่อ <%= dayjs(document_main_data[0].cdm_approve_date).format("DD/MM/YYYY HH:mm:ss") %>
+                                    </div>
+                                <% }else if( document_main_data[0].tdm_status == "ถูกตีกลับ" ){ %>
+                                    <div class="alert alert-danger" role="alert" style="text-align: start;">
+                                        <i class="fa-solid fa-square-xmark"></i> <%= document_main_data[0].tdm_status %> โดย <%= document_main_data[0].cdm_approver_name %> เมื่อ <%= dayjs(document_main_data[0].cdm_approve_date).format("DD/MM/YYYY HH:mm:ss") %>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_insert_new_row" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">ระบุข้อมูล</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="insert_sub_row(event)" >
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> วันที่ต้องการ</label>
+                            <input required id="tds_want_date" onchange="" value="" type="date" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> แอพที่เรียก</label>
+                            <select required id="tds_want_brand" onchange="" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                                <option value="Bolt">Bolt</option>
+                                <option value="Grab">Grab</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> หมายเหตุ</label>
+                            <textarea required id="tds_want_remark" onchange="" class="form-control" rows="5"><%= document_main_data[0].tdm_for_what %></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                    <button type="submit" class="btn btn-primary">บันทึกรายการ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+function reject(){
+        Swal.fire({
+            title: "ยืนยันการตีกลับ" ,
+            html: "ยืนยันการตีกลับเอกสารการขอตั๋วเดินทาง Bolt , Grab นี้หรือไม่ <br><br> <span style='color:#dc3545'> * โปรดระบุสาเหตุในการตีกลับในช่องความคิดเห็น เพื่อให้เจ้าของเอกสารสามารถแก้ไขเอกสารให้ถูกต้อง </span> ",
+            icon : "question",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            confirmButtonText: "<i class='fa-solid fa-circle-xmark'></i> ยืนยัน, ตีกลับ",
+            cancelButtonColor: "#00000040",
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let data = {
+                    document_id : document.getElementById("tdm_id").value , 
+                    action : "ถูกตีกลับ"
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/approve_ticket_request_document',
+                    data: data,
+                    success: function ( call_back_value ) {
+                        console.log("saved")
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    function approve(){
+        Swal.fire({
+            title: "ยืนยันการอนุมัติ" ,
+            text: "ยืนยันการอนุมัติเอกสารการขอตั๋วเดินทาง Bolt , Grab นี้หรือไม่",
+            icon : "question",
+            showCancelButton: true,
+            confirmButtonColor: "#027E6F",
+            confirmButtonText: '<i class="fa-solid fa-circle-check"></i> ยืนยัน, อนุมัติ',
+            cancelButtonColor: "#00000040",
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let data = {
+                    document_id : document.getElementById("tdm_id").value , 
+                    action : "อนุมัติแล้ว"
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/approve_ticket_request_document',
+                    data: data,
+                    success: function ( call_back_value ) {
+                        console.log("saved")
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    function submit_comment(){
+        if( document.getElementById("document_commnet").value == "" || document.getElementById("document_commnet").value == " " || document.getElementById("document_commnet").value == "   " ){
+            console.log("No Comment")
+        }else{
+            Swal.fire({
+                title: "ยืนยันการส่งความคิดเห็น" ,
+                text: "ยืนยันการส่งความคิดเห็นหรือไม่ ความคิดเห็นที่ส่งไปแล้วจะไม่สามารถลบได้",
+                icon : "question",
+                showCancelButton: true,
+                confirmButtonColor: "#027E6F",
+                confirmButtonText: "ยืนยัน, ส่ง",
+                cancelButtonColor: "#00000040",
+                cancelButtonText: "ปิด"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let comment = document.getElementById("document_commnet").value
+
+                    let data = {
+                        document_id : document.getElementById("tdm_id").value , 
+                        comment : comment
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/ticket_request_insert_comment',
+                        data: data,
+                        success: function ( call_back_value ) {
+                            console.log("saved")
+                            window.location.reload();
+                        },
+                        error: function (error) {
+                            console.log("error with Ajax");
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 3 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+    $('#main_table_3').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 3 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+</script>

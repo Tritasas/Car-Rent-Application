@@ -1,0 +1,241 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <!-- <div class="row" style="margin-bottom: 10px; ">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ 
+                </button>
+                <button onclick="window.location.reload();" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเซ็ต
+                </button>
+            </div>
+        </div> -->
+        <div class='card'>
+            <div class='card-header'>
+                <h4> Flow การอนุมัติของแผนก <%= division %> </h4>
+            </div>
+            <div class='card-body'>
+                <div class="row" style="overflow: auto; margin-bottom: 1vh;">
+                    <% flow_approve.forEach( function(e) { %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0.5rem;">
+                            <div class="card">
+                                <div class="card-header" style="background-color: white !important;">
+                                    อนุมัติลำดับที่ <%= e.step_approve %>
+                                </div>
+                                <div class="card-body">
+                                    <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">#</th>
+                                                <th>#</th>
+                                                <th>#</th>
+                                                <th>#</th>
+                                                <th>#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% index = 1 %>
+                                            <% e.approve.forEach( function(x) { %>
+                                                <tr>
+                                                    <td><%= index %></td>
+                                                    <td><%= x.ac_approval_name_th %></td>
+                                                    <td><%= x.ac_approval_name_en %></td>
+                                                    <td><%= x.ac_approval_email %></td>
+                                                    <td><%= x.ac_approval_division %></td>
+                                                </tr>
+                                            <% index++ } ) %>
+                                        </tbody>
+                                    </table>
+                                    <a href="#" class="btn btn-danger"> <i class="fa-solid fa-trash"></i> </a>
+                                    <a href="#" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> เพิ่มผู้อนุมัติลำดับที่ <%= e.step_approve %></a>
+                                </div>
+                            </div>
+                        </div>
+                    <% } ) %>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 0.5rem;">
+                        <div class="card">
+                            <div class="card-body" style=" display: flex; justify-content: center;">
+                                <a onclick="add_new_step_approve( '<%= flow_approve[ flow_approve.length - 1 ].step_approve %>' )" style="font-size: xx-large; cursor: pointer;" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<script>
+
+    function add_new_step_approve( number_step_approve ){
+        Swal.fire({
+            icon : "question",
+            title: `เพิ่มลำดับการอนุมัติลำดับที่ ${+number_step_approve + 1}`,
+            html: ``,
+            showCancelButton: true,
+            confirmButtonColor: "#027E6F",
+            cancelButtonColor: "#00000040",
+            confirmButtonText: "ยืนยัน, เพิ่ม" ,
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let data = {
+                    car_id : document.getElementById("car_id").value
+                }
+        
+                $.ajax({
+                    type: 'POST',
+                    url: '/submit_edit_car_detail',
+                    data: data,
+                    success: function (nextPage) {
+                        window.location = nextPage;
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+    });
+    }
+
+function delete_image_car( car_image_id ){
+    Swal.fire({
+        title: "ยืนยันการลบรูป",
+        text: "คุณต้องการลบรูปภาพหรือไม่ ? โปรดยืนยันการทำรายการ",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#00000040",
+        confirmButtonText: "ยืนยัน, ลบรูป" ,
+        cancelButtonText: "ปิด"
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            let data = {
+                car_image_id : car_image_id
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: '/delete_image_car',
+                data: data,
+                success: function (nextPage) {
+
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                    
+                    setTimeout( function(){window.location.reload()} , 1500 );
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                }
+            });
+
+            
+        }
+    });
+}
+
+function auto_save_value( fierd_name , new_value ){
+    let data = {
+            sql_command : `UPDATE tb_car_list SET ${fierd_name} = "${new_value.replace(/["\\]/g, ' ')}" WHERE tb_car_list.car_id = "${document.getElementById("car_id").value}"`
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/only_for_run_sql',
+            data: data,
+            success: function (nextPage) {
+                // window.location = nextPage;
+                console.log("save")
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+}
+
+function submit_edit_car_detail(){
+
+    let car_image_no_syntex = '<%= JSON.stringify(division_approval_data) %>'
+    let car_image_no_free_spec = (JSON.stringify(car_image_no_syntex.replace(/\n|\t|\r/g, " ")))
+    let car_image_with_syntax = decodedString( car_image_no_free_spec )
+    let car_image_to_obj = JSON.parse(car_image_with_syntax);
+
+    console.log("car_image_to_obj")
+    console.log(car_image_to_obj)
+
+    console.log("car_image_to_obj.length")
+    console.log(car_image_to_obj.length)
+
+    if( car_image_to_obj.length == 0 ){
+        Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถบันทึกได้",
+            text: "กรุณราใส่รูปภาพรถยนต์" ,
+            timer: 1500,
+        });
+        // setTimeout( function(){window.location.reload()} , 1500 );
+    }else if( document.getElementById("car_name").value == "" ){
+        Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถบันทึกได้",
+            text: "กรุณราใส่ชื่อของรถยนต์" ,
+            timer: 1500,
+        });
+    }else if( document.getElementById("car_type").value == "" ){
+        Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถบันทึกได้",
+            text: "กรุณราใส่ประเภทของรถยนต์" ,
+            timer: 1500,
+        });
+    }else{
+        Swal.fire({
+            icon : "question",
+            title: "บันทึกข้อมูลรถยนต์",
+            html: `
+                บันทึกข้อมูลรถยนต์หรือไม่ ? 
+            `,
+            showCancelButton: true,
+            confirmButtonColor: "#027E6F",
+            cancelButtonColor: "#00000040",
+            confirmButtonText: "ยืนยัน, บันทึก" ,
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let data = {
+                    car_id : document.getElementById("car_id").value
+                }
+        
+                $.ajax({
+                    type: 'POST',
+                    url: '/submit_edit_car_detail',
+                    data: data,
+                    success: function (nextPage) {
+                        window.location = nextPage;
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+}
+
+</script>

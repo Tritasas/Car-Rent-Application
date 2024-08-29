@@ -1,0 +1,147 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card' style="margin-bottom: 2vh;">
+            <div class='card-header'>
+                <h4>รายการเอกสารขอยืมรถ</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="10%">#</th>
+                                    <th>#</th>
+                                    <th>ผู้สร้างชื่อ-นามสกุล (แผนก)</th>
+                                    <th>สร้างให้กับชื่อ-นามสกุล (แผนก)</th>
+                                    <th>สร้างเมื่อ</th>
+                                    <th>ผู้ขับ</th>
+                                    <th>Eazy Pass</th>
+                                    <th>บัตรเติมน้ำมัน</th>
+                                    <th>เริ่มต้น</th>
+                                    <th>สิ้นสุด</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% car_rent_document_approve_list.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <a href="/car_rent_document_approve_view/<%= btoa(e.cdm_id) %>">
+                                                <button type="button" class="btn btn-primary btn-icon">
+                                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td><%= e.cdm_create_by_name %> (<%= e.cdm_create_by_division %>)</td>
+                                        <td><%= e.cdm_for_person %> (<%= e.cdm_for_person_division %>)</td>
+                                        <td><%= dayjs(e.cdm_create_date).format("DD/MM/YYYY") %></td>
+                                        <td><%= e.cdm_driver_type %></td>
+                                        <td><%= e.cdm_eazy_pass %></td>
+                                        <td><%= e.cdm_fuel_card %></td>
+                                        <td><%= dayjs(e.cdm_start_date).format("DD/MM/YYYY") %></td>
+                                        <td><%= dayjs(e.cdm_end_date).format("DD/MM/YYYY") %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='card'>
+            <div class='card-header'>
+                <h4>รายการเอกสารการขอตั๋วเดินทาง Bolt , Grab </h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table_2" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="10%">#</th>
+                                    <th>ผู้สร้างชื่อ-นามสกุล (แผนก)</th>
+                                    <th>สร้างให้กับชื่อ-นามสกุล (แผนก)</th>
+                                    <th>สร้างเมื่อ</th>
+                                    <th>จุดประสงค์การขอ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% ticket_requset_document_approve_list.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <a href="/ticket_requset_document_view/<%= btoa(e.tdm_id) %>">
+                                                <button type="button" class="btn btn-primary btn-icon">
+                                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td><%= e.tdm_create_by_name %> (<%= e.tdm_create_by_division %>)</td>
+                                        <td><%= e.tdm_user_name %> (<%= e.tdm_user_division_name %>)</td>
+                                        <td><%= dayjs(e.tdm_create_date).format("DD/MM/YYYY") %></td>
+                                        <td style="max-width: 30vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            <%= e.tdm_for_what %>
+                                        </td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<script>
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+    $('#main_table_2').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+</script>

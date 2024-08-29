@@ -1,0 +1,367 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button onclick="window.location.reload()" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเฟรซ
+                </button>
+            </div>
+        </div>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>อนุมัติ - เอกสารขออนุมัติอัตรากำลัง</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 15px;">
+                        <button onclick="checkbox_1_all()" style="color: white; font-weight: 700;" type="button" class="btn btn-secondary btn-back">
+                            <i class="fa-solid fa-hand-pointer" style="margin-right: 5px;"></i>
+                            เลือกทั้งหมด
+                        </button>
+                        <button onclick="check_approve()" style="color: white; font-weight: 700;" type="button" class="btn btn-success btn-back">
+                            <i class="fa-solid fa-file-circle-check" style="margin-right: 5px;"></i>
+                            อนุมัติรายการที่เลือก
+                        </button>
+                        <button onclick="check_reject()" style="color: white; font-weight: 700;" type="button" class="btn btn-danger btn-back">
+                            <i class="fa-solid fa-file-circle-xmark" style="margin-right: 5px;"></i>
+                            ปฎิเสธรายการที่เลือก
+                        </button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">ลำดับ</th>
+                                    <th>เครื่องมือ</th>
+                                    <th>หมายเลขเอกสาร</th>
+                                    <th>สถานะ</th>
+
+                                    <th>แผนกเอกสาร</th>
+                                    <th>ตำแหน่ง</th>
+                                    <th>วันที่คาดหวังให้เริ่มงาน</th>
+                                    <th>ประเภทการจ้าง</th>
+                                    <th>วัตถุประสงค์</th>
+                                    <th>สถานที่ทำงาน</th>
+                                    <th>หน้าที่ความรับผิดชอบ</th>
+                                    <th>สาขาที่ต้องการ</th>
+                                    <th>ทักษะหรือความต้องการอื่นๆ</th>
+
+                                    <th>ผู้อนุมัติที่ 1</th>
+                                    <th>ผู้อนุมัติที่ 2</th>
+
+                                    <th>บริษัท</th>
+                                    <th>สร้างวันที่</th>
+                                    <th>สร้างโดย (ชื่อ)</th>
+                                    <th>สร้างโดย (แผนก)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% manpower_doc_list_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <input id="<%= e.md_id %>" name="checkbox_1" onchange="checkbox_1()" type="checkbox" class="form-check-input" style="margin-right: 10px; margin-top: 6px;">
+                                            <button onclick="set_src_manpower_doc_view('<%= e.md_id %>')" data-bs-toggle="modal" data-bs-target="#manpower_doc_view" title="VIEW" type="button" class="btn btn-outline-primary inTable">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </button>
+                                        </td>
+                                        <td><%= e.md_doc_code %><%= e.md_doc_id %></td>
+                                        <td><%= e.md_status_approve %></td>
+
+                                        <td><%= e.md_division_doc %></td>
+                                        <td><%= e.md_job_name %></td>
+                                        <td><%= dayjs(e.md_start_work).format("DD-MM-YYYY") %></td>
+                                        <td><%= e.md_employee_type %></td>
+                                        <td><%= e.md_objective %></td>
+                                        <td><%= e.md_workplace %></td>
+                                        <td><%= e.md_responsibilities %></td>
+                                        <td><%= e.md_education_major %></td>
+                                        <td><%= e.md_requirement_skill %></td>
+
+                                        <td><%= e.md_hiring_name_th %> (<%= e.md_hiring_name_en %>)</td>
+                                        <td><%= e.md_head_bu_name_th %> (<%= e.md_head_bu_name_en %>)</td>
+
+                                        <td><%= e.md_company_code %></td>
+                                        <td><%= dayjs(e.md_create_date).format("DD-MM-YYYY") %></td>
+                                        <td><%= e.md_create_name %></td>
+                                        <td><%= e.md_create_division %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade bd-example-modal-xl" id="manpower_doc_view">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-solid fa-eye"></i>
+                    ดูเอกสารขออนุมัติอัตรากำลัง
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="background-color: #e4e4e4 !important;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <iframe id="manpower_doc_view_iframe" src="#" style="width: 100%; height: 65vh;" frameborder="0" allowtransparency="true"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 100%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="comment_approve_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-regular fa-circle-check"></i>
+                    ยืนยันอนุมัติ - เอกสารขออนุมัติอัตรากำลัง
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">คอมเมนต์</label>
+                        <textarea class="form-control" id="comment_approve" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_approve( document.getElementById('comment_approve').value )" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="comment_reject_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: rgb(170, 0, 0);" class="fa-regular fa-circle-xmark"></i>
+                    ยืนยันปฎิเสธ - เอกสารขออนุมัติอัตรากำลัง
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label"> <span class="red">*</span> คอมเมนต์</label>
+                        <textarea class="form-control" id="comment_reject" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="confirm_reject( document.getElementById('comment_reject').value )" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: rgb(170, 0, 0);" class="fa-regular fa-circle-check"></i>
+                    ยืนยันปฎิเสธ - เอกสารขออนุมัติอัตรากำลัง
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#comment_approve_modal" id="btn_comment_approve"></button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#comment_reject_modal" id="btn_comment_reject"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let checkbox_1_array_id = []
+
+    window.onload = function(){
+        manpower_doc_list_data_str = '<%-JSON.stringify(manpower_doc_list_data)%>'
+        manpower_doc_list_data_obj = JSON.parse(manpower_doc_list_data_str);
+    }
+
+    function checkbox_1_all(){
+        let checkbox_1_all = document.getElementsByName("checkbox_1")
+        checkbox_1_array_id = []
+
+        console.log("checkbox_1_all")
+        console.log(checkbox_1_all)
+
+        for( let i = 0 ; i < checkbox_1_all.length ; i++ ){
+            checkbox_1_all[i].checked = true
+            checkbox_1_array_id.push(checkbox_1_all[i].id)
+        }
+
+        console.log("checkbox_1_array_id")
+        console.log(checkbox_1_array_id)
+    }
+
+    function checkbox_1(){
+        let checkbox_1_all = document.getElementsByName("checkbox_1")
+        checkbox_1_array_id = []
+
+        console.log("checkbox_1_all")
+        console.log(checkbox_1_all)
+
+        for( let i = 0 ; i < checkbox_1_all.length ; i++ ){
+            if( checkbox_1_all[i].checked == true ){
+                checkbox_1_array_id.push(checkbox_1_all[i].id)
+            }
+        }
+
+        console.log("checkbox_1_array_id")
+        console.log(checkbox_1_array_id)
+    }
+
+    function check_approve(){
+        if(checkbox_1_array_id.length > 0){
+            document.getElementById("btn_comment_approve").click();
+        }else{
+            alert("ไม่มีรายการที่เลือก")
+        }
+    }
+
+    function check_reject(){
+        if(checkbox_1_array_id.length > 0){
+            document.getElementById("btn_comment_reject").click();
+        }else{
+            alert("ไม่มีรายการที่เลือก")
+        }
+    }
+
+    function confirm_approve( comment ){
+        console.log("approve comment")
+        console.log(comment)
+
+        let data = {
+            arr_check_id : checkbox_1_array_id.join(',') , 
+            comment : comment
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/manpower_doc_approve_approve',
+            data: data,
+            success: function (nextPage) {
+                window.location.replace(nextPage)
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function confirm_reject( comment ){
+        if( comment == "" ){
+            alert("โปรดระบุเหตุผลการปฎิเสธในช่องคอมเมนต์")
+        }else{
+            console.log("reject comment")
+            console.log(comment)
+
+            let data = {
+                arr_check_id : checkbox_1_array_id.join(',') , 
+                comment : comment
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/manpower_doc_approve_reject',
+                data: data,
+                success: function (nextPage) {
+                    window.location.replace(nextPage)
+                },
+                error: function (error) {
+                    console.log("error with Ajax");
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+    function set_src_manpower_doc_view( param ){
+        document.getElementById("manpower_doc_view_iframe").src = `/manpower_doc_view/${btoa(param)}`
+    }
+
+    if( window.innerWidth > 1000 ){
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 4 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh" 
+        })
+    }else{
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 0 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh" 
+        })
+    }
+
+    
+
+</script>

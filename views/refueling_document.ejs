@@ -1,0 +1,510 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card' style="margin-bottom: 2vh;">
+            <div class='card-header'>
+                <h4>ข้อมูลทั้งหมด</h4>
+                <input id="sub_document_id" disabled hidden value="<%= sub_document_data[0].cds_id  %>" type="text" class="form-control">
+                <input id="main_document_id" disabled hidden value="<%= main_document_data[0].cdm_id  %>" type="text" class="form-control">
+                <input id="car_id" disabled hidden value="<%= car_data[0].car_id  %>" type="text" class="form-control">
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <h5>ข้อมูลเอกสารขอยืมรถยนต์</h5>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 7px;">
+                        <label for="">วันที่ยืม</label>
+                        <span class="form-control"><%= dayjs(sub_document_data[0].cds_date).format("DD/MM/YYYY") %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 7px;">
+                        <label for="">ช่วงเวลา</label>
+                        <span class="form-control"><%= sub_document_data[0].cds_phase %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <label for="">ผู้ขับ</label>
+                        <span class="form-control"><%= main_document_data[0].cdm_driver_name %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <hr>
+                    </div>
+
+                    <h5>ข้อมูลรถยนต์</h5>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 7px;">
+                        <label for="">ทะเบียนรถ</label>
+                        <span class="form-control"><%= car_data[0].car_registration_code %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 7px;">
+                        <label for="">เลข Eazy Pass</label>
+                        <span class="form-control"><%= car_data[0].car_eazy_pass_code %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 7px;">
+                        <label for="">เลข บัตรเติมน้ำมัน</label>
+                        <span class="form-control"><%= car_data[0].car_fuel_card_code %></span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 7px;">
+                        <label for=""> <span class="red">* แก้ไข</span> เลขไมล์ล่าสุด</label>
+                        <input id="new_last_miles" value="<%= car_data[0].car_last_miles %>" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='card' style="margin-bottom: 2vh;">
+            <div class='card-header'>
+                <h4>รายการการเติมน้้ำมัน</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <% if( sub_document_data[0].cds_status == "สำเร็จแล้ว" ){ %>
+
+                    <% }else{ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                            <button data-bs-toggle="modal" data-bs-target="#modal_insert_refueling_record" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                                <i class="fa-solid fa-plus"></i>
+                                เพิ่มประวัติการเติมน้ำมัน
+                            </button>
+                        </div>
+                    <% } %>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>#</th>
+                                    <th>สถานที่เติมน้ำมัน</th>
+                                    <th>จำนวนลิตร</th>
+                                    <th>ราคาทั้งหมด</th>
+                                    <th>หมายเหตุ</th>
+                                    <th>ผู้สร้างชื่อ-นามสกุล (แผนก)</th>
+                                    <th>สร้างเมื่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% refueling_document.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <% if( sub_document_data[0].cds_status == "สำเร็จแล้ว" ){ %>
+
+                                            <% }else{ %>
+                                                <button onclick="delete_refueling_record( '<%= e.rd_id %>' )" type="button" class="btn btn-danger btn-icon">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            <% } %>
+                                        </td>
+                                        <td><%= e.rd_refueling_location %></td>
+                                        <td style="text-align: end;"><%= e.rd_refueling_litre %> ลิตร</td>
+                                        <td style="text-align: end;"><%= e.rd_refueling_price %> บาท</td>
+                                        <td><%= e.rd_remark %></td>
+                                        <td><%= e.rd_create_by_name %> (<%= e.rd_create_by_division %>)</td>
+                                        <td><%= e.rd_create_by_name %> (<%= e.rd_create_by_division %>)</td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='card'>
+            <div class='card-header'>
+                <h4>รายการการผ่านทางด่วน</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <% if( sub_document_data[0].cds_status == "สำเร็จแล้ว" ){ %>
+
+                    <% }else{ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 10px;">
+                            <button data-bs-toggle="modal" data-bs-target="#modal_insert_expressway_record" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                                <i class="fa-solid fa-plus"></i>
+                                เพิ่มทางด่วนที่จ่ายด้วย Easy Pass
+                            </button>
+                        </div>
+                    <% } %>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table_2" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>#</th>
+                                    <th>ชื่อทางด่วน</th>
+                                    <th>ราคา/รอบ</th>
+                                    <th>หมายเหตุทางด่วน</th>
+                                    <th>หมายเหตุ</th>
+                                    <th>ผู้สร้างชื่อ-นามสกุล (แผนก)</th>
+                                    <th>สร้างเมื่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% expressway_record.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <% if( sub_document_data[0].cds_status == "สำเร็จแล้ว" ){ %>
+
+                                            <% }else{ %>
+                                                <button onclick="delete_expressway_record( '<%= e.eud_id %>' )" type="button" class="btn btn-danger btn-icon">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            <% } %>
+                                        </td>
+                                        <td><%= e.epw_expressway_name %></td>
+                                        <td style="text-align: end;"><%= e.epw_expressway_price %> บาท</td>
+                                        <td style="max-width: 30vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('<%= e.epw_expressway_description %>')" ><%= e.epw_expressway_description %></td>
+                                        <td style="max-width: 30vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('<%= e.ezp_easy_pass_remark %>')" ><%= e.eud_remark %></td>
+                                        <td><%= e.eud_create_by_name %> (<%= e.eud_create_by_division %>)</td>
+                                        <td><%= dayjs(e.eud_create_date).format("DD/MM/YYYY HH:mm:ss") %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% if( sub_document_data[0].cds_status == "สำเร็จแล้ว" ){ %>
+
+                    <% }else{ %>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px; text-align: end;">
+                            <button onclick="confirm_return_car()" type="button" class="btn btn-success" style="width: 50%;">
+                                <i class="fa-solid fa-clipboard-check" style="margin-right: 5px;"></i> 
+                                ยืนยันการคืนรถ
+                            </button>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_insert_expressway_record" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form onsubmit="insert_expressway_record(event)">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">เพิ่มประวัติการเติมน้ำมัน</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> ชื่อทางด่วน</label>
+                            <select required id="expressway_id" onchange="expressway_changing(this.value)" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                                <% expressway_data.forEach( function(e) { %>
+                                    <option value="<%= e.epw_id %>"><%= e.epw_expressway_name %></option>
+                                <% } ) %>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for="">ราคา/รอบ</label>
+                            <div class="input-group">
+                                <input disabled id="expressway_price" value="" type="number" name="" class="form-control">
+                                <span class="input-group-text">บาท</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for="">หมายเหตุ</label>
+                            <textarea disabled name="" id="expressway_remark" class="form-control"></textarea>
+                        </div>
+
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for="">หมายเหตุ</label>
+                            <textarea name="" id="expressway_remark_from_user" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">บันทึก</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_insert_refueling_record" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form onsubmit="insert_refueling_record(event)">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">เพิ่มประวัติการเติมน้ำมัน</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> สถานที่เติมน้ำมัน</label>
+                            <input required id="refueling_location" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> จำนวนลิตร</label>
+                            <div class="input-group">
+                                <input required id="refueling_litre" value="" type="number" name="" class="form-control">
+                                <span class="input-group-text">ลิตร</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> ราคาทั้งหมด</label>
+                            <div class="input-group">
+                                <input required id="refueling_price" value="" type="number" name="" class="form-control">
+                                <span class="input-group-text">บาท</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for="">หมายเหตุ</label>
+                            <textarea name="" id="refueling_remark" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">บันทึก</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function insert_expressway_record( event ){
+        event.preventDefault(); 
+
+        let data = {
+            expressway_id : document.getElementById("expressway_id").value , 
+            expressway_remark_from_user : document.getElementById("expressway_remark_from_user").value ,
+            sub_document_id : document.getElementById("sub_document_id").value
+        }
+
+        console.log( data )
+
+        $.ajax({
+            type: 'POST',
+            url: '/insert_expressway_record',
+            data: data,
+            success: function (call_back_data) {
+                window.location.reload();
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function expressway_changing( expressway_id ){
+        data_no_syntex = '<%= JSON.stringify(expressway_data) %>'
+        data_no_free_spec = (JSON.stringify(data_no_syntex.replace(/\n|\t|\r/g, " ")))
+        data_with_syntax = decodedString( data_no_free_spec )
+        data_to_obj = JSON.parse(data_with_syntax);
+
+        expressway_selected = data_to_obj.filter( function(e){
+            return  e.epw_id == expressway_id
+        } )
+
+        if( expressway_selected.length > 0 ){
+            document.getElementById("expressway_price").value = expressway_selected[0].epw_expressway_price
+            document.getElementById("expressway_remark").innerText = expressway_selected[0].epw_expressway_description
+        }else{
+
+        }
+    }
+
+    function confirm_return_car(){
+        Swal.fire({
+            title: "ยืนยันการคืนรถ",
+            html: "ยืนยันการคืนรถหรือไม่ ? <br><br> <span class='red'>*** หากคืนรถแล้ว จะไม่สามารถกลับมาแก้ไขประวัติการเติมน้ำมันได้</span>",
+            icon : "question",
+            showCancelButton: true,
+            confirmButtonText: "ยืนยัน, คืนรถ" ,
+            confirmButtonColor: "#027E6F",
+            cancelButtonText: "ปิด" ,
+            cancelButtonColor: "#00000040",
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                let data = {
+                    main_document_id : document.getElementById("main_document_id").value , 
+                    sub_document_id : document.getElementById("sub_document_id").value ,
+                    car_id : document.getElementById("car_id").value ,
+                    last_miles : document.getElementById("new_last_miles").value ,
+                }
+
+                console.log("data")
+                console.log(data)
+        
+                $.ajax({
+                    type: 'POST',
+                    url: '/return_car',
+                    data: data,
+                    success: function (call_back_data) {
+                        window.location.replace( '/home' )
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    function delete_refueling_record( refueling_id ){
+        Swal.fire({
+            title: "ยืนยันการลบ",
+            text: "ยืนยันการลบประวัติการเติมน้ำมันหรือไม่ ?",
+            icon : "question",
+            showCancelButton: true,
+            confirmButtonText: "ยืนยัน, ลบ" ,
+            confirmButtonColor: "#dc3545",
+            cancelButtonText: "ปิด" ,
+            cancelButtonColor: "#00000040",
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                let data = {
+                    refueling_id : refueling_id , 
+                }
+
+                console.log("data")
+                console.log(data)
+        
+                $.ajax({
+                    type: 'POST',
+                    url: '/delete_refueling_record',
+                    data: data,
+                    success: function (call_back_data) {
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    function delete_expressway_record( expressway_id ){
+        Swal.fire({
+            title: "ยืนยันการลบ",
+            text: "ยืนยันการลบประวัติการผ่านทางด่วนหรือไม่ ?",
+            icon : "question",
+            showCancelButton: true,
+            confirmButtonText: "ยืนยัน, ลบ" ,
+            confirmButtonColor: "#dc3545",
+            cancelButtonText: "ปิด" ,
+            cancelButtonColor: "#00000040",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let data = {
+                    sql_command : `DELETE FROM tb_easy_pass_using_document WHERE tb_easy_pass_using_document.eud_id = '${expressway_id}'`
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/only_for_run_sql',
+                    data: data,
+                    success: function (nextPage) {
+                        Swal.fire({
+                            title: "ลบรายการสำเร็จ",
+                            text: "",
+                            icon: "success"
+                        });
+                        
+                        setTimeout( function(){window.location.reload()} , 800 );
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    function insert_refueling_record(event){
+        event.preventDefault()
+
+        console.log( document.getElementById("refueling_location").value )
+        console.log( document.getElementById("refueling_litre").value )
+        console.log( document.getElementById("refueling_price").value )
+        console.log( document.getElementById("refueling_remark").value )
+        console.log( document.getElementById("sub_document_id").value )
+
+        let data = {
+            refueling_location : document.getElementById("refueling_location").value , 
+            refueling_litre : document.getElementById("refueling_litre").value , 
+            refueling_price : document.getElementById("refueling_price").value , 
+            refueling_remark : document.getElementById("refueling_remark").value , 
+            sub_document_id : document.getElementById("sub_document_id").value
+        }
+
+        console.log( data )
+
+        $.ajax({
+            type: 'POST',
+            url: '/insert_refueling_record',
+            data: data,
+            success: function (call_back_data) {
+                window.location.reload();
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 3 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+    $('#main_table_2').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 3 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+</script>

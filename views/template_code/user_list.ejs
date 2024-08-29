@@ -1,0 +1,80 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px; ">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button style="color: white; font-weight: 700;" data-bs-toggle="modal" data-bs-target="#choose_company" type="button" class="btn btn-info">
+                    <i class="fa-solid fa-plus"></i>
+                    เพิ่มใหม่
+                </button>
+                <button style="color: white; font-weight: 700;" type="button" class="btn btn-info">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเซ็ต
+                </button>
+            </div>
+        </div>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>เอกสารขออนุมัติอัตรากำลัง</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <table id="main_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>ลำดับ</th>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>แผนก</th>
+                                    <th>อีเมล</th>
+                                    <th>สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% user_list.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= e.us_fullname %></td>
+                                        <td><%= e.us_division %></td>
+                                        <td><%= e.us_email %></td>
+                                        <td><%= e.us_enable %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<script>
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 1 ,
+            right: 1
+        },
+        "paging": false,
+        "scrollCollapse": true,
+        "responsive": false, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "50vh" 
+    })
+</script>

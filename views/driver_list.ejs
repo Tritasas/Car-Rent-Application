@@ -1,0 +1,147 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card'>
+            <div class='card-header'>
+                <h4>รายชื่อคนขับรถ</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 15px;">
+                        <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_add_new_driver" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                            <i class="fa-solid fa-car-side" style="margin-right: 0.2rem;"></i>
+                            เพิ่มคนขับรถ
+                        </button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="5%">#</th>
+                                    <th width="10%">ชื่อเล่น (TH)</th>
+                                    <th width="30%">ชื่อ-นามสกุล (TH)</th>
+                                    <th width="10%">ชื่อเล่น (EN)</th>
+                                    <th width="30%">ชื่อ-นามสกุล (EN)</th>
+                                    <th width="10%">สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% car_driver_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <a href="/<%= btoa(e.dm_id) %>">
+                                                <button type="button" class="btn btn-primary btn-icon">
+                                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td><%= e.dm_nickname_th %></td>
+                                        <td><%= e.dm_name_th %></td>
+                                        <td><%= e.dm_nickname_en %></td>
+                                        <td><%= e.dm_name_en %></td>
+                                        <td><%= e.dm_status %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_add_new_driver" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">ระบุข้อมูลคนขับรถ</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="submit_add_new_driver(event)" >
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> ชื่อเล่น (TH)</label>
+                            <input required id="dm_nickname_th" onchange="" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-8" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> ชื่อ-นามสกุล (TH)</label>
+                            <input required id="dm_name_th" onchange="" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> ชื่อเล่น (EN)</label>
+                            <input required id="dm_nickname_en" onchange="" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-8" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> ชื่อ-นามสกุล (EN)</label>
+                            <input required id="dm_name_en" onchange="" value="" type="text" name="" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function submit_add_new_driver(event){
+        event.preventDefault();
+
+        let data = {
+            nickname_th : document.getElementById("dm_nickname_th").value , 
+            name_th : document.getElementById("dm_name_th").value , 
+            nickname_en : document.getElementById("dm_nickname_en").value , 
+            name_en : document.getElementById("dm_name_en").value
+        }
+
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_new_drive',
+            data: data,
+            success: function (nextPage) {
+                console.log("add_new_drive Submit !")
+
+                window.location.reload();
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 4 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+</script>

@@ -1,0 +1,361 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card'>
+            <div class='card-header'>
+                <h4>ตั๋วโปรโมชั่นการใช้รถยนต์</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_add_new_ticket" style="color: white; font-weight: 700; margin-bottom: 1vh;" type="button" class="btn btn-info btn-function">
+                            <i class="fa-solid fa-ticket" style="margin-right: 0.2rem;"></i>
+                            เพิ่มตั๋ว
+                        </button>
+
+                        <button onclick="" data-bs-toggle="modal" data-bs-target="#modal_insert_ticket_excel" style="color: white; font-weight: 700; margin-bottom: 1vh;" type="button" class="btn btn-info btn-function">
+                            <i class="fa-solid fa-ticket" style="margin-right: 0.2rem;"></i>
+                            เพิ่มตั๋ว (Excel)
+                        </button>
+
+                        <button onclick="window.open(`https://synteccon0.sharepoint.com/:x:/s/DIS-Center/EUQfHbO4UdpIkvbYMQTu-jgBTR1ZdEfScu4s6nkUddPXCg?e=qBTyNc`,'_blank');" style="color: white; font-weight: 700; margin-bottom: 1vh;" type="button" class="btn btn-warning">
+                            <i class="fa-solid fa-table" style="margin-right: 0.2rem;"></i>
+                            Templace Excel
+                        </button>
+                        
+                        <button onclick="ticket_refresh_status_today()" style="color: white; font-weight: 700; margin-bottom: 1vh;" type="button" class="btn btn-warning">
+                            <i class="fa-solid fa-arrows-rotate" style="margin-right: 0.2rem;"></i>
+                            รีเฟรซสถานะ
+                        </button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>แบรนด์</th>
+                                    <th>โค้ด</th>
+                                    <th>รายละเอียด</th>
+                                    <th>เริ่มการใช้งาน</th>
+                                    <th>สิ้นสุดการใช้งาน</th>
+                                    <th>ใช้งานได้</th>
+                                    <th>สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% ticket_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= e.tk_brand %></td>
+                                        <td><%= e.tk_code %></td>
+                                        <td><%= e.tk_detail %></td>
+                                        <td><%= dayjs(e.tk_start_use).format("DD/MM/YYYY HH:mm") %></td>
+                                        <td><%= dayjs(e.tk_end_use).format("DD/MM/YYYY HH:mm") %></td>
+                                        <td>
+                                            <% if( e.tk_status == "ใช้งานได้"){ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox">
+                                                        <input checked name="check_box" id="<%= e.user_id %>" onchange="update_user_enable( document.getElementById('<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% }else{ %>
+                                                <div class="checkbox-wrapper-30" style="display: flex; justify-content: center;">
+                                                    <span class="checkbox"> 
+                                                        <input name="check_box" id="<%= e.user_id %>" onchange="update_user_enable( document.getElementById('<%= e.user_id %>').checked , '<%= e.user_id %>' )" type="checkbox" />
+                                                        <svg>
+                                                            <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                        </svg>
+                                                    </span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                        <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                            <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                        </symbol>
+                                                    </svg>
+                                                </div>
+                                            <% } %>
+                                        </td>
+                                        <td><%= e.tk_status %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_add_new_ticket" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">ระบุข้อมูลตั๋ว</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="submit_add_new_ticket(event)" >
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 1.5vh;">
+                            <label for=""><span class="red">*</span> แบรนด์ </label>
+                            <select required id="tk_brand" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                                <option value="Bolt">Bolt</option>
+                                <option value="Grab">Grab</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> โค้ด </label>
+                            <input required id="tk_code" onchange="" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> รายละเอียด </label>
+                            <input required id="tk_detail" onchange="" value="" type="text" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> เริ่มใช้งานได้</label>
+                            <input required id="tk_start_use" onchange="" value="" type="date" name="" class="form-control">
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 1.5vh;">
+                            <label for=""> <span class="red">*</span> สิ้นสุดการใช้</label>
+                            <input required id="tk_end_use" onchange="" value="" type="date" name="" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">ยืนยัน, เพิ่ม</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_insert_ticket_excel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">เลือกไฟล์อัพโหลด</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="form" action="/uploads_ticket_excel" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <input type="file" class="form-control" id="fileupload" name="fileupload" required accept=".xlsx, .xls" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">อัพโหลด</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function ticket_refresh_status_today(){
+        $.ajax({
+            type: 'POST',
+            url: '/ticket_refresh_status_today',
+            data: {},
+            success: function (nextPage) {
+                alert(`การเปิดใช่ Ticket : ${nextPage.return_result_1} /// การปิด Ticket : ${nextPage.return_result_2}`)
+                window.location.reload();
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function submit_add_new_ticket(event){
+        event.preventDefault()
+
+        let data = {
+            tk_brand : document.getElementById("tk_brand").value , 
+            tk_code : document.getElementById("tk_code").value , 
+            tk_detail : document.getElementById("tk_detail").value , 
+            tk_start_use : document.getElementById("tk_start_use").value , 
+            tk_end_use : document.getElementById("tk_end_use").value
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/add_new_ticket',
+            data: data,
+            success: function (nextPage) {
+                window.location.reload();
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function update_user_system_admin( value , user_id ){
+        console.log("value")
+        console.log(value)
+        console.log("user_id")
+        console.log(user_id)
+
+        let data = {
+            value : value , 
+            user_id : user_id
+        }
+
+        console.log("data")
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/update_user_system_admin',
+            data: data,
+            success: function (nextPage) {
+                console.log("update_user_system_admin Updated !")
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function update_user_master_admin( value , user_id ){
+        console.log("value")
+        console.log(value)
+        console.log("user_id")
+        console.log(user_id)
+
+        let data = {
+            value : value , 
+            user_id : user_id
+        }
+
+        console.log("data")
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/update_user_master_admin',
+            data: data,
+            success: function (nextPage) {
+                console.log("update_user_master_admin Updated !")
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function update_user_admin( value , user_id ){
+        console.log("value")
+        console.log(value)
+        console.log("user_id")
+        console.log(user_id)
+
+        let data = {
+            value : value , 
+            user_id : user_id
+        }
+
+        console.log("data")
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/update_user_admin',
+            data: data,
+            success: function (nextPage) {
+                console.log("update_user_admin Updated !")
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    function update_user_enable( value , user_id ){
+        console.log("value")
+        console.log(value)
+        console.log("user_id")
+        console.log(user_id)
+
+        let data = {
+            value : value , 
+            user_id : user_id
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/update_user_enable',
+            data: data,
+            success: function (nextPage) {
+                console.log("update_user_enable Updated !")
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+    if( document.getElementsByClassName("row")[1].clientWidth > 850 ){
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 2 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "46vh" 
+        })
+    }else{
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 0 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "46vh" 
+        })
+    }
+</script>

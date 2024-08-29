@@ -1,0 +1,579 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <% if( document_waiting_data.length > 0 ){ %>
+            <% if( document_waiting_data[0].cds_status == "ส่งรถแล้ว" ){ %>
+                <a onclick="confirm_receive_car( '<%= document_waiting_data[0].cds_id %>' , '<%= document_waiting_data[0].car_registration_code %>' , '<%= dayjs(document_waiting_data[0].cds_date).format(`DD/MM/YYYY`) %>' , '<%= document_waiting_data[0].cds_phase %>' )" style="cursor: pointer;">
+                    <div class="alert alert-danger" role="alert" style="background-color: #fff4f5;">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <h5>(คลิกเพื่อรับมอบรถยนต์) * วันนี้คุณได้ทำเรื่องขอยืมรถต์เอาไว้ และแอดมินได้ส่งรถมาให้คุณแล้ว</h5>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                รถทะเบียน : <%= document_waiting_data[0].car_registration_code %> | 
+                                วันที่ยืม : <%= dayjs(document_waiting_data[0].cds_date).format("DD/MM/YYYY") %> | 
+                                ช่วง : <%= document_waiting_data[0].cds_phase %> | 
+                                ผู้ขับ : <%= document_waiting_data[0].cdm_driver_name %>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            <% }else { %>
+                <a onclick="confirm_return_car( '<%= document_waiting_data[0].cds_id %>' , '<%= document_waiting_data[0].car_registration_code %>' , '<%= dayjs(document_waiting_data[0].cds_date).format(`DD/MM/YYYY`) %>' , '<%= document_waiting_data[0].cds_phase %>' )" style="cursor: pointer;">
+                    <div class="alert alert-warning" role="alert" style="background-color: #fffae9;">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <h5>(คลิกเพื่อส่งคืนรถยนต์) * วันนี้คุณได้ทำเรื่องขอยืมรถต์เอาไว้ และแอดมินได้ส่งรถมาให้คุณแล้ว</h5>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                รถทะเบียน : <%= document_waiting_data[0].car_registration_code %> | 
+                                วันที่ยืม : <%= dayjs(document_waiting_data[0].cds_date).format("DD/MM/YYYY") %> | 
+                                ช่วง : <%= document_waiting_data[0].cds_phase %> | 
+                                ผู้ขับ : <%= document_waiting_data[0].cdm_driver_name %>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            <% } %>
+        <% } %>
+        <div class='card'>
+            <div class='card-header'>
+                <h4>การทำงาน</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row" style="overflow: auto; margin-bottom: 1vh;">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                        <div class="card daily-sales" style="width: 100%;">
+                            <div class="card-block">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-4">
+                                        <img class="img-radius img-fluid wid-80" src="./assets/images/car-rent.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                    </div>
+                                    <div class="col-8" style="padding: 1rem 1.5rem;">
+                                        <span style="font-size: 18px; font-weight: 800;">ขออนุมัติเช่ารถยนต์</span>
+                                        <br>
+                                        <hr>
+                                        <span style="font-size: 15px;">ขออนุมัติเช่ารถยนต์ของบริษัท XXXXXXXXXXXXXXXXXXXXXX</span>
+                                        <br>
+                                        <br>
+                                        <a onclick="confirm_create_new_document_car_rent()" style="cursor: pointer; width: 100%;" class="btn btn-primary"><i class="fa-solid fa-file-signature" style="margin-right: 0.2rem;"></i> สร้างเอกสาร</a>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 0.5rem;">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                        <div class="card daily-sales" style="width: 100%;">
+                            <div class="card-block">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-4">
+                                        <img class="img-radius img-fluid wid-80" src="./assets/images/file.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                    </div>
+                                    <div class="col-8" style="padding: 1rem 1.5rem;">
+                                        <span style="font-size: 18px; font-weight: 800;">เอกสารขอเช่ารถยนต์</span>
+                                        <br>
+                                        <hr>
+                                        <span style="font-size: 15px;">ขออนุมัติเช่ารถยนต์ของบริษัท XXXXXXXXXXXXXXXXXXXXXX</span>
+                                        <br>
+                                        <br>
+                                        <a href="/car_rent_document_list" style="cursor: pointer; width: 100%;" class="btn btn-primary"><i class="fa-solid fa-file-circle-question" style="margin-right: 0.2rem;"></i> ดูเอกสาร</a>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 0.5rem;">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                        <div class="card daily-sales" style="width: 100%;">
+                            <div class="card-block">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-4">
+                                        <img class="img-radius img-fluid wid-80" src="./assets/images/verified.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                    </div>
+                                    <div class="col-8" style="padding: 1rem 1.5rem;">
+                                        <span style="font-size: 18px; font-weight: 800;">อนุมัติใบขอเช่ารถยนต์</span>
+                                        <br>
+                                        <hr>
+                                        <span style="font-size: 15px;">อนุมัติใบขอเช่ารถยนต์ XXXXXXXXXXXXXXXXXXXXXX</span>
+                                        <br>
+                                        <br>
+                                        <a href="/car_rent_document_approve_list" class="btn btn-warning position-relative" style="cursor: pointer; width: 100%; color: white;" >
+                                            <i class="fa-solid fa-file-circle-check" style="margin-right: 0.2rem;"></i> 
+                                            รายการที่ต้องอนุมัติ
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                <%= document_approve_data.length %>
+                                                <span class="visually-hidden">unread messages</span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="progress" style="position: absolute; height: 0.5rem; width: 100%; bottom: 0;">
+                                    <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                        <div class="card daily-sales" style="width: 100%;">
+                            <div class="card-block">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-4">
+                                        <img class="img-radius img-fluid wid-80" src="./assets/images/car.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                    </div>
+                                    <div class="col-8" style="padding: 1rem 1.5rem;">
+                                        <span style="font-size: 18px; font-weight: 800;">รายการรถยนต์</span>
+                                        <br>
+                                        <hr>
+                                        <span style="font-size: 15px;">ขออนุมัติเช่ารถยนต์ของบริษัท XXXXXXXXXXXXXXXXXXXXXX</span>
+                                        <br>
+                                        <br>
+                                        <a href="/car_list" class="btn btn-success" style="cursor: pointer; width: 100%;" ><i class="fa-solid fa-car-side" style="margin-right: 0.2rem;"></i> ดูรายการรถ</a>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 0.5rem;">
+                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <% if( user_data.cr_user_row.admin == "ใช่" || user_data.cr_user_row.master_admin == "ใช่" || user_data.cr_user_row.system_admin == "ใช่" ){ %>
+            <div class='card' style="margin-top: 2vh;">
+                <div class='card-header'>
+                    <h4>ADMIN : ควบคุมดูแลงาน</h4>
+                </div>
+                <div class='card-body'>
+                    <div class="row" style="overflow: auto; margin-bottom: 1vh;">
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                            <div class="card daily-sales" style="width: 100%;">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-radius img-fluid wid-80" src="./assets/images/table-content.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                        </div>
+                                        <div class="col-8" style="padding: 1rem 1.5rem;">
+                                            <span style="font-size: 18px; font-weight: 800;">รายการยืมรถวันนี้</span>
+                                            <br>
+                                            <hr>
+                                            <span style="font-size: 15px;">รายการยืมรถวันนี้ XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                            <br>
+                                            <br>
+                                            <a href="/admin_job_schedule_today" style="cursor: pointer; cursor: pointer; width: 100%; color: white;" class="btn btn-warning position-relative">
+                                                <i class="fa-solid fa-table" style="margin-right: 0.2rem;"></i> 
+                                                ดูรายการยืมรถวันนี้
+                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                    <%= document_action_data.length %>
+                                                    <span class="visually-hidden">unread messages</span>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 0.5rem;">
+                                        <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                            <div class="card daily-sales" style="width: 100%;">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-radius img-fluid wid-80" src="./assets/images/table.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                        </div>
+                                        <div class="col-8" style="padding: 1rem 1.5rem;">
+                                            <span style="font-size: 18px; font-weight: 800;">รายการยืมรถทั้งหมด</span>
+                                            <br>
+                                            <hr>
+                                            <span style="font-size: 15px;">รายการยืมรถทั้งหมด XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                            <br>
+                                            <br>
+                                            <a href="/admin_job_schedule_alltime" style="cursor: pointer; cursor: pointer; width: 100%;" class="btn btn-success"><i class="fa-solid fa-table-cells" style="margin-right: 0.2rem;"></i> ดูรายการยืมรถทั้งหมด</a>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 0.5rem;">
+                                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                            <div class="card daily-sales" style="width: 100%;">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-radius img-fluid wid-80" src="./assets/images/gas-station.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                        </div>
+                                        <div class="col-8" style="padding: 1rem 1.5rem;">
+                                            <span style="font-size: 18px; font-weight: 800;">รายงานการเติมน้ำมัน</span>
+                                            <br>
+                                            <hr>
+                                            <span style="font-size: 15px;">รายงานการเติมน้ำมัน XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                            <br>
+                                            <br>
+                                            <a href="/report_refueling_per_month" style="cursor: pointer; cursor: pointer; width: 100%;" class="btn btn-info"><i class="fa-solid fa-table-cells" style="margin-right: 0.2rem;"></i> ดูรายงาน</a>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 0.5rem;">
+                                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                            <div class="card daily-sales" style="width: 100%;">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-radius img-fluid wid-80" src="./assets/images/highway.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                        </div>
+                                        <div class="col-8" style="padding: 1rem 1.5rem;">
+                                            <span style="font-size: 18px; font-weight: 800;">รายงานการใช้ Easy Pass</span>
+                                            <br>
+                                            <hr>
+                                            <span style="font-size: 15px;">รายงานการใช้ Easy Pass XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                            <br>
+                                            <br>
+                                            <a href="/report_expressway" style="cursor: pointer; cursor: pointer; width: 100%;" class="btn btn-info"><i class="fa-solid fa-table-cells" style="margin-right: 0.2rem;"></i> ดูรายงาน</a>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 0.5rem;">
+                                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
+        <% if( user_data.cr_user_row.admin == "ใช่" || user_data.cr_user_row.master_admin == "ใช่" || user_data.cr_user_row.system_admin == "ใช่" ){ %>
+            <div class='card' style="margin-top: 2vh;">
+                <div class='card-header'>
+                    <h4>ADMIN : ควบคุมดูแลระบบหลังบ้าน</h4>
+                </div>
+                <div class='card-body'>
+                    <div class="row" style="overflow: auto; margin-bottom: 1vh;">
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                            <div class="card daily-sales" style="width: 100%;">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-radius img-fluid wid-80" src="./assets/images/ticket.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                        </div>
+                                        <div class="col-8" style="padding: 1rem 1.5rem;">
+                                            <span style="font-size: 18px; font-weight: 800;">ตั๋ว Grab , Bolt</span>
+                                            <br>
+                                            <hr>
+                                            <span style="font-size: 15px;">XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                            <br>
+                                            <br>
+                                            <a href="/admin_setup_ticket" style="cursor: pointer; cursor: pointer; width: 100%; color: white;" class="btn btn-secondary position-relative">
+                                                <i class="fa-solid fa-ticket" style="margin-right: 0.2rem;"></i> 
+                                                ดูตั๋ว Grab , Bolt
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 0.5rem;">
+                                        <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                            <div class="card daily-sales" style="width: 100%;">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-radius img-fluid wid-80" src="./assets/images/taxi-driver.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                        </div>
+                                        <div class="col-8" style="padding: 1rem 1.5rem;">
+                                            <span style="font-size: 18px; font-weight: 800;">พนักงานขับรถ</span>
+                                            <br>
+                                            <hr>
+                                            <span style="font-size: 15px;">XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                            <br>
+                                            <br>
+                                            <a href="/driver_list" style="cursor: pointer; cursor: pointer; width: 100%; color: white;" class="btn btn-secondary position-relative">
+                                                <i class="fi fi-ss-steering-wheel" style="margin-right: 0.2rem;"></i> 
+                                                ดูพนักงานขับรถ
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 0.5rem;">
+                                        <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                            <div class="card daily-sales" style="width: 100%;">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-radius img-fluid wid-80" src="./assets/images/payment.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                        </div>
+                                        <div class="col-8" style="padding: 1rem 1.5rem;">
+                                            <span style="font-size: 18px; font-weight: 800;">ข้อมูลการ์ด Easy Pass</span>
+                                            <br>
+                                            <hr>
+                                            <span style="font-size: 15px;">XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                            <br>
+                                            <br>
+                                            <a href="/easy_pass_list" style="cursor: pointer; cursor: pointer; width: 100%; color: white;" class="btn btn-secondary position-relative">
+                                                <i class="fa-brands fa-cc-paypal" style="margin-right: 0.2rem;"></i> 
+                                                ดูข้อมูล Easy Pass
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 0.5rem;">
+                                        <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                            <div class="card daily-sales" style="width: 100%;">
+                                <div class="card-block">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-radius img-fluid wid-80" src="./assets/images/toll-road.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                        </div>
+                                        <div class="col-8" style="padding: 1rem 1.5rem;">
+                                            <span style="font-size: 18px; font-weight: 800;">ข้อมูลทางด่วน</span>
+                                            <br>
+                                            <hr>
+                                            <span style="font-size: 15px;">XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                            <br>
+                                            <br>
+                                            <a href="/expressway_list" style="cursor: pointer; cursor: pointer; width: 100%; color: white;" class="btn btn-secondary position-relative">
+                                                <i class="fa-solid fa-sign-hanging" style="margin-right: 0.2rem;"></i> 
+                                                ดูข้อมูลทางด่วน
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="progress" style="height: 0.5rem;">
+                                        <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% if( (user_data.cr_user_row.admin == "ใช่" && user_data.cr_user_row.master_admin == "ใช่") || user_data.cr_user_row.system_admin == "ใช่" ){ %>
+                            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                                <div class="card daily-sales" style="width: 100%;">
+                                    <div class="card-block">
+                                        <div class="row d-flex align-items-center">
+                                            <div class="col-4">
+                                                <img class="img-radius img-fluid wid-80" src="./assets/images/approved.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                            </div>
+                                            <div class="col-8" style="padding: 1rem 1.5rem;">
+                                                <span style="font-size: 18px; font-weight: 800;">ผู้อนุมัติแต่ละแผนก</span>
+                                                <br>
+                                                <hr>
+                                                <span style="font-size: 15px;">XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                                <br>
+                                                <br>
+                                                <a href="/division_list" style="cursor: pointer; cursor: pointer; width: 100%; color: white;" class="btn btn-secondary position-relative">
+                                                    <i class="fa-solid fa-person-circle-check" style="margin-right: 0.2rem;"></i> 
+                                                    ดูผู้อนุมัติแผนก
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="progress" style="height: 0.5rem;">
+                                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                                <div class="card daily-sales" style="width: 100%;">
+                                    <div class="card-block">
+                                        <div class="row d-flex align-items-center">
+                                            <div class="col-4">
+                                                <img class="img-radius img-fluid wid-80" src="./assets/images/management.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                            </div>
+                                            <div class="col-8" style="padding: 1rem 1.5rem;">
+                                                <span style="font-size: 18px; font-weight: 800;">ผู้ใช้งานทั้งหมด</span>
+                                                <br>
+                                                <hr>
+                                                <span style="font-size: 15px;">XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX</span>
+                                                <br>
+                                                <br>
+                                                <a href="/user_list_in_application" style="cursor: pointer; cursor: pointer; width: 100%; color: white;" class="btn btn-secondary position-relative">
+                                                    <i class="fa-solid fa-users-rectangle" style="margin-right: 0.2rem;"></i> 
+                                                    ดูผู้ใช้งาน
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="progress" style="height: 0.5rem;">
+                                            <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
+
+        <div class='card' style="margin-top: 2vh;">
+            <div class='card-header'>
+                <h4>การทำงาน</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row" style="overflow: auto; margin-bottom: 1vh;">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                        <div class="card daily-sales" style="width: 100%;">
+                            <div class="card-block">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-4">
+                                        <img class="img-radius img-fluid wid-80" src="./assets/images/car-rent.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                    </div>
+                                    <div class="col-8" style="padding: 1rem 1.5rem;">
+                                        <span style="font-size: 18px; font-weight: 800;">ขออนุมัติเช่ารถยนต์</span>
+                                        <br>
+                                        <hr>
+                                        <span style="font-size: 15px;">ขออนุมัติเช่ารถยนต์ของบริษัท XXXXXXXXXXXXXXXXXXXXXX</span>
+                                        <br>
+                                        <br>
+                                        <a onclick="confirm_create_new_document_car_rent()" style="cursor: pointer; cursor: pointer; width: 100%;" class="btn btn-primary"><i class="fa-solid fa-file-signature" style="margin-right: 0.2rem;"></i> สร้างเอกสาร</a>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 0.5rem;">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6" style="display: flex; margin-bottom: 1.5rem; justify-content: center;">
+                        <div class="card daily-sales" style="width: 100%;">
+                            <div class="card-block">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-4">
+                                        <img class="img-radius img-fluid wid-80" src="./assets/images/car-rent.png" style="padding:10px;margin-right:20px; width: 100%; height: auto; "/>
+                                    </div>
+                                    <div class="col-8" style="padding: 1rem 1.5rem;">
+                                        <span style="font-size: 18px; font-weight: 800;">ตั้งค่าผู้อนุมัติเอกสาร</span>
+                                        <br>
+                                        <hr>
+                                        <span style="font-size: 15px;">ตั้งค่าผู้อนุมัติเอกสาร</span>
+                                        <br>
+                                        <br>
+                                        <a href="/approval_config" style="cursor: pointer; cursor: pointer; width: 100%;" class="btn btn-primary"><i class="fa-solid fa-file-signature" style="margin-right: 0.2rem;"></i> ตั้งค่าผู้อนุมัติเอกสาร</a>
+                                    </div>
+                                </div>
+                                <div class="progress" style="position: absolute; height: 0.5rem; width: 100%; bottom: 0;">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 100%; height: 0.5rem;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<script>
+
+    window.onload = function(){
+
+    }
+
+    function confirm_return_car( sub_document_id , car_registration_code , date , phase ){
+        Swal.fire({
+            icon : "question",
+            title: "ยืนยันการคืนรถ",
+            html: "ยืนยันการคืนรถยนต์หรือไม่ ?",
+
+            showCancelButton: true,
+
+            confirmButtonText: "ยืนยัน, คืนรถ" ,
+            confirmButtonColor: "#027E6F",
+
+            cancelButtonText: "ปิด" ,
+            cancelButtonColor: "#00000040"
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // window.open('https://www.google.co.th/?hl=th');
+                window.location.replace(`/refueling_document/${btoa(sub_document_id)}`)
+            }
+        });
+    }
+
+    function confirm_receive_car( sub_document_id , car_registration_code , date , phase ){
+        console.log(sub_document_id)
+        console.log(car_registration_code)
+        console.log(date)
+        console.log(phase)
+
+        Swal.fire({
+            icon : "question",
+            title: "ยืนยันการรับรถ",
+            html: "ยืนยันการรับรถยนต์หรือไม่ ?",
+
+            showCancelButton: true,
+
+            confirmButtonText: "ยืนยัน, รับรถ" ,
+            confirmButtonColor: "#027E6F",
+
+            cancelButtonText: "ปิด" ,
+            cancelButtonColor: "#00000040"
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                let data = {
+                    sub_document_id : sub_document_id
+                }
+        
+                $.ajax({
+                    type: 'POST',
+                    url: '/receive_car',
+                    data: data,
+                    success: function (call_back_data) {
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+</script>

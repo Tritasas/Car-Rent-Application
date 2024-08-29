@@ -1,0 +1,461 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+            </div>
+        </div>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>เอกสารขออนุมัติอัตรากำลัง</h3>
+                <input disabled hidden value="<%= manpower_doc_data[0].md_id %>" id="manpower_doc_id" type="number" class="form-control">
+            </div>
+            <div class='card-body'>
+                <div class="row">
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label"><span class="red">*</span> ฝ่าย (Division)</label>
+                        <select id="division_doc" onchange="function_6( this.value )" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option selected style="display: none;" value="<%= manpower_doc_data[0].md_division_doc %>"><%= manpower_doc_data[0].md_division_doc %></option>
+                            <% division_data.forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <%  } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label"><span class="red">*</span> หัวหน้าโดยตรง (Hiring manager) <span class="red">ผู้อนุมัติที่ 1</span></label>
+                        <select onchange="function_7( this.value )" id="hiring_id" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option selected style="display: none;" value="<%= manpower_doc_data[0].md_hiring_id %>"><%= manpower_doc_data[0].md_hiring_name_th %> (<%= manpower_doc_data[0].md_hiring_name_en %>)</option>
+                            <% employee_data.forEach( function(e) { %>
+                                <option value="<%= e.ed_id %>"><%= e.ed_name_th %> <%= e.ed_surname_th %> (<%= e.ed_name_en %> <%= e.ed_surname_en %>)</option>
+                            <%  } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">Head BU <span class="red">ผู้อนุมัติที่ 2</span></label>
+                        <span id="second_approve" class="form-control"><%= manpower_doc_data[0].md_head_bu_name_th %> (<%= manpower_doc_data[0].md_head_bu_name_en %>)</span>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 18px;">
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label"><span class="red">*</span> ชื่อตำแหน่ง (Job Title)</label>
+                        <select id="job_name" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option selected style="display: none;" value="<%= manpower_doc_data[0].md_job_name %>"><%= manpower_doc_data[0].md_job_name %></option>
+                            <% job_data.forEach( function(e) { %>
+                                <option value="<%= e.job_position %>"><%= e.job_position %></option>
+                            <%  } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label"><span class="red">*</span> วันที่คาดหวังให้เริ่มงาน (Expected date of joining) <span class="red">MM/DD/YYYY</span></label>
+                        <input id="start_work" value="<%= dayjs(manpower_doc_data[0].md_start_work).format('YYYY-MM-DD') %>" placeholder="" type="date" class="form-control">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label"><span class="red">*</span> ประเภทการจ้าง (Type of employment)</label>
+                        <select id="employee_type" onchange="function_1( this.value )" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option selected style="display: none;" value="<%= manpower_doc_data[0].md_employee_type %>"><%= manpower_doc_data[0].md_employee_type %></option>
+                            <option value="พนักงานประจำ (Permanent Staff)">พนักงานประจำ (Permanent Staff)</option>
+                            <option value="พนักงานสัญญาจ้าง (Contract Staff)">พนักงานสัญญาจ้าง (Contract Staff)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">ระบุจำนวนเดือน <span class="red">* กรณีพนักงานสัญญาจ้าง</span></label>
+                        <div class="input-group">
+                            <% if(manpower_doc_data[0].md_employee_type == "พนักงานประจำ (Permanent Staff)"){ %>
+                                <input disabled value="" id="hiring_month" type="number" class="form-control">
+                            <% }else{ %>
+                                <input value="<%= manpower_doc_data[0].md_hire_month %>" id="hiring_month" type="number" class="form-control">
+                            <% } %>
+                            <span class="input-group-text">เดือน (Month)</span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label"><span class="red">*</span> วัตถุประสงค์ (Objective)</label>
+                        <select id="objective" onchange="function_2( this.value )" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option selected style="display: none;" value="<%= manpower_doc_data[0].md_objective %>"><%= manpower_doc_data[0].md_objective %></option>
+                            <option>จ้างใหม่ - ตามงบประมาณปีนี้ (New addition in of the headcount planning)</option>
+                            <option>จ้างใหม่ - นอกแผน (New addition out of the headcount planning)</option>
+                            <option disabled >-------------------------------------------------------------------------------------</option>
+                            <option>ทดแทน - พนักงานลาออก (Replacement Resignation)</option>
+                            <option>ทดแทน - พนักงานโอนย้าย (Replacement Transfer)</option>
+                            <option>ทดแทน - พนักงานปรับตำแหน่ง (Replacement Promotion)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">ชื่อพนักงานที่ถูกทดแทน (Replacement Employee Name) <span class="red">* กรณีทดแทน</span></label>
+                        <% if(manpower_doc_data[0].md_objective == "จ้างใหม่ - ตามงบประมาณปีนี้ (New addition in of the headcount planning)" || manpower_doc_data[0].md_objective == "จ้างใหม่ - นอกแผน (New addition out of the headcount planning)"){ %>
+                            <input disabled value="" id="replace_employee_name" class="form-control" type="text">
+                        <% }else{ %>
+                            <input value="<%= manpower_doc_data[0].md_replace_employee_name %>" id="replace_employee_name" class="form-control" type="text">
+                        <% } %>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">สถานที่ทำงาน (Workplace)</label>
+                        <select id="workplace" onchange="function_3( this.value )" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option style="display: none;" selected value="<%= manpower_doc_data[0].md_workplace %>"><%= manpower_doc_data[0].md_workplace %></option>
+                            <option value="สำนักงานใหญ่ (Head office)">สำนักงานใหญ่ (Head office)</option>
+                            <option value="ไซท์งาน (Site)">ไซท์งาน (Site)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">ระบุไซท์งาน <span class="red">* กรณีเลือกไซท์งาน</span></label>
+                        <% if(manpower_doc_data[0].md_workplace == "สำนักงานใหญ่ (Head office)"){ %>
+                            <input disabled value="" id="workplace_site_name" class="form-control" type="text">
+                        <% }else{ %>
+                            <input value="<%= manpower_doc_data[0].md_workplace_site_name %>" id="workplace_site_name" class="form-control" type="text">
+                        <% } %>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">หน้าที่ความรับผิดชอบ (Responsibilities)</label>
+                        <textarea class="form-control" id="responsibilities" rows="4"><%= manpower_doc_data[0].md_responsibilities %></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">ช่วงอายุ (Age)</label>
+                        <select id="age_length" onchange="function_4( this.value )" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option style="display: none;" selected value="<%= manpower_doc_data[0].md_age_length %>"><%= manpower_doc_data[0].md_age_length %></option>
+                            <option value="20 - 25 ปี">20 - 25 ปี</option>
+                            <option value="25 - 30 ปี">25 - 30 ปี</option>
+                            <option value=">30 - 35 ปี">30 - 35 ปี</option>
+                            <option value="35 - 40 ปี">35 - 40 ปี</option>
+                            <option value="40 - 45 ปี">40 - 45 ปี</option>
+                            <option value="45 - 50 ปี">45 - 50 ปี</option>
+                            <option value="อื่น ๆ">อื่น ๆ</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">ระบุช่วงอายุ <span class="red">* กรณีเลือกอื่น ๆ</span></label>
+                        <% if(manpower_doc_data[0].md_age_length != "อื่น ๆ"){ %>
+                            <input disabled value="" id="age_length_other" class="form-control" type="text">
+                        <% }else{ %>
+                            <input value="<%= manpower_doc_data[0].md_age_length_other %>" id="age_length_other" class="form-control" type="text">
+                        <% } %>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">วุฒิการศึกษา (Educational background)</label>
+                        <select id="education_type" onchange="function_5( this.value )" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option style="display: none;" selected value="<%= manpower_doc_data[0].md_education_type %>"><%= manpower_doc_data[0].md_education_type %></option>
+                            <option value="เฉพาะ ปวส./ ปวช." >เฉพาะ ปวส./ ปวช.</option>
+                            <option value="ปวส./ ปวช. ขึ้นไป" >ปวส./ ปวช. ขึ้นไป</option>
+                            <option value="เฉพาะ ปริญญาตรี" >เฉพาะ ปริญญาตรี</option>
+                            <option value="ปริญญาตรี ขึ้นไป" >ปริญญาตรี ขึ้นไป</option>
+                            <option value="เฉพาะ ปริญญาโท" >เฉพาะ ปริญญาโท</option>
+                            <option value="ปริญญาโท ขึ้นไป" >ปริญญาโท ขึ้นไป</option>
+                            <option value="อื่น ๆ" >อื่น ๆ</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">ระบุวุฒิการศึกษา <span class="red">* กรณีเลือกอื่น ๆ</span></label>
+                        <% if(manpower_doc_data[0].md_education_type != "อื่น ๆ"){ %>
+                            <input disabled value="" id="education_other" class="form-control" type="text">
+                        <% }else{ %>
+                            <input value="<%= manpower_doc_data[0].md_education_other %>" id="education_other" class="form-control" type="text">
+                        <% } %>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">สาขาที่ต้องการ</label>
+                        <input id="education_major" value="<%= manpower_doc_data[0].md_education_major %>" class="form-control" type="text">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">เพศ (Sex)</label>
+                        <select id="sex" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option style="display: none;" selected value="<%= manpower_doc_data[0].md_sex %>"><%= manpower_doc_data[0].md_sex %></option>
+                            <option>ไม่ระบุ (none)</option>
+                            <option>ชาย (Male)</option>
+                            <option>หญิง (Female)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">ประสบการณ์ทำงาน (Work experiences)</label>
+                        <select id="work_experiences" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option style="display: none;" selected value="<%= manpower_doc_data[0].md_work_experiences %>"><%= manpower_doc_data[0].md_work_experiences %></option>
+                            <option>0 ปี (เด็กจบใหม่)</option>
+                            <option>1 ปีขึ้นไป</option>
+                            <option>2 ปีขึ้นไป</option>
+                            <option>3 ปีขึ้นไป</option>
+                            <option>4 ปีขึ้นไป</option>
+                            <option>5 ปีขึ้นไป</option>
+                            <option>10 ปีขึ้นไป</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 18px;">
+                        <label for="" class="form-label">ทักษะหรือความต้องการอื่นๆ (Skill Or Additional requirement)</label>
+                        <textarea class="form-control" id="requirement_skill" rows="4"><%= manpower_doc_data[0].md_requirement_skill %></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" >
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-0 col-md-6 col-lg-8 col-xl-8" style="margin-top: 10px;">
+                        <button hidden id="btn_for_save" data-bs-toggle="modal" data-bs-target="#comfirm_save" type="button" class="btn btn-success">
+                            <i class="fa-regular fa-floppy-disk" style="margin-right: 3px;"></i>
+                            บันทึก
+                        </button>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4" style="margin-top: 10px;">
+                        <button onclick="check_submit()" style="width: 100%;" type="button" class="btn btn-success">
+                            <i class="fa-regular fa-floppy-disk" style="margin-right: 3px;"></i>
+                            บันทึก
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="comfirm_save">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-regular fa-circle-check"></i>
+                    ยืนยันการบันทึก
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ยืนยันการบันทึกหรือไม่
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button onclick="submit()" style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let req_hiring_month = false
+    let req_replace_employee_name = false
+    let req_workplace_site_name = false
+    let req_age_length_other = false
+    let req_education_other = false
+
+    let position_data_obj
+    let employee_data_obj
+
+    window.onload = function(){
+        position_data_str = '<%-JSON.stringify(position_data)%>'
+        position_data_obj = JSON.parse(position_data_str);
+
+        employee_data_str = '<%-JSON.stringify(employee_data)%>'
+        employee_data_obj = JSON.parse(employee_data_str);
+    }
+
+    function function_1( value ){
+        if( value == "พนักงานประจำ (Permanent Staff)" ){
+            document.getElementById("hiring_month").value = ""
+            document.getElementById("hiring_month").disabled = true
+            req_hiring_month = false
+        }else{
+            document.getElementById("hiring_month").disabled = false
+            req_hiring_month = true
+        }
+    }
+
+    function function_2( value ){
+        if( value == "จ้างใหม่ - ตามงบประมาณปีนี้ (New addition in of the headcount planning)" || value == "จ้างใหม่ - นอกแผน (New addition out of the headcount planning)" ){
+            document.getElementById("replace_employee_name").value = ""
+            document.getElementById("replace_employee_name").disabled = true
+            req_replace_employee_name = false
+        }else{
+            document.getElementById("replace_employee_name").disabled = false
+            req_replace_employee_name = true
+        }
+    }
+
+    function function_3( value ){
+        if( value == "สำนักงานใหญ่ (Head office)"){
+            document.getElementById("workplace_site_name").value = ""
+            document.getElementById("workplace_site_name").disabled = true
+            req_workplace_site_name = false
+        }else{
+            document.getElementById("workplace_site_name").disabled = false
+            req_workplace_site_name = true
+        }
+    }
+
+    function function_4( value ){
+        if( value != "อื่น ๆ"){
+            document.getElementById("age_length_other").value = ""
+            document.getElementById("age_length_other").disabled = true
+            req_age_length_other = false
+        }else{
+            document.getElementById("age_length_other").disabled = false
+            req_age_length_other = true
+        }
+    }
+
+    function function_5( value ){
+        if( value != "อื่น ๆ"){
+            document.getElementById("education_other").value = ""
+            document.getElementById("education_other").disabled = true
+            req_education_other = false
+        }else{
+            document.getElementById("education_other").disabled = false
+            req_education_other = true
+        }
+    }
+
+    let head_bu_id = ""
+    let head_bu_name_th = ""
+    let head_bu_name_en = ""
+    let head_bu_email = ""
+
+    function function_6( value ){
+        let head_bu_id_arr = position_data_obj.filter( function(e){
+            return  e.pc_division == value
+        } )
+
+        let head_bu = employee_data_obj.filter( function(e){
+            return  e.ed_id == head_bu_id_arr[0].pc_employee_id
+        } )
+
+        head_bu_id = head_bu[0].ed_id
+        head_bu_name_th = `${head_bu[0].ed_name_th} ${head_bu[0].ed_surname_th}`
+        head_bu_name_en = `${head_bu[0].ed_name_en} ${head_bu[0].ed_surname_en}`
+        head_bu_email = head_bu[0].ed_email_ite
+
+        document.getElementById("second_approve").innerText = `${head_bu[0].ed_name_th} ${head_bu[0].ed_surname_th} (${head_bu[0].ed_name_en} ${head_bu[0].ed_surname_en})`
+    }
+
+    let hiring_id = ""
+    let hiring_name_th = ""
+    let hiring_name_en = ""
+    let hiring_email = ""
+
+    function function_7( value ){
+        let hiring_array = employee_data_obj.filter( function(e){
+            return  e.ed_id == value
+        } )
+
+        hiring_id = hiring_array[0].ed_id
+        hiring_name_th = `${hiring_array[0].ed_name_th} ${hiring_array[0].ed_surname_th}`
+        hiring_name_en = `${hiring_array[0].ed_name_en} ${hiring_array[0].ed_surname_en}`
+        hiring_email = hiring_array[0].ed_email_ite
+    }
+
+    function check_submit(){
+
+        if( document.getElementById("division_doc").value == "" ){
+            alert("ระบุ 'ฝ่าย (Division)'")
+        }else if( document.getElementById("hiring_id").value == "" ){
+            alert("ระบุ 'หัวหน้าโดยตรง (Hiring manager)'")
+        }else if( document.getElementById("job_name").value == "" ){
+            alert("ระบุ 'ชื่อตำแหน่ง (Job Title)'")
+        }else if( document.getElementById("employee_type").value == "" ){
+            alert("ระบุ 'ประเภทการจ้าง (Type of employment)'")
+        }else if( document.getElementById("objective").value == "" ){
+            alert("ระบุ 'วัตถุประสงค์ (Objective)'")
+        }else if( document.getElementById("workplace").value == "" ){
+            alert("ระบุ 'สถานที่ทำงาน (Workplace)'")
+        }else if( document.getElementById("responsibilities").value == "" ){
+            alert("ระบุ 'หน้าที่ความรับผิดชอบ (Responsibilities)'")
+        }else if( document.getElementById("age_length").value == "" ){
+            alert("ระบุ 'ช่วงอายุ (Age)'")
+        }else if( document.getElementById("education_type").value == "" ){
+            alert("ระบุ 'วุฒิการศึกษา (Educational background)'")
+        }else if( document.getElementById("education_major").value == "" ){
+            alert("ระบุ 'สาขาที่ต้องการ'")
+        }else if( document.getElementById("work_experiences").value == "" ){
+            alert("ระบุ 'ประสบการณ์ทำงาน (Work experiences)'")
+        }else if( document.getElementById("requirement_skill").value == "" ){
+            alert("ระบุ 'ทักษะหรือความต้องการอื่นๆ (Skill Or Additional requirement)'")
+        }else if( req_hiring_month == true && document.getElementById("hiring_month").value == "" ){
+            alert("ระบุ 'ระบุจำนวนเดือน * กรณีพนักงานสัญญาจ้าง'")
+        }else if( req_replace_employee_name == true && document.getElementById("replace_employee_name").value == "" ){
+            alert("ระบุ 'ชื่อพนักงานที่ถูกทดแทน (Replacement Employee Name) * กรณีทดแทน'")
+        }else if( req_workplace_site_name == true && document.getElementById("workplace_site_name").value == "" ){
+            alert("ระบุ 'ระบุไซท์งาน * กรณีเลือกไซท์งาน'")
+        }else if( req_age_length_other == true && document.getElementById("age_length_other").value == "" ){
+            alert("ระบุ 'ระบุช่วงอายุ * กรณีเลือกอื่น ๆ'")
+        }else if( req_education_other == true && document.getElementById("education_other").value == "" ){
+            alert("ระบุ 'ระบุวุฒิการศึกษา * กรณีเลือกอื่น ๆ'")
+        }else{
+            document.getElementById("btn_for_save").click()
+        }
+    }
+
+    function submit(){
+        let data = {
+            job_name : document.getElementById("job_name").value , 
+            start_work : document.getElementById("start_work").value , 
+            employee_type : document.getElementById("employee_type").value , 
+            hiring_month : document.getElementById("hiring_month").value , 
+            objective : document.getElementById("objective").value , 
+            replace_employee_name : document.getElementById("replace_employee_name").value , 
+            workplace : document.getElementById("workplace").value , 
+            workplace_site_name : document.getElementById("workplace_site_name").value , 
+            responsibilities : document.getElementById("responsibilities").value , 
+            age_length : document.getElementById("age_length").value , 
+            age_length_other : document.getElementById("age_length_other").value , 
+            education_type : document.getElementById("education_type").value , 
+            education_other : document.getElementById("education_other").value , 
+            education_major : document.getElementById("education_major").value , 
+            sex : document.getElementById("sex").value , 
+            work_experiences : document.getElementById("work_experiences").value , 
+            requirement_skill : document.getElementById("requirement_skill").value , 
+
+            division_doc : document.getElementById("division_doc").value ,
+
+            hiring_id : hiring_id ,
+            hiring_name_th : hiring_name_th ,
+            hiring_name_en : hiring_name_en ,
+            hiring_email : hiring_email ,
+
+            head_bu_id : head_bu_id ,
+            head_bu_name_th : head_bu_name_th ,
+            head_bu_name_en : head_bu_name_en ,
+            head_bu_email : head_bu_email ,
+
+            manpower_doc_id : document.getElementById("manpower_doc_id").value
+        }
+
+        console.log(data)
+
+        $.ajax({
+            type: 'POST',
+            url: '/manpower_doc_edit_submit',
+            data: data,
+            success: function (nextPage) {
+                window.location = nextPage;
+            },
+            error: function (error) {
+                console.log("error with Ajax");
+                console.log(error);
+            }
+        });
+    }
+
+</script>

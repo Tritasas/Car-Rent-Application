@@ -1,0 +1,446 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>Report Refueling</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.4vh;">
+                        <label for="">กรอก รหัส Easy Pass</label>
+                        <select id="filter_easy_pass_code" onchange="change_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            <% (filter_easy_pass_code.sort()).forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.4vh;">
+                        <label for="">กรอก ชื่อทางด่วน</label>
+                        <select id="filter_expressway_name" onchange="change_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            <% (filter_expressway_name.sort()).forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.4vh;">
+                        <label for="">กรอก ทะเบียนรถยนต์</label>
+                        <select id="filter_car_registration_code" onchange="change_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            <% (filter_car_registration_code.sort()).forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="" style="margin-top: 0.4vh;">
+                        <label for="">กรอก เติมเงิน/จ่ายเงิน</label>
+                        <select id="filter_phase" onchange="change_filter()" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            <option value="เติมเงิน">เติมเงิน</option>
+                            <option value="จ่ายเงิน">จ่ายเงิน</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="div_main_table" style="margin-top: 1.5vh;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>เครื่องมือ</th>
+                                    <th>รหัส Easy Pass</th>
+                                    <th>รายละเอียด Easy Pass</th>
+                                    <th>จำนวนเงินที่เพิ่ม/ลด</th>
+                                    <th>หมายเหตุ</th>
+                                    <th>วันทำรายการ</th>
+                                    <th>วันที่ทำรายการ</th>
+                                    <th>ช่วงทำรายการ</th>
+                                    <th>คนที่ทำรายการ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% report_expressway_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <button onclick="show_modal_detail_report( '<%= e.epr_join_ezp_id %>' , '<%= e.epr_join_cds_id %>' , '<%= e.epr_join_eud_id %>' )" type="button" class="btn btn-primary btn-icon">
+                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                            </button>
+                                        </td>
+                                        <td><%= e.ezp_easy_pass_code %></td>
+                                        <td style="max-width: 10vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('<%= e.ezp_easy_pass_remark %>')"><%= e.ezp_easy_pass_remark %></td>
+                                        <td><%= e.epr_money %></td>
+                                        <td style="max-width: 20vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('<%= e.epr_remark %>')"><%= e.epr_remark %></td>
+                                        <td><%= e.cds_day_th %> (<%= e.cds_day %>)</td>
+                                        <td><%= dayjs(e.cds_date).format("DD/MM/YYYY") %></td>
+                                        <td><%= e.cds_phase %></td>
+                                        <td><%= e.cds_return_user_name %> (<%= e.cds_return_user_division %>)</td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_insert_refueling_excel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">เลือกไฟล์อัพโหลด</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="form" action="/uploads_refueling_excel" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 1.5vh;">
+                            <input type="file" class="form-control" id="fileupload" name="fileupload" required accept=".xlsx, .xls" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">อัพโหลด</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    window.onload = function(){
+        data_no_syntex = '<%= JSON.stringify(report_expressway_data) %>'
+        data_no_free_spec = (JSON.stringify(data_no_syntex.replace(/\n|\t|\r/g, " ")))
+        data_with_syntax = decodedString( data_no_free_spec )
+        data_to_obj = JSON.parse(data_with_syntax);
+
+        draft_main_table( data_to_obj )
+    }
+
+    async function change_filter(){
+        data_no_syntex = '<%= JSON.stringify(report_expressway_data) %>'
+        data_no_free_spec = (JSON.stringify(data_no_syntex.replace(/\n|\t|\r/g, " ")))
+        data_with_syntax = decodedString( data_no_free_spec )
+        data_to_obj = JSON.parse(data_with_syntax);
+
+        let result_0 = await filter_easy_pass_code(data_to_obj)
+        let result_1 = await filter_expressway_name(result_0)
+        let result_2 = await filter_car_registration_code(result_1)
+        let result_3 = await filter_phase(result_2)
+
+        console.log(result_3)
+        draft_main_table( result_3 )
+
+    }
+
+    function filter_easy_pass_code(data){
+        return new Promise(( resolve , reject ) => {
+            if( document.getElementById("filter_easy_pass_code").value == "" || document.getElementById("filter_easy_pass_code").value == "ทั้งหมด" ){
+                resolve(data)
+            }else{
+                let return_object = data.filter( function(e){
+                    return e.ezp_easy_pass_code == document.getElementById("filter_easy_pass_code").value
+                } )
+
+                resolve(return_object)
+            }
+        })
+    }
+
+    function filter_expressway_name(data){
+        return new Promise(( resolve , reject ) => {
+            if( document.getElementById("filter_expressway_name").value == "" || document.getElementById("filter_expressway_name").value == "ทั้งหมด" ){
+                resolve(data)
+            }else{
+                let return_object = data.filter( function(e){
+                    return e.epw_expressway_name == document.getElementById("filter_expressway_name").value
+                } )
+
+                resolve(return_object)
+            }
+        })
+    }
+
+    function filter_car_registration_code(data){
+        return new Promise(( resolve , reject ) => {
+            if( document.getElementById("filter_car_registration_code").value == "" || document.getElementById("filter_car_registration_code").value == "ทั้งหมด" ){
+                resolve(data)
+            }else{
+                let return_object = data.filter( function(e){
+                    return e.car_registration_code == document.getElementById("filter_car_registration_code").value
+                } )
+
+                resolve(return_object)
+            }
+        })
+    }
+
+    function filter_phase(data){
+        return new Promise(( resolve , reject ) => {
+            if( document.getElementById("filter_phase").value == "" || document.getElementById("filter_phase").value == "ทั้งหมด" ){
+                resolve(data)
+            }else{
+                let return_object_1 = data.filter(p => String(p.epr_money).startsWith('-'));
+
+                let return_object_2 = data.filter(p => !String(p.epr_money).startsWith('-'));
+
+                if( document.getElementById("filter_phase").value == "เติมเงิน" ){
+                    resolve(return_object_2)
+
+                }else if( document.getElementById("filter_phase").value == "จ่ายเงิน" ){
+                    resolve(return_object_1)
+
+                }
+            }
+        })
+    }
+
+    function draft_main_table( data ){
+        let text = ``
+        if( data.length == 0 ){
+            set_main_table(text)
+        }else{
+            for( let i = 0 ; i < data.length ; i++ ){
+                let index = i+1
+                let date_record = new Date(data[i].cds_date)
+                let date_record_2 = new Date(data[i].epr_create_date)
+
+                let cds_day_th = ``
+                if( data[i].cds_day_th == "" || data[i].cds_day_th == "null" || data[i].cds_day_th == null ){
+                    cds_day_th = ``
+                }else{
+                    cds_day_th = `${ data[i].cds_day_th } (${ data[i].cds_day })`
+                }
+
+                let date_record_show = ``
+                if( `${ date_record.getDate().toString().padStart(2, '0')}/${(date_record.getMonth() + 1).toString().padStart(2, '0')}/${date_record.getFullYear() }` == "01/01/1970" ){
+                    date_record_show = `${ date_record_2.getDate().toString().padStart(2, '0')}/${(date_record_2.getMonth() + 1).toString().padStart(2, '0')}/${date_record_2.getFullYear() }`
+                }else{
+                    date_record_show = `${ date_record.getDate().toString().padStart(2, '0')}/${(date_record.getMonth() + 1).toString().padStart(2, '0')}/${date_record.getFullYear() }`
+                }
+
+                let cds_phase = ``
+                if( data[i].cds_phase == "" || data[i].cds_phase == "null" || data[i].cds_phase == null ){
+                    cds_phase = ``
+                }else{
+                    cds_phase = data[i].cds_phase
+                }
+
+                let cds_return_user_name = ``
+                if( data[i].cds_return_user_name == "" || data[i].cds_return_user_name == "null" || data[i].cds_return_user_name == null ){
+                    cds_return_user_name = `${ data[i].epr_create_by_name } (${ data[i].epr_create_by_division })`
+                }else{
+                    cds_return_user_name = `${ data[i].cds_return_user_name } (${ data[i].cds_return_user_division })`
+                }
+
+                text += `
+                <tr>
+                    <td>${ index }</td>
+                    <td>
+                        <button onclick="show_modal_detail_report( '${ data[i].epr_join_ezp_id }' , '${ data[i].epr_join_cds_id }' , '${ data[i].epr_join_eud_id }' )" type="button" class="btn btn-primary btn-icon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </td>
+                    <td>${ data[i].ezp_easy_pass_code }</td>
+                    <td style="max-width: 10vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('${ data[i].ezp_easy_pass_remark }')">${ data[i].ezp_easy_pass_remark }</td>
+                    <td style="text-align : end;" >${ data[i].epr_money } บาท</td>
+                    <td style="max-width: 20vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('${ data[i].epr_remark }')">${ data[i].epr_remark }</td>
+                    <td>${ cds_day_th }</td>
+                    <td>${ date_record_show }</td>
+                    <td>${ cds_phase }</td>
+                    <td>${ cds_return_user_name }</td>
+                </tr>
+                `
+
+                if( i == data.length - 1 ){
+                    set_main_table(text)
+                }
+            }
+        }
+    }
+
+    function set_main_table(text){
+        document.getElementById("div_main_table").innerHTML = `
+        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>เครื่องมือ</th>
+                    <th>รหัส Easy Pass</th>
+                    <th>รายละเอียด Easy Pass</th>
+                    <th>จำนวนเงินที่เพิ่ม/ลด</th>
+                    <th>หมายเหตุ</th>
+                    <th>วันทำรายการ</th>
+                    <th>วันที่ทำรายการ</th>
+                    <th>ช่วงทำรายการ</th>
+                    <th>คนที่ทำรายการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${text}
+            </tbody>
+        </table>
+        `
+
+        $('#main_table').DataTable({
+            "destroy": true,
+            "retrieve":true,
+            "stateSave": true,
+            fixedColumns:   {
+                left: 2 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "45.5vh" 
+        })
+    }
+
+    async function show_modal_detail_report( epr_join_ezp_id , epr_join_cds_id , epr_join_eud_id ){
+        let option_1 = ``
+        let option_2 = ``
+
+        await prepare_data_for_modal( epr_join_ezp_id , epr_join_cds_id , epr_join_eud_id )
+
+        function prepare_data_for_modal( epr_join_ezp_id , epr_join_cds_id , epr_join_eud_id ){
+            return new Promise( (resolve , reject) => {
+                if( epr_join_cds_id == 0 || epr_join_cds_id == "0" || epr_join_cds_id == null || epr_join_cds_id == "null" || epr_join_cds_id == "" ){
+                    option_1 = ``
+                    option_2 = ``
+                    resolve()
+                }else{
+                    let data = {
+                        sub_document_id : epr_join_cds_id
+                    }
+        
+                    $.ajax({
+                        type: 'POST',
+                        url: '/find_main_document_from_sub_document_id',
+                        data: data,
+                        success: function (call_back_data) {
+                            if( call_back_data.message == "success" ){
+                                console.log("find_main_document_from_sub_document_id is success")
+                                option_1 = `
+                                <a href="${call_back_data.link}" target="_blank" style="cursor: pointer;">
+                                    <button type="button" class="btn btn-primary" style="color: white; margin-left: 10px;">
+                                        <i class="fa-solid fa-list"></i>
+                                        ดูเอกสารการอนุมัติ
+                                    </button>
+                                </a>
+                                `
+        
+                                option_2 = `
+                                <a href="/refueling_document/${ btoa(epr_join_cds_id) }" target="_blank" style="cursor: pointer;">
+                                    <button type="button" class="btn btn-primary" style="color: white; margin-left: 10px;">
+                                        <i class="fa-solid fa-list"></i>
+                                        ดูประวัติการคืนรถ
+                                    </button>
+                                </a>
+                                `
+                                resolve()
+                            }else{
+                                option_1 = ``
+                                option_2 = ``
+                                resolve()
+                            }
+                        },
+                        error: function (error) {
+                            option_1 = ``
+                            option_2 = ``
+                            console.log("error with Ajax");
+                            console.log(error);
+                            resolve()
+                        }
+                    });
+                }
+            } )
+        }
+
+
+        Swal.fire({
+            icon : "info",
+            title: "",
+            html: `
+            <a href="/easy_pass_recharge_history_list/${btoa(epr_join_ezp_id)}" target="_blank" style="cursor: pointer;">
+                <button type="button" class="btn btn-primary" style="color: white; margin-left: 10px;">
+                    <i class="fa-solid fa-list"></i>
+                    ดูข้อมูล Easy Pass
+                </button>
+            </a>
+            <br>
+            <br>
+            ${option_1}
+            <br>
+            <br>
+            ${option_2}
+            `,
+            showConfirmButton: false,
+            confirmButtonColor: "#027E6F",
+            confirmButtonText: "ยืนยัน, ตรวจรถสำเร็จ" ,
+            showCancelButton: false,
+            cancelButtonColor: "#00000040",
+            cancelButtonText: "ปิด"
+        })
+    }
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 1 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "45.5vh" 
+    })
+
+    $('#main_table_2').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 1 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "45vh" 
+    })
+</script>

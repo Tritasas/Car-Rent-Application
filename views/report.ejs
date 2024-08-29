@@ -1,0 +1,380 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px; ">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button onclick="window.location.reload();" style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเซ็ต
+                </button>
+            </div>
+        </div>
+        <div class='card' style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;">
+            <div class='card-header'>
+                <h3>CUSTOMER SATISFACTION SUMMARY</h3>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">ฝ่าย :</label>
+                        <select id="dropdown_division" onchange="filter_by_divition(this.value)" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option selected value="ทั้งหมด">ทั้งหมด</option>
+
+                            <% division_array.forEach( function(e) { %>
+                                <option value="<%= e %>"><%= e %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div id="div_dropdown_project_in_division" class="col-sm-6 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 10px;">
+                        <label for="" class="form-label">โครงการ :</label>
+                        <select onchange="filter_by_project(this.value)" id="dropdown_project_in_division" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option selected value="ทั้งหมด">ทั้งหมด</option>
+
+                            <% division_project_array_obj.forEach( function(e) { %>
+                                <option value="<%= e.project %>"><%= e.project %></option>
+                            <% } ) %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="div_main_table">
+                        <table id="main_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>Project</th>
+                                    <th>BU</th>
+                                    <th>Customer Name (TH)</th>
+                                    <!-- <th>Customer Name (EN)</th> -->
+                                    <!-- <th>Status</th> -->
+                                    <th>First Evaluation (%)</th>
+                                    <th>Second Evaluation (%)</th>
+                                    <th>Satisfaction</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% project_surveyed_list.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <a target="_blank" href="/project_information/<%= btoa(e.pj_id) %>">
+                                                <%= e.ProjectCode %>
+                                            </a>
+                                        </td>
+                                        <td><%= e.Fulldepartment %></td>
+                                        <td><%= e.OwnerNameTH %></td>
+                                        <td style="text-align: end;">
+                                            <% if( (+e.point_avg_css_part_1) > 75 ){ %>
+                                                <a style="color: #21b721; font-weight: 700;" target="_blank" href="/project_information/<%= btoa(e.pj_id) %>#css_1">
+                                                    <%= e.point_avg_css_part_1 %> %
+                                                </a>
+                                            <% }else if( (+e.point_avg_css_part_1) <= 75 ){ %>
+                                                <a style="color: #e90003; font-weight: 700;" target="_blank" href="/project_information/<%= btoa(e.pj_id) %>#css_1">
+                                                    <%= e.point_avg_css_part_1 %> %
+                                                </a>
+                                            <% }else{ %>
+                                                <a target="_blank" href="/project_information/<%= btoa(e.pj_id) %>#css_1">
+                                                    <%= e.point_avg_css_part_1 %> %
+                                                </a>
+                                            <% } %>
+
+                                        </td>
+                                        <td style="text-align: end;">
+                                            <% if(e.point_avg_css_part_2 == "ไม่มีการประเมิน" || e.point_avg_css_part_2 == "รอการประเมิน"){ %>
+                                                <%= e.point_avg_css_part_2 %>
+                                            <% }else{ %>
+                                                <% if( (+e.point_avg_css_part_2) > 75 ){ %>
+                                                    <a style="color: #21b721; font-weight: 700;" target="_blank" href="/project_information/<%= btoa(e.pj_id) %>#css_2">
+                                                        <%= e.point_avg_css_part_2 %> %
+                                                    </a>
+                                                <% }else if( (+e.point_avg_css_part_2) <= 75 ){ %>
+                                                    <a style="color: #e90003; font-weight: 700;" target="_blank" href="/project_information/<%= btoa(e.pj_id) %>#css_2">
+                                                        <%= e.point_avg_css_part_2 %> %
+                                                    </a>
+                                                <% }else{ %>
+                                                    <a target="_blank" href="/project_information/<%= btoa(e.pj_id) %>#css_2">
+                                                        <%= e.point_avg_css_part_2 %> %
+                                                    </a>
+                                                <% } %>
+                                            <% } %>
+                                            
+                                        </td>
+                                        <td><%= e.results %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" id="" style="margin-top: 1vh;">
+                        <table id="" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr hidden>
+                                    <th width="50%" style="text-align: center;" >Total</th>
+                                    <th width="50%" style="text-align: center;" ><span id="sum_total_point"></span></th>
+                                </tr>
+                                <tr hidden>
+                                    <th width="50%" style="text-align: center;" >Avg Evaluation in Percent (%)</th>
+                                    <th width="50%" style="text-align: center;" ><span id="avg_total_point"></span></th>
+                                </tr>
+                                <tr>
+                                    <th width="30%" style="text-align: center;" >EXPORT</th>
+                                    <th width="70%" style="text-align: center;" > 
+                                        <button style="width: 33%;" class="btn btn-info btn-function" onclick="export_data_to_excel('xlsx' , 'main_table')" >Xlsx</button>
+                                        <button style="width: 33%;" class="btn btn-info btn-function" onclick="export_data_to_excel('xls' , 'main_table')">Xls</button>
+                                        <button style="width: 33%;" class="btn btn-info btn-function" onclick="export_data_to_excel('csv' , 'main_table')">CSV</button> 
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<script>
+
+    let filter_object = {
+        division_search : "ทั้งหมด" , 
+        project_search : "ทั้งหมด"
+    }
+
+    let report_project_list_str = []
+    let report_project_list_obj = []
+
+    window.onload = function(){
+        console.log("document.getElementById(dropdown_division).value")
+        console.log(document.getElementById("dropdown_division").value)
+
+        report_project_list_str = '<%-JSON.stringify(project_surveyed_list)%>'
+        report_project_list_obj = JSON.parse(report_project_list_str);
+    }
+
+    async function filter_by_divition( division_search ){
+
+        if( division_search == "ทั้งหมด" ){
+            console.log("เลือกทั้งหมด")
+    
+            division_project_array_obj_str = '<%-JSON.stringify(division_project_array_obj)%>'
+            division_project_array_obj_obj = JSON.parse(division_project_array_obj_str);
+
+            project_array_filter = division_project_array_obj_obj
+
+            console.log("project_array_filter")
+            console.log(project_array_filter)
+
+            let html_option_project = await set_html_option_dropdown_project_in_division(project_array_filter)
+            await set_option_dropdown_project_in_division(html_option_project)
+
+            filter_object.division_search = division_search
+            filter_object.project_search = "ทั้งหมด"
+
+            fillter_main_function()
+        }else{
+            console.log(division_search)
+    
+            division_project_array_obj_str = '<%-JSON.stringify(division_project_array_obj)%>'
+            division_project_array_obj_obj = JSON.parse(division_project_array_obj_str);
+    
+            project_array_filter = division_project_array_obj_obj.filter( function(e){
+                return  e.division == division_search
+            } )  // FILTER
+    
+            console.log(project_array_filter)
+    
+            let html_option_project = await set_html_option_dropdown_project_in_division(project_array_filter)
+            await set_option_dropdown_project_in_division(html_option_project)
+
+            filter_object.division_search = division_search
+            filter_object.project_search = "ทั้งหมด"
+
+            fillter_main_function()
+        }
+
+    }
+
+    function set_option_dropdown_project_in_division( html_option_project ) {
+        return new Promise((resolve, reject) => {
+
+            document.getElementById("div_dropdown_project_in_division").innerHTML = `
+                <label for="" class="form-label">โครงการ :</label>
+                <select onchange="filter_by_project(this.value)" id="dropdown_project_in_division" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                    <option selected value="ทั้งหมด">ทั้งหมด</option> 
+                    ${html_option_project}
+                </select>`
+            $('.selectpicker').selectpicker('refresh') 
+            resolve()
+            
+        });
+    }
+
+    function set_html_option_dropdown_project_in_division( project_array_filter ) {
+        return new Promise((resolve, reject) => {
+
+            if( project_array_filter.length == 0 ){
+                resolve()
+            }else{
+                let html_option_project = ""
+                for( let i = 0 ; i < project_array_filter.length ; i++ ){
+                    html_option_project += `<option value="${project_array_filter[i].project}">${project_array_filter[i].project}</option>`
+    
+                    if( i == project_array_filter.length - 1 ){
+                        resolve(html_option_project)
+                    }
+                }
+            }
+        });
+    }
+
+    function filter_by_project( project_search ){
+        filter_object.project_search = project_search
+        fillter_main_function()
+    }
+
+    async function fillter_main_function(){
+        console.log("filter_object")
+        console.log(filter_object)
+
+        let report_project_list_obj_clone_1 = report_project_list_obj
+        let report_project_list_obj_clone_2 = []
+
+        if( filter_object.division_search == "ทั้งหมด" && filter_object.project_search == "ทั้งหมด" ){
+            report_project_list_obj_clone_2 = report_project_list_obj_clone_1
+        }else if( filter_object.division_search == "ทั้งหมด" ){
+            report_project_list_obj_clone_2 = report_project_list_obj_clone_1.filter( function(e){
+                return  e.ProjectCode == filter_object.project_search
+            } )
+        }else if( filter_object.project_search == "ทั้งหมด" ){
+            report_project_list_obj_clone_2 = report_project_list_obj_clone_1.filter( function(e){
+                return  e.Fulldepartment == filter_object.division_search
+            } )
+        }else{
+            report_project_list_obj_clone_2 = report_project_list_obj_clone_1.filter( function(e){
+                return  e.Fulldepartment == filter_object.division_search && e.ProjectCode == filter_object.project_search
+            } )
+        }
+
+        console.log("report_project_list_obj_clone_2")
+        console.log(report_project_list_obj_clone_2)
+
+        let html_tr_in_main_table = ""
+
+        for( let i = 0 ; i < report_project_list_obj_clone_2.length ; i++ ){
+            let index = i+1
+            html_tr_in_main_table += `
+            <tr>
+                <td>${ index }</td>
+                <td>
+                    <a target="_blank" href="/project_information/${ btoa(report_project_list_obj_clone_2[i].pj_id) }">
+                        ${ report_project_list_obj_clone_2[i].ProjectCode }
+                    </a>
+                </td>
+                <td>${ report_project_list_obj_clone_2[i].Fulldepartment }</td>
+                <td>${ report_project_list_obj_clone_2[i].OwnerNameTH }</td>
+                <td>
+                    <a target="_blank" href="/project_information/${ btoa(report_project_list_obj_clone_2[i].pj_id) }#css_1">
+                        ${ report_project_list_obj_clone_2[i].point_avg_css_part_1 }
+                    </a>
+                </td>
+                <td><a target="_blank" href="/project_information/${ btoa(report_project_list_obj_clone_2[i].pj_id) }#css_2">
+                        ${ report_project_list_obj_clone_2[i].point_avg_css_part_2 }
+                    </a>
+                </td>
+                <td>${ report_project_list_obj_clone_2[i].results }</td>
+            </tr>`
+
+            if( i == report_project_list_obj_clone_2.length - 1 ){
+                document.getElementById("div_main_table").innerHTML = `
+                <table id="main_table" class="table table-striped table-hover table-bordered" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th width="5%">#</th>
+                            <th>Project</th>
+                            <th>BU</th>
+                            <th>Customer Name (TH)</th>
+                            <th>First Evaluation (%)</th>
+                            <th>Second Evaluation (%)</th>
+                            <th>Satisfaction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${html_tr_in_main_table}
+                    </tbody>
+                </table>`
+
+                $('#main_table').DataTable({
+                    "destroy": true,
+                    "retrieve":true,
+                    "stateSave": true,
+                    fixedColumns:   {
+                        left: 2 ,
+                        right: 0
+                    },
+                    "paging": true,
+                    "scrollCollapse": true,
+                    "responsive": true, 
+                    "lengthChange": true, 
+                    "searching": true,
+                    "autoWidth": true,
+                    "ordering": true,
+                    "info": true,
+                    "scrollX": true,
+                    "scrollY": "50vh" 
+                })
+            }
+        }
+    }
+
+    if( document.getElementsByClassName("row")[1].clientWidth > 850 ){
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 2 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh" 
+        })
+    }else{
+        $('#main_table').DataTable({
+            // "destroy": true,
+            // "retrieve":true,
+            // "stateSave": true,
+            fixedColumns:   {
+                left: 0 ,
+                right: 0
+            },
+            "paging": true,
+            "scrollCollapse": true,
+            "responsive": true, 
+            "lengthChange": true, 
+            "searching": true,
+            "autoWidth": true,
+            "ordering": true,
+            "info": true,
+            "scrollX": true,
+            "scrollY": "50vh" 
+        })
+    }
+</script>

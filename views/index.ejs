@@ -1,0 +1,617 @@
+<%- include("1_header.ejs") %>
+
+<link rel="stylesheet" href="/node_modules/@pqina/pintura/pintura.css" />
+
+<style>
+    .sortable-list {
+  width: 425px;
+  padding: 25px;
+  background: #fff;
+  border-radius: 7px;
+  padding: 30px 25px 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+.sortable-list .item {
+  list-style: none;
+  display: flex;
+  cursor: move;
+  background: #fff;
+  align-items: center;
+  border-radius: 5px;
+  padding: 10px 13px;
+  margin-bottom: 11px;
+  /* box-shadow: 0 2px 4px rgba(0,0,0,0.06); */
+  border: 1px solid #ccc;
+  justify-content: space-between;
+}
+.item .details {
+  display: flex;
+  align-items: center;
+}
+.item .details img {
+  height: 43px;
+  width: 43px;
+  pointer-events: none;
+  margin-right: 12px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.item .details span {
+  font-size: 1.13rem;
+}
+.item i {
+  color: #474747;
+  font-size: 1.13rem;
+}
+.item.dragging {
+  opacity: 0.6;
+}
+.item.dragging :where(.details, i) {
+  opacity: 0;
+}
+</style>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-12">
+                <button onclick="back_page()" title="กลับ" type="button" class="btn btn-secondary btn-back">
+                    <i class="fa-solid fa-angle-left"></i>
+                    กลับ
+                </button>
+                <button style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-plus"></i>
+                    เพิ่มใหม่
+                </button>
+                <button style="color: white; font-weight: 700;" type="button" class="btn btn-info btn-function">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    รีเซ็ต
+                </button>
+            </div>
+        </div>
+        <div class='card'>
+            <div class='card-header'>
+                <h3>รายชื่อโครงการทั้งหมด</h3>
+            </div>
+            <div class='card-body'>
+
+                <div class="row">
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">Email address</label>
+                        <input id="" placeholder="" type="text" class="form-control">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">Email address</label>
+                        <input id="" placeholder="" type="text" class="form-control">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">Email address</label>
+                        <input id="" placeholder="" type="text" class="form-control">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">Input Text Group</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                            <span class="input-group-text">.00</span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">Dropdown</label>
+                        <select class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">Input Text + Dropdown</label>
+                        <input list="datalistOptions" id="" placeholder="Type to search..." class="form-control">
+                        <datalist id="datalistOptions">
+                            <option value="San Francisco">
+                            <option value="New York">
+                            <option value="Seattle">
+                            <option value="Los Angeles">
+                            <option value="Chicago">
+                        </datalist>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" >
+                        <hr>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">Date</label>
+                        <input id="date_select" placeholder="" type="date" class="form-control">
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">Type</label>
+                        <div class="input-group">
+                            <select id="type_select" class="selectpicker form-control" title="-- เลือก --" data-show-subtext="true" data-live-search="true">
+                                <option value="en_short">en_short</option>
+                                <option value="en_long">en_long</option>
+                                <option value="th_short">th_short</option>
+                                <option value="th_long">th_long</option>
+                            </select>
+                            <button onclick="alert(set_date_templece( document.getElementById('date_select').value , '-' , document.getElementById('type_select').value ))" class="input-group-text btn btn-primary" type="submit"> <i class="fa-solid fa-paper-plane"></i> Sent</button>
+                        </div>
+                    </div>
+<!--  -->
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="" class="form-label">Multiple File Upload</label>
+                        <form id="uploadForm" enctype="multipart/form-data">
+                            <div class="input-group">
+                                <input onchange="set_file_name_list( this.files )" type="file" id="fileInput" class="form-control" name="files" multiple>
+                                <button class="input-group-text btn btn-primary" type="submit"> <i class="fa-solid fa-upload"></i> Upload Files</button>
+                            </div>
+                        </form>
+                        <div id="file_name_list">
+                            
+                        </div>
+                        <div id="status"></div>
+                    </div>
+<!--  -->
+                    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4" >
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Accordion Item #1
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                                            <thead>
+                                                <tr hidden>
+                                                    <th width="5%">ลำดับ</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox-wrapper-30">
+                                                            <span class="checkbox">
+                                                                <input name="check_box" id="option_0" onchange="" type="checkbox" />
+                                                                <svg>
+                                                                    <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                                </svg>
+                                                            </span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                                <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                                    <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                                </symbol>
+                                                            </svg>
+                                                        </div>
+                                                    </td>
+                                                    <td><label style="cursor: pointer;" for="option_0">Option 0</label></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox-wrapper-30">
+                                                            <span class="checkbox">
+                                                                <input name="check_box" id="option_1" onchange="" type="checkbox" />
+                                                                <svg>
+                                                                    <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                                </svg>
+                                                            </span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                                <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                                    <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                                </symbol>
+                                                            </svg>
+                                                        </div>
+                                                    </td>
+                                                    <td><label style="cursor: pointer;" for="option_1">Option 1</label></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox-wrapper-30">
+                                                            <span class="checkbox">
+                                                                <input name="check_box" id="" onchange="" type="checkbox" />
+                                                                <svg>
+                                                                    <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                                </svg>
+                                                            </span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                                <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                                    <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                                </symbol>
+                                                            </svg>
+                                                        </div>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox-wrapper-30">
+                                                            <span class="checkbox">
+                                                                <input name="check_box" id="" onchange="" type="checkbox" />
+                                                                <svg>
+                                                                    <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                                </svg>
+                                                            </span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                                <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                                    <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                                </symbol>
+                                                            </svg>
+                                                        </div>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox-wrapper-30">
+                                                            <span class="checkbox">
+                                                                <input name="check_box" id="" onchange="" type="checkbox" />
+                                                                <svg>
+                                                                    <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                                </svg>
+                                                            </span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                                <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                                    <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                                </symbol>
+                                                            </svg>
+                                                        </div>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox-wrapper-30">
+                                                            <span class="checkbox">
+                                                                <input name="check_box" id="" onchange="" type="checkbox" />
+                                                                <svg>
+                                                                    <use xlink:href="#checkbox-30" class="checkbox"></use>
+                                                                </svg>
+                                                            </span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                                <symbol id="checkbox-30" viewBox="0 0 22 22">
+                                                                    <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                                </symbol>
+                                                            </svg>
+                                                        </div>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" >
+                        <div class="wrapper">
+                            <div class="item">
+                              <span class="text">draggable item one</span>
+                              <i class="fas fa-bars"></i>
+                            </div>
+                            <div class="item">
+                              <span class="text">draggable item two</span>
+                              <i class="fas fa-bars"></i>
+                            </div>
+                            <div class="item">
+                              <span class="text">draggable item three</span>
+                              <i class="fas fa-bars"></i>
+                            </div>
+                            <div class="item">
+                              <span class="text">draggable item four</span>
+                              <i class="fas fa-bars"></i>
+                            </div>
+                            <div class="item">
+                              <span class="text">draggable item five</span>
+                              <i class="fas fa-bars"></i>
+                            </div>
+                          </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" >
+                        <!-- <div class="editor" style="height: 80vh"></div>
+                        <img class="result" src="" alt="" /> -->
+
+                        <div class="inline-editor" style="height: 70vh"></div>
+                        <p><img class="inline-result" src="" alt="" /></p>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" >
+                        <button onclick="show_value_multi_dd()" class="input-group-text btn btn-primary" type="submit">Sent</button>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+                        <textarea onchange="show_value()" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <button type="button" class="btn btn-primary" onclick="modal();">Open and close in 3 secs</button>
+                    </div>
+
+                    <div class="col-sm-0 col-md-6 col-lg-8 col-xl-8" style="margin-top: 10px;">
+                        
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4" style="margin-top: 10px;">
+                        <!-- <button style="width: 100%;" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#comfirm_save"> -->
+                        <button style="width: 100%;" type="button" class="btn btn-success" onclick="submit_document()">
+                            <i class="fa-regular fa-floppy-disk" style="margin-right: 3px;"></i>
+                            บันทึก
+                        </button>
+                    </div>
+
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="comfirm_save">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i style="color: green;" class="fa-regular fa-circle-check"></i>
+                    ยืนยันการบันทึก
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ยืนยันการบันทึกหรือไม่
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-evenly;">
+                <button style="width: 30%;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button style="width: 65%;" type="button" class="btn btn-success">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<!-- <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js" integrity="sha512-Ww1y9OuQ2kehgVWSD/3nhgfrb424O3802QYP/A5gPXoM4+rRjiKrjHdGxQKrMGQykmsJ/86oGdHszfcVgUr4hA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(function () {
+        $(".wrapper").sortable({ 
+            update: function( event, ui ) { 
+                console.log("event")
+                console.log(event)
+                console.log("ui")
+                console.log(ui)
+                let return_obj = []
+                let array_item = document.getElementsByClassName("text")
+                for( let i = 0 ; i < array_item.length ; i++ ){
+                    return_obj.push({
+                        index : i + 1 , 
+                        value : array_item[i].innerHTML
+                    })
+                    console.log( "array_item[i].innerHTML" )
+                    console.log( array_item[i].innerHTML )
+                }
+                // alert("Sortable Event Updated!") 
+                console.log("return_obj")
+                console.log(return_obj)
+            } 
+        });
+    });
+</script>
+
+<!-- <script src="./jquery.js"></script> -->
+<script src="/node_modules/@pqina/pintura/pintura-iife.js"></script>
+<script defer src="/node_modules/@pqina/jquery-pintura/dist/useEditorWithJQuery-iife.js"></script>
+
+<script>
+    // load Pintura adapter
+    useEditorWithJQuery(jQuery, pintura);
+
+    var editor = $(".inline-editor").pinturaDefault({
+      src: "./assets/images/image.jpeg",
+      stickers: [
+        ["Emoji", ["⭐️", "😊", "👍", "👎", "☀️", "🌤", "🌥"]],
+        [
+          "Markers",
+          [
+            {
+              src: "sticker-one.svg",
+              width: "5%",
+              alt: "One",
+            },
+            {
+              src: "sticker-two.svg",
+              width: "5%",
+              alt: "Two",
+            },
+            {
+              src: "sticker-three.svg",
+              width: "5%",
+              alt: "Three",
+            },
+          ],
+        ],
+      ],
+    });
+
+    $(".inline-editor").on("pintura:load", (e) =>
+      console.log("inline load", e)
+    );
+
+    $(".inline-editor").on("pintura:process", (e) => {
+      console.log("inline process", e);
+      $(".inline-result").attr("src", URL.createObjectURL(e.detail.dest));
+    });
+</script>
+
+<script>
+
+    function submit_document(){
+        Swal.fire({
+            icon : "question",
+            title: "ยืนยันการบันทึก",
+            html: `
+                ยืนยันการบันทึกหรือไม่ ? หากบันทึกจะไม่สามารถแก้ไขรายละเอียดภายในเอกสารได้อีก
+                <br>
+                <span style="color:red"> * XXXX </span>
+            `,
+            // text: "ยืนยันการบันทึกหรือไม่ ? หากบันทึกจะไม่สามารถแก้ไขรายละเอียดภายในเอกสารได้อีก",
+            showCancelButton: true,
+            confirmButtonColor: "#027E6F",
+            cancelButtonColor: "#00000040",
+            confirmButtonText: "ยืนยัน, บันทึก" ,
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "บันทึกสำเร็จ",
+                    text: "ระบบบันทึกข้อมูลสำเร็จ",
+                    icon: "success"
+                });
+                console.log("SUBMIT COMFIRM!!!");
+                setTimeout( function(){window.location.reload()} , 1500 );
+            }
+        });
+    }
+
+    function show_value_multi_dd(){
+        
+    }
+
+    function show_value(){
+        console.log( document.getElementById("exampleFormControlTextarea1").value )
+        console.log( JSON.stringify(document.getElementById("exampleFormControlTextarea1").value) )
+
+        let data = {
+            value : (document.getElementById("exampleFormControlTextarea1").value).replace(/\n|\t|\r/g, " ")
+        }
+
+        console.log( data )
+
+    }
+
+    document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(); // Create FormData object
+
+        const fileInput = document.getElementById('fileInput');
+        const files = fileInput.files; // Get selected files
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            formData.append('files', file); // Append each file to FormData object
+        }
+
+        // Send files to server using fetch API
+        try {
+            const response = await fetch('/test_multi_files_upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.text();
+            document.getElementById('status').textContent = data; // Show upload status
+        } catch (error) {
+            console.error('Error uploading files:', error);
+        }
+    });
+
+    window.onload = function(){
+        
+        // let string_no_syntax = '<%= JSON.stringify(comment_test) %>'
+        // let string_no_free_spec = (JSON.stringify(string_no_syntax.replace(/\n|\t|\r/g, " ")))
+        // let string_to_obj = JSON.parse(string_no_free_spec);
+
+        // let string_with_syntax = decodedString( string_no_free_spec )
+
+        // console.log("string_to_obj")
+        // console.log(string_to_obj)
+
+        // document.getElementById("exampleFormControlTextarea1").value = string_with_syntax
+
+        // let now = new Date();
+        // let now_set_templece = set_date_templece(now , "/" , "en_long")
+        // console.log(now)
+        // console.log(now_set_templece)
+
+        
+        satisfaction_document_str = '<%= JSON.stringify(comment_test) %>'
+        let satisfaction_document_no_free_spec = satisfaction_document_str.replace(/\n|\t|\r/g, " ")
+        // let satisfaction_document_to_obj = JSON.parse(satisfaction_document_no_free_spec);
+
+        let satisfaction_document_with_syntax = decodedString( satisfaction_document_no_free_spec )
+
+        console.log("satisfaction_document_no_free_spec")
+        console.log(typeof satisfaction_document_no_free_spec)
+        console.log(satisfaction_document_no_free_spec)
+
+        console.log("satisfaction_document_with_syntax")
+        console.log(typeof satisfaction_document_with_syntax)
+        console.log(satisfaction_document_with_syntax)
+
+        let satisfaction_document_to_obj = JSON.parse(satisfaction_document_with_syntax);
+        console.log("satisfaction_document_to_obj")
+        console.log(typeof satisfaction_document_to_obj)
+        console.log(satisfaction_document_to_obj)
+        // satisfaction_document_obj = JSON.parse(satisfaction_document_str.replace(/\n|\t|\r/g, ""));
+
+    }
+
+    function set_file_name_list( value ){
+        console.log(value)
+        let text = ""
+
+        if( value.length == 0 ){
+            return
+        }else{
+            for( let i = 0 ; i < value.length ; i++ ){
+                console.log("----")
+                console.log(value[i])
+
+                text += `
+                <li>${value[i].name}</li>
+                `
+
+                if( i == value.length - 1 ){
+                    document.getElementById("file_name_list").innerHTML = `
+                    <ol>
+                        ${text}
+                    </ol>`
+                }
+            }
+        }
+    }
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": false,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": false, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": false,
+        "scrollX": true,
+        "scrollY": "30vh" 
+    })
+
+</script>

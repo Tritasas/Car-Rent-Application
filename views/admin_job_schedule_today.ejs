@@ -1,0 +1,508 @@
+<%- include("1_header.ejs") %>
+
+<div class='dashboard-content'>
+    <div class='container'>
+        <div class='card' style="margin-bottom: 2vh;">
+            <div class='card-header'>
+                <h4>รายการเอกสารขอยืมรถยนต์ วันที่ <%= dayjs(new Date()).format("DD/MM/YYYY") %> (ช่วงเช้า)</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th style="min-width: 150px;">เครื่องมือ</th>
+                                    <th>วันที่ยืม</th>
+                                    <th>ผู้ยืมชื่อ-นามสกุล (แผนก)</th>
+                                    <th>ผู้ขับ</th>
+                                    <th>Eazy Pass</th>
+                                    <th>บัตรเติมน้ำมัน</th>
+                                    <th>ทะเบียนรถที่ยืม</th>
+                                    <th>ชื่อรถที่ยืม</th>
+                                    <th>ผู้สร้างชื่อ-นามสกุล (แผนก)</th>
+                                    <th>สร้างเมื่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% document_morning_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <a href="/car_rent_document_approve_view/<%= btoa(e.cdm_id) %>">
+                                                <button type="button" class="btn btn-primary btn-icon">
+                                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                                </button>
+                                            </a>
+                                            <% if( e.cds_status == "อนุมัติแล้ว" ){ %>
+                                                <a onclick="set_last_miles('<%= e.cds_id %>' , '<%= e.car_registration_code %>' , '<%= e.car_id %>' , '<%= e.car_last_miles %>')" data-bs-toggle="modal" data-bs-target="#modal_set_last_miles" style="cursor: pointer;">
+                                                    <button type="button" class="btn btn-warning" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-solid fa-car-on"></i>
+                                                        ส่งรถ
+                                                    </button>
+                                                </a>
+                                            <% }else if( e.cds_status == "ส่งรถแล้ว" ){ %>
+                                                <a style="cursor: pointer;">
+                                                    <button type="button" class="btn btn-secondary" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        รอผู้ขอ
+                                                    </button>
+                                                </a>
+                                            <% }else if( e.cds_status == "รับรถแล้ว" ){ %>
+                                                <a style="cursor: pointer;">
+                                                    <button type="button" class="btn btn-info" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-solid fa-plane-departure"></i>
+                                                        กำลังใช้งาน
+                                                    </button>
+                                                </a>
+                                            <% }else if( e.cds_status == "คืนรถแล้ว" ){ %>
+                                                <a style="cursor: pointer;">
+                                                    <button onclick="admin_car_checking('<%= e.cdm_id %>' , '<%= e.cds_id %>')" type="button" class="btn btn-danger" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-solid fa-list-check"></i>
+                                                        ตรวจรถ
+                                                    </button>
+                                                </a>
+                                            <% }else if( e.cds_status == "สำเร็จแล้ว" ){ %>
+                                                <a href="/refueling_document/<%= btoa(e.cds_id) %>" target="_blank" style="cursor: pointer;">
+                                                    <button type="button" class="btn btn-success" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-solid fa-plane-circle-check"></i>
+                                                        สำเร็จแล้ว
+                                                    </button>
+                                                </a>
+                                            <% } %>
+                                        </td>
+                                        <td><%= dayjs(e.cds_date).format("DD/MM/YYYY") %> (<%= e.cds_phase %>)</td>
+                                        <td><%= e.cdm_for_person %> (<%= e.cdm_for_person_division %>)</td>
+                                        <td><%= e.cdm_driver_type %> (<%= e.cdm_driver_name %>)</td>
+                                        <td><%= e.cdm_eazy_pass %></td>
+                                        <td><%= e.cdm_fuel_card %></td>
+                                        <td><%= e.car_registration_code %></td>
+                                        <td><%= e.car_name %> (<%= e.car_type %>)</td>
+                                        <td><%= e.cdm_create_by_name %> (<%= e.cdm_create_by_division %>)</td>
+                                        <td><%= dayjs(e.cdm_create_date).format("DD/MM/YYYY") %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='card'>
+            <div class='card-header'>
+                <h4>รายการเอกสารขอยืมรถยนต์ วันที่ <%= dayjs(new Date()).format("DD/MM/YYYY") %> (ช่วงบ่าย)</h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table_2" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th style="min-width: 150px;">เครื่องมือ</th>
+                                    <th>วันที่ยืม</th>
+                                    <th>ผู้ยืมชื่อ-นามสกุล (แผนก)</th>
+                                    <th>ผู้ขับ</th>
+                                    <th>Eazy Pass</th>
+                                    <th>บัตรเติมน้ำมัน</th>
+                                    <th>ทะเบียนรถที่ยืม</th>
+                                    <th>ชื่อรถที่ยืม</th>
+                                    <th>ผู้สร้างชื่อ-นามสกุล (แผนก)</th>
+                                    <th>สร้างเมื่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% document_afternoon_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <a href="/car_rent_document_approve_view/<%= btoa(e.cdm_id) %>">
+                                                <button type="button" class="btn btn-primary btn-icon">
+                                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                                </button>
+                                            </a>
+                                            <% if( e.cds_status == "อนุมัติแล้ว" ){ %>
+                                                <a onclick="set_last_miles('<%= e.cds_id %>' , '<%= e.car_registration_code %>' , '<%= e.car_id %>' , '<%= e.car_last_miles %>')" data-bs-toggle="modal" data-bs-target="#modal_set_last_miles" style="cursor: pointer;">
+                                                    <button type="button" class="btn btn-warning" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-solid fa-car-on"></i>
+                                                        ส่งรถ
+                                                    </button>
+                                                </a>
+                                            <% }else if( e.cds_status == "ส่งรถแล้ว" ){ %>
+                                                <a style="cursor: pointer;">
+                                                    <button type="button" class="btn btn-secondary" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-regular fa-clock"></i>
+                                                        รอผู้ขอ
+                                                    </button>
+                                                </a>
+                                            <% }else if( e.cds_status == "รับรถแล้ว" ){ %>
+                                                <a style="cursor: pointer;">
+                                                    <button type="button" class="btn btn-info" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-solid fa-plane-departure"></i>
+                                                        กำลังใช้งาน
+                                                    </button>
+                                                </a>
+                                            <% }else if( e.cds_status == "คืนรถแล้ว" ){ %>
+                                                <a style="cursor: pointer;">
+                                                    <button onclick="admin_car_checking('<%= e.cdm_id %>' , '<%= e.cds_id %>')" type="button" class="btn btn-danger" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-solid fa-list-check"></i>
+                                                        ตรวจรถ
+                                                    </button>
+                                                </a>
+                                            <% }else if( e.cds_status == "สำเร็จแล้ว" ){ %>
+                                                <a href="/refueling_document/<%= btoa(e.cds_id) %>" target="_blank" style="cursor: pointer;">
+                                                    <button type="button" class="btn btn-success" style="color: white; margin-left: 10px;">
+                                                        <i class="fa-solid fa-plane-circle-check"></i>
+                                                        สำเร็จแล้ว
+                                                    </button>
+                                                </a>
+                                            <% } %>
+                                        </td>
+                                        <td><%= dayjs(e.cds_date).format("DD/MM/YYYY") %> (<%= e.cds_phase %>)</td>
+                                        <td><%= e.cdm_for_person %> (<%= e.cdm_for_person_division %>)</td>
+                                        <td><%= e.cdm_driver_type %> (<%= e.cdm_driver_name %>)</td>
+                                        <td><%= e.cdm_eazy_pass %></td>
+                                        <td><%= e.cdm_fuel_card %></td>
+                                        <td><%= e.car_registration_code %></td>
+                                        <td><%= e.car_name %> (<%= e.car_type %>)</td>
+                                        <td><%= e.cdm_create_by_name %> (<%= e.cdm_create_by_division %>)</td>
+                                        <td><%= dayjs(e.cdm_create_date).format("DD/MM/YYYY") %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='card' style="margin-top: 2vh;">
+            <div class='card-header'>
+                <h4>รายการเอกสารการขอตั๋วเดินทาง Bolt , Grab วันที่ <%= dayjs(new Date()).format("DD/MM/YYYY") %></h4>
+            </div>
+            <div class='card-body'>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <table id="main_table_3" class="table table-hover table-bordered" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>เครื่องมือ</th>
+                                    <th>รหัสตั๋ว</th>
+                                    <th>วันที่ขอ</th>
+                                    <th>แบรนด์ที่ขอ</th>
+                                    <th>หมายเหตุ</th>
+                                    <th>ผู้สร้างเอกสาร</th>
+                                    <th>ผู้ใช้งาน</th>
+                                    <th>ขอเพื่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% index = 1 %>
+                                <% ticket_request_document_data.forEach( function(e) { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td>
+                                            <% if( e.tds_status == "ใส่โค้ดแล้ว" ){ %>
+                                                
+                                            <% }else{ %>
+                                                <button onclick="generate_ticket('<%= e.tds_id %>')" title="ให้รหัสตั๋ว" style="color: white;" type="button" class="btn btn-warning btn-icon">
+                                                    <i class="fa-solid fa-ticket"></i>
+                                                </button>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if( e.tds_status == "ใส่โค้ดแล้ว" ){ %>
+                                                <div class="alert alert-success" role="alert" style="padding: 0.3rem 1rem; margin-bottom: 0rem;">
+                                                    <%= e.tds_ticket_code_generated %>
+                                                </div>
+                                            <% }else{ %>
+                                                -
+                                            <% } %>
+                                        </td>
+                                        <td><%= dayjs(e.tds_want_date).format("DD/MM/YYYY") %></td>
+                                        <td><%= e.tds_want_brand %></td>
+                                        <td style="max-width: 20vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('<%= e.tds_want_remark %>')" ><%= e.tds_want_remark %></td>
+                                        <td><%= e.tdm_create_by_name %> (<%= e.tdm_create_by_division %>)</td>
+                                        <td><%= e.tdm_user_name %> (<%= e.tdm_user_division_name %>)</td>
+                                        <td style="max-width: 30vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;" onclick="alert('<%= e.tdm_for_what %>')" ><%= e.tdm_for_what %></td>
+                                    </tr>
+                                <% index++ } ) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("2_footer.ejs") %>
+
+<div class="modal fade" id="modal_set_last_miles" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">ยืนยันการส่งรถและอัพเดทเลขไมล์</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-bottom: 7px;">
+                        <label style="margin-bottom: 1vh;" for="">เลขไมล์ล่าสุด ของรถยนต์ทะเบียน <span id="car_registration_code" class="red"></span></label>
+                        <input id="last_mile" value="" type="text" name="" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="send_car()" type="button" class="btn btn-success">บันทึกเลขไมล์ และส่งรถ</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function generate_ticket( ticket_doc_sub_id ){
+        Swal.fire({
+            icon : "question",
+            title: "ยืนยันการให้ตั๋ว",
+            html: "ยืนยันการให้ตั๋วกับเอกสารการขอรายการนี้หรือไม่ ? <br><br> <span class='red'> * หมายเหตุ : ให้แล้วไม่สามารถเอาคืนได้ โปรดตรวจสอบให้แน่ใจก่อน</span>",
+            showCancelButton: true,
+            confirmButtonColor: "#027E6F",
+            cancelButtonColor: "#00000040",
+            confirmButtonText: "ยืนยัน, ให้ตั๋ว" ,
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                let data = {
+                    ticket_doc_sub_id : ticket_doc_sub_id
+                }
+        
+                $.ajax({
+                    type: 'POST',
+                    url: '/generate_ticket',
+                    data: data,
+                    success: function (call_back_data) {
+                        // window.location.reload();
+
+                        console.log("call_back_data")
+                        console.log(call_back_data)
+
+                        if( call_back_data == "success" ){
+                            Swal.fire({
+                                icon: "success",
+                                title: "การให้ตั๋ว สำเร็จ",
+                                text: "",
+                            });
+                            
+                            setTimeout( function(){window.location.reload()} , 1000 );
+                        }else if( call_back_data == "error 002" ){
+                            Swal.fire({
+                                icon: "warning",
+                                title: "การให้ตั๋ว ไม่สำเร็จ",
+                                text: "ไม่สำเร็จ : ไม่มีตั๋วที่พร้อมใช้งาน",
+                            });
+                        }else if( call_back_data == "error 001" ){
+                            Swal.fire({
+                                icon: "warning",
+                                title: "การให้ตั๋ว ไม่สำเร็จ",
+                                text: "ไม่สำเร็จ : ระบบทำงานผิดปกติ",
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: "warning",
+                                title: "การให้ตั๋ว ไม่สำเร็จ",
+                                text: "ไม่สำเร็จ : ระบบทำงานผิดปกติ",
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    function admin_car_checking( main_document_id , sub_document_id ){
+        Swal.fire({
+            icon : "question",
+            title: "ยืนยันการตรวจรถ",
+            html: `ยืนยันการตรวจรถสำเร็จแล้วหรือไม่ ?
+            <br>
+            <br>
+            <a href="/refueling_document/${btoa(sub_document_id)}" target="_blank" style="cursor: pointer;">
+                <button type="button" class="btn btn-primary" style="color: white; margin-left: 10px;">
+                    <i class="fa-solid fa-list"></i>
+                    ดูประวัติการเติมน้ำมัน <br> และ การจ่ายผ่านทางด่วนด้วย Easy Pass
+                </button>
+            </a>`,
+            showCancelButton: true,
+            confirmButtonColor: "#027E6F",
+            cancelButtonColor: "#00000040",
+            confirmButtonText: "ยืนยัน, ตรวจรถสำเร็จ" ,
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon : "question",
+                    title: "ยืนยันการตรวจรถ",
+                    html: `ยืนยันการตรวจรถสำเร็จแล้วหรือไม่ ? 
+                    <br><br>
+                    <span class='red'>* ประวัติการผ่านทางด่วน จะนำไปลบกับเงินผ่านในบัตร Easy Pass หลังจากการยืนยันครั้งนี้ เพราะงั้น โปรดอย่าลืมตรวจสอบ ดูประวัติการเติมน้ำมัน และ การจ่ายผ่านทางด่วนด้วย Easy Pass</span>`,
+                    showCancelButton: true,
+                    confirmButtonColor: "#027E6F",
+                    cancelButtonColor: "#00000040",
+                    confirmButtonText: "ยืนยัน, ตรวจรถสำเร็จ" ,
+                    cancelButtonText: "ปิด"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let data = {
+                            main_document_id : main_document_id , 
+                            sub_document_id : sub_document_id
+                        }
+
+                        console.log("data")
+                        console.log(data)
+                
+                        $.ajax({
+                            type: 'POST',
+                            url: '/admin_car_checking',
+                            data: data,
+                            success: function (call_back_data) {
+                                window.location.reload();
+                            },
+                            error: function (error) {
+                                console.log("error with Ajax");
+                                console.log(error);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    function send_car(){
+        console.log(document_id_selected)
+
+        Swal.fire({
+            title: "ยืนยันการส่งรถ",
+            text: "ยืนยันการส่งรถยนต์ให้กับผู้ขอใช้รถยนต์ ?",
+            icon : "question",
+            showCancelButton: true,
+            confirmButtonColor: "#027E6F",
+            cancelButtonColor: "#00000040",
+            confirmButtonText: "ยืนยัน, ส่งรถ" ,
+            cancelButtonText: "ปิด"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                let data = {
+                    document_id : document_id_selected , 
+                    car_id : car_id_selected ,
+                    last_miles : document.getElementById("last_mile").value
+                }
+
+                console.log("data")
+                console.log(data)
+        
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin_send_car',
+                    data: data,
+                    success: function (call_back_data) {
+                        window.location.reload();
+                    },
+                    error: function (error) {
+                        console.log("error with Ajax");
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    }
+
+    let document_id_selected = ""
+    let car_id_selected = ""
+
+    function set_last_miles( document_id , registration_code , car_id , last_miles ){
+        console.log(document_id)
+        console.log(last_miles)
+
+        document_id_selected = document_id
+        car_id_selected = car_id
+
+        document.getElementById("last_mile").value = last_miles
+        document.getElementById("car_registration_code").innerText = registration_code
+    }
+
+    $('#main_table').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+    $('#main_table_2').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+    $('#main_table_3').DataTable({
+        // "destroy": true,
+        // "retrieve":true,
+        // "stateSave": true,
+        fixedColumns:   {
+            left: 0 ,
+            right: 0
+        },
+        "paging": true,
+        "scrollCollapse": true,
+        "responsive": true, 
+        "lengthChange": true, 
+        "searching": true,
+        "autoWidth": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+        "scrollY": "46vh" 
+    })
+
+</script>
