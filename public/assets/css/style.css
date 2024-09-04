@@ -1042,3 +1042,8 @@ h4{
   font-weight: 500;
   font-style: Italic;
 }
+
+.manual:hover {
+  color: #0080ff !important;
+  text-decoration: underline !important;
+}
